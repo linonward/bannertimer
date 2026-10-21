@@ -12,6 +12,14 @@ function alternates(html: string): Record<string, string> {
   );
 }
 
+// Every language version of /hsr/ lists all of them, itself included.
+const HSR_ALTERNATES = {
+  en: `${SITE}/hsr/`,
+  vi: `${SITE}/vi/hsr/`,
+  "pt-BR": `${SITE}/pt-br/hsr/`,
+  "x-default": `${SITE}/hsr/`,
+};
+
 function answerText(html: string): string {
   return (html.match(/<p[^>]*data-testid="answer"[^>]*>([\s\S]*?)<\/p>/)?.[1] ?? "").replace(/<[^>]+>/g, "");
 }
@@ -36,7 +44,7 @@ test.describe("/vi/hsr/ server HTML", () => {
 
   test("has its own canonical and hreflang to every language version", () => {
     expect(html.match(/<link rel="canonical"[^>]*>/g)).toEqual([`<link rel="canonical" href="${SITE}/vi/hsr/"/>`]);
-    expect(alternates(html)).toEqual({ en: `${SITE}/hsr/`, vi: `${SITE}/vi/hsr/`, "x-default": `${SITE}/hsr/` });
+    expect(alternates(html)).toEqual(HSR_ALTERNATES);
   });
 
   test("answers in Vietnamese with the four §6 phrases, on the Asia server", () => {
@@ -87,10 +95,59 @@ test.describe("/vi/hsr/ server HTML", () => {
   });
 });
 
-test("/hsr/ links back to its Vietnamese version", async ({ request }) => {
+test.describe("/pt-br/hsr/ server HTML", () => {
+  let html: string;
+
+  test.beforeAll(async ({ request }) => {
+    const res = await request.get("/pt-br/hsr/");
+    expect(res.ok()).toBe(true);
+    html = await res.text();
+  });
+
+  test("is marked as Brazilian Portuguese, with the §6 PT-BR title, meta and H1", () => {
+    expect(html).toMatch(/<html lang="pt-BR"/);
+    expect(html).toContain("<title>Cronograma de Banners do HSR &amp; Próximo Banner — Ao Vivo</title>");
+    expect(html).toContain(
+      '<meta name="description" content="Cronograma de banners do HSR ao vivo com contagem regressiva. Banner atual, início do próximo banner, próximos banners e reruns — atualizado a cada hora."/>',
+    );
+    expect(html).toMatch(/<h1[^>]*>Cronograma de Banners do HSR — Contagem ao Vivo<\/h1>/);
+  });
+
+  test("has its own canonical and hreflang to every language version", () => {
+    expect(html.match(/<link rel="canonical"[^>]*>/g)).toEqual([`<link rel="canonical" href="${SITE}/pt-br/hsr/"/>`]);
+    expect(alternates(html)).toEqual(HSR_ALTERNATES);
+  });
+
+  test("answers in Portuguese with the four §6 phrases, on the America server", () => {
+    const answer = answerText(html);
+    // America is the default server for pt-BR (§3.1); at the build moment it still runs HSR 4.6 phase 1.
+    expect(answer).toContain(
+      "Os banners atuais do HSR são The Demoiselle in Charge (Evanescia) e An Ocean in a Pearl (Pearl); o primeiro termina em 21 de out. de 2026, 11:59 (UTC-5)",
+    );
+    for (const phrase of ["próximo banner", "cronograma de banners", "próximos banners", "contagem regressiva"]) {
+      expect(answer.toLowerCase()).toContain(phrase);
+    }
+  });
+
+  test("translates the page, not only the first fold", () => {
+    for (const english of ["Last updated", "Upcoming HSR banners", "Filter by character", "NEXT BANNER", "Not affiliated", ">Official<"]) {
+      expect(html, english).not.toContain(english);
+    }
+    expect(html).toContain("Qual é o próximo banner do HSR?");
+    expect(html).toContain(">Oficial<");
+    expect(html).toContain('"name":"Início"');
+  });
+
+  test("offers the other languages in the language switch", () => {
+    expect(html).toMatch(/<a [^>]*href="\/hsr\/"[^>]*hrefLang="en"/i);
+    expect(html).toMatch(/<a [^>]*href="\/vi\/hsr\/"[^>]*hrefLang="vi"/i);
+  });
+});
+
+test("/hsr/ links to every language version", async ({ request }) => {
   const html = await (await request.get("/hsr/")).text();
   expect(html).toMatch(/<html lang="en"/);
-  expect(alternates(html)).toEqual({ en: `${SITE}/hsr/`, vi: `${SITE}/vi/hsr/`, "x-default": `${SITE}/hsr/` });
+  expect(alternates(html)).toEqual(HSR_ALTERNATES);
 });
 
 test("pages without a language version have no hreflang", async ({ request }) => {
@@ -101,7 +158,7 @@ test("pages without a language version have no hreflang", async ({ request }) =>
 });
 
 test("a URL without a language version is a 404", async ({ request }) => {
-  for (const path of ["/vi/", "/vi/zzz/", "/vi/hsr/4.6/", "/ko/hsr/", "/en/hsr/"]) {
+  for (const path of ["/vi/", "/vi/zzz/", "/vi/hsr/4.6/", "/pt-br/", "/pt-br/zzz/", "/pt-br/hsr/4.6/", "/pt-BR/hsr/", "/ko/hsr/", "/en/hsr/"]) {
     expect((await request.get(path)).status(), path).toBe(404);
   }
 });
@@ -109,6 +166,14 @@ test("a URL without a language version is a 404", async ({ request }) => {
 test("the game sitemap lists the language page", async ({ request }) => {
   const xml = await (await request.get("/hsr/sitemap.xml")).text();
   expect(xml).toContain(`${SITE}/vi/hsr/`);
+  expect(xml).toContain(`${SITE}/pt-br/hsr/`);
+});
+
+test("the Brazilian page starts on the America server", async ({ page }) => {
+  await page.clock.setFixedTime(new Date(BUILD_NOW));
+  await page.goto("/pt-br/hsr/");
+  await expect(page.getByRole("button", { name: /^América/ })).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByTestId("ends-server")).toHaveText("21 de out., 11:59");
 });
 
 test("the Vietnamese page starts on the Asia server and keeps a saved choice", async ({ page }) => {
@@ -130,4 +195,21 @@ test("a 404 keeps the site header and is not indexed", async ({ request }) => {
   expect(html).toMatch(/<html lang="en"/);
   expect(html).toContain('aria-label="Games"');
   expect(html).toMatch(/<meta name="robots" content="noindex/);
+});
+
+// Three languages and the server picker don't fit one 390px row; the switch must not push the page wide.
+test("the header fits a 390px screen on every language version", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  for (const path of ["/hsr/", "/vi/hsr/", "/pt-br/hsr/"]) {
+    await page.goto(path);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth), path).toBeLessThanOrEqual(390);
+  }
+});
+
+test("the mobile language menu links to the other versions", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/pt-br/hsr/");
+  await page.locator("header summary").click();
+  await page.getByRole("link", { name: "VI", exact: true }).click();
+  await expect(page).toHaveURL(/\/vi\/hsr\/$/);
 });

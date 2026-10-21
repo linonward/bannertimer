@@ -32,6 +32,24 @@ export function SiteHeader({ lang = "en" }: { lang?: Lang }) {
   const page = gamePageAt(pathname);
   const pageLangs = page ? gameLangs(page) : [];
 
+  // Inline links on desktop; on mobile a menu next to the tabs, because three languages and the
+  // server picker don't fit one 390px row. Plain links, so the menu works without JS.
+  const langLinks =
+    pageLangs.length > 1 &&
+    ((className: string) =>
+      pageLangs.map((l) => (
+        <a
+          key={l}
+          href={gamePath(l, page!.id)}
+          hrefLang={htmlLang(l)}
+          lang={htmlLang(l)}
+          aria-current={l === lang ? "page" : undefined}
+          className={`${className} font-mono text-xs tracking-[1px] whitespace-nowrap text-ink-3 hover:text-ink aria-[current=page]:bg-panel-2 aria-[current=page]:font-semibold aria-[current=page]:text-ink`}
+        >
+          {l.toUpperCase()}
+        </a>
+      )));
+
   const tabs = (
     <nav aria-label={t.gamesNav} className="flex h-full gap-[22px] md:gap-7">
       {GAMES.map((g) => {
@@ -67,20 +85,9 @@ export function SiteHeader({ lang = "en" }: { lang?: Lang }) {
         <div className="h-full max-md:hidden">{tabs}</div>
         <div className="flex-1 max-md:hidden" />
 
-        {pageLangs.length > 1 && (
-          <nav aria-label={t.language} className="flex gap-0.5 font-mono text-[11px] tracking-[1px] max-md:ml-auto md:text-xs">
-            {pageLangs.map((l) => (
-              <a
-                key={l}
-                href={gamePath(l, page!.id)}
-                hrefLang={htmlLang(l)}
-                lang={htmlLang(l)}
-                aria-current={l === lang ? "page" : undefined}
-                className="rounded px-2 py-1.5 text-ink-3 uppercase hover:text-ink aria-[current=page]:bg-panel-2 aria-[current=page]:font-semibold aria-[current=page]:text-ink"
-              >
-                {l}
-              </a>
-            ))}
+        {langLinks && (
+          <nav aria-label={t.language} className="flex gap-0.5 max-md:hidden">
+            {langLinks("rounded px-2 py-1.5")}
           </nav>
         )}
 
@@ -125,7 +132,24 @@ export function SiteHeader({ lang = "en" }: { lang?: Lang }) {
           </select>
         </label>
       </div>
-      <div className="h-11 px-5 md:hidden">{tabs}</div>
+      <div className="flex h-11 items-center justify-between gap-3 px-5 md:hidden">
+        {tabs}
+        {langLinks && (
+          <details className="relative">
+            <summary className="flex cursor-pointer list-none items-center gap-1 rounded-md bg-panel px-2 py-1 font-mono text-[11px] tracking-[1px] text-ink outline outline-line -outline-offset-1 [&::-webkit-details-marker]:hidden">
+              <span className="sr-only">{t.language}: </span>
+              {lang.toUpperCase()}
+              <ChevronDownIcon className="size-3.5 text-ink-3" />
+            </summary>
+            <nav
+              aria-label={t.language}
+              className="absolute top-full right-0 z-10 mt-1 flex flex-col gap-0.5 rounded-md bg-panel p-1 outline outline-line -outline-offset-1"
+            >
+              {langLinks("rounded px-3 py-2")}
+            </nav>
+          </details>
+        )}
+      </div>
     </header>
   );
 }
