@@ -124,12 +124,12 @@ export function BannerHero({ shortName, versions, banners, nextVersionOf, render
             >
               <span aria-hidden="true" className="size-[7px] rounded-full bg-game-ink md:size-2" />
               {current.length ? (
-                <>
-                  <span className="max-md:hidden">
-                    LIVE NOW · {current.length} BANNER{current.length > 1 ? "S" : ""}
-                  </span>
-                  <span className="md:hidden">LIVE NOW{latest ? ` · v${latest.version} PHASE ${latest.phase}` : ""}</span>
-                </>
+                // One shared "LIVE NOW", then the desktop or the mobile ending, so the source reads as one line.
+                <span>
+                  LIVE NOW
+                  <span className="max-md:hidden">{` · ${current.length} BANNER${current.length > 1 ? "S" : ""}`}</span>
+                  {latest && <span className="md:hidden">{` · v${latest.version} PHASE ${latest.phase}`}</span>}
+                </span>
               ) : (
                 "NO BANNER LIVE"
               )}

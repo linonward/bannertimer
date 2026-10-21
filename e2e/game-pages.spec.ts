@@ -211,3 +211,25 @@ test("/zzz/3.4/ shows the estimated start as an estimate and no banners", async 
   const main = await (await request.get("/zzz/")).text();
   expect(main).toMatch(/<a [^>]*href="\/zzz\/3.4\/"/);
 });
+
+// The live label has a desktop and a mobile ending. Both sit in one h2, so the raw text must
+// still read as one line for crawlers (and as the shown ending for screen readers).
+test("the live-banner heading reads as one line in the source", async ({ request }) => {
+  const html = await (await request.get("/hsr/")).text();
+  const h2 = html.match(/<h2[^>]*id="current-banner"[^>]*>([\s\S]*?)<\/h2>/)?.[1] ?? "";
+  expect(h2.replace(/<[^>]+>/g, "")).toBe("LIVE NOW · 2 BANNERS · v4.6 PHASE 1");
+});
+
+test("every page has Open Graph tags and a share image", async ({ request }) => {
+  for (const path of ["/", "/hsr/", "/zzz/3.3/"]) {
+    const html = await (await request.get(path)).text();
+    expect(html, path).toContain(`<meta property="og:url" content="https://bannertimer.com${path}"/>`);
+    expect(html, path).toMatch(/<meta property="og:title" content="[^"]+"\/>/);
+    const image = html.match(/<meta property="og:image" content="([^"]+)"\/>/)?.[1] ?? "";
+    expect(image, path).toMatch(/^https:\/\/bannertimer\.com\//);
+    const res = await request.get(new URL(image).pathname + new URL(image).search);
+    expect(res.headers()["content-type"]).toBe("image/png");
+    expect(html, path).toContain(`<meta name="twitter:card" content="summary_large_image"/>`);
+    expect(html, path).toContain(`<meta name="twitter:image" content="${image}"/>`);
+  }
+});

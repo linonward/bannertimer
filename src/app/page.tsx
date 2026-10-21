@@ -3,14 +3,18 @@ import { HomeBoard } from "@/components/home-board";
 import { SiteFooter } from "@/components/site-footer";
 import { bannersOf, versionsOf } from "@/lib/banners";
 import { BUILD_TIME } from "@/lib/build-time";
-import { GAMES, SITE_NAME } from "@/lib/games";
+import { GAMES, SHARE_IMAGE, SITE_NAME } from "@/lib/games";
 
 // The hub (docs/product.md §3): a quick view of each game's current banner. It targets no
 // keyword, so it never competes with the game pages.
+const title = `${SITE_NAME} — Live Gacha Banner Timers`;
+const description = "Current and next banners for HoYoverse gacha games, each with its own live countdown page.";
+
 export const metadata: Metadata = {
-  title: { absolute: `${SITE_NAME} — Live Gacha Banner Timers` },
-  description: "Current and next banners for HoYoverse gacha games, each with its own live countdown page.",
+  title: { absolute: title },
+  description,
   alternates: { canonical: "/" },
+  openGraph: { title, description, url: "/", images: [SHARE_IMAGE] },
 };
 
 const SLASHES = ["bg-hsr", "bg-hsr/33", "bg-hsr/33", "bg-zzz", "bg-zzz/33", "bg-zzz/33", "bg-genshin", "bg-genshin/33", "bg-genshin/33"];

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { phaseWindows, versionsOf, type Phase, type VersionRecord } from "@/lib/banners";
 import { BUILD_TIME } from "@/lib/build-time";
-import { GAMES, getGame, SITE_URL } from "@/lib/games";
+import { GAMES, getGame, SHARE_IMAGE, SITE_URL } from "@/lib/games";
 import { DEFAULT_SERVER, formatServerDay, instant } from "@/lib/time";
 import { formatTimePoint, versionAnswer, versionH1, versionTitle } from "@/lib/version-page";
 import { BannerLine } from "./banner-line";
@@ -300,6 +300,6 @@ export function versionMetadata(gameId: string, version: string): Metadata {
     title: { absolute: title },
     description,
     alternates: { canonical: url },
-    openGraph: { title, description, url },
+    openGraph: { title, description, url, images: [SHARE_IMAGE] },
   };
 }

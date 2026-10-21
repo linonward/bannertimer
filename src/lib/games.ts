@@ -68,3 +68,12 @@ export function getGame(id: string): Game {
 
 export const SITE_URL = "https://bannertimer.com";
 export const SITE_NAME = "Bannertimer";
+
+// One brand card for link previews (public/og.png), on every page. It shows no banner data,
+// so it never goes stale. Each page's openGraph replaces the parent's, so every page sets it.
+export const SHARE_IMAGE = {
+  url: "/og.png",
+  width: 1200,
+  height: 630,
+  alt: "bannertimer: live gacha banner countdowns for Star Rail, Zenless Zone Zero and Genshin Impact",
+};
