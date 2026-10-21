@@ -17,7 +17,7 @@ Instructions for AI coding agents working in this repository.
 
 ## Workflow
 
-Slice → branch (never commit to `main`) → TDD → verify → rebase → PR → `gh pr merge --squash --auto` → clean up and sync `main`. One slice is end-to-end, ships on its own, and leaves `main` working.
+Follow [`docs/workflow.md`](docs/workflow.md): slice → worktree `../bannertimer-<topic>` (never commit to `main`) → design file (when a template is added or changed) → TDD → verify → rebase → PR → `gh pr merge --squash --auto` → clean up and sync `main`. One slice is end-to-end, ships on its own, and leaves `main` working.
 
 ## Project status
 
