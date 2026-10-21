@@ -84,9 +84,9 @@ test.describe("/vi/hsr/ server HTML", () => {
     expect(html).not.toMatch(/"@type":"(Event|SpecialAnnouncement)"/);
   });
 
-  test("links archive rows to the English version pages and shows no other game's banners", () => {
+  test("links archive rows to the English version pages, other games in Vietnamese, and shows no other game's banners", () => {
     expect(html).toMatch(/<a [^>]*href="\/hsr\/4.5\/"/);
-    expect(html).toMatch(/<a [^>]*href="\/zzz\/"/);
+    expect(html).toMatch(/<a [^>]*href="\/vi\/zzz\/"/);
     expect(html).not.toContain("Into the Flames of Life");
   });
 
@@ -144,6 +144,67 @@ test.describe("/pt-br/hsr/ server HTML", () => {
   });
 });
 
+// §6.1, §6.2: zzz and genshin reuse the /hsr/ answer paragraph and FAQ with their own name.
+const OTHER_PAGES = [
+  {
+    path: "/vi/zzz/",
+    lang: "vi",
+    title: "Đếm Ngược Banner ZZZ &amp; Banner Tiếp Theo — Lịch Trực Tiếp",
+    h1: "Đếm Ngược Banner ZZZ &amp; Lịch Banner",
+    faq: "Banner tiếp theo của ZZZ là gì?",
+    phrases: ["banner tiếp theo", "lịch banner", "banner sắp tới", "đếm ngược banner"],
+  },
+  {
+    path: "/pt-br/zzz/",
+    lang: "pt-BR",
+    title: "Contagem de Banners do ZZZ &amp; Próximo Banner — Ao Vivo",
+    h1: "Contagem Regressiva de Banners do ZZZ &amp; Cronograma",
+    faq: "Qual é o próximo banner do ZZZ?",
+    phrases: ["próximo banner", "cronograma de banners", "próximos banners", "contagem regressiva"],
+  },
+  {
+    path: "/vi/genshin/",
+    lang: "vi",
+    title: "Banner Tiếp Theo Genshin &amp; Lịch Banner — Đếm Ngược",
+    h1: "Banner Tiếp Theo Genshin — Đếm Ngược Trực Tiếp",
+    faq: "Banner tiếp theo của Genshin là gì?",
+    phrases: ["banner tiếp theo", "lịch banner", "banner sắp tới", "đếm ngược banner"],
+  },
+  {
+    path: "/pt-br/genshin/",
+    lang: "pt-BR",
+    title: "Próximo Banner do Genshin &amp; Cronograma — Contagem ao Vivo",
+    h1: "Próximo Banner do Genshin — Contagem ao Vivo",
+    faq: "Qual é o próximo banner do Genshin?",
+    phrases: ["próximo banner", "cronograma de banners", "próximos banners", "contagem regressiva"],
+  },
+];
+
+for (const p of OTHER_PAGES) {
+  test(`${p.path} is translated, with its own canonical and hreflang`, async ({ request }) => {
+    const res = await request.get(p.path);
+    expect(res.ok()).toBe(true);
+    const html = await res.text();
+    const game = p.path.split("/")[2];
+    expect(html).toMatch(new RegExp(`<html lang="${p.lang}"`));
+    expect(html).toContain(`<title>${p.title}</title>`);
+    expect(html).toMatch(new RegExp(`<h1[^>]*>${p.h1}</h1>`));
+    expect(html.match(/<link rel="canonical"[^>]*>/g)).toEqual([`<link rel="canonical" href="${SITE}${p.path}"/>`]);
+    expect(alternates(html)).toEqual({
+      en: `${SITE}/${game}/`,
+      vi: `${SITE}/vi/${game}/`,
+      "pt-BR": `${SITE}/pt-br/${game}/`,
+      "x-default": `${SITE}/${game}/`,
+    });
+    const answer = answerText(html).toLowerCase();
+    for (const phrase of p.phrases) expect(answer, phrase).toContain(phrase);
+    expect(html).toContain(p.faq);
+    for (const english of ["Last updated", "Upcoming ", "Filter by character", "NEXT BANNER", "Not affiliated", ">Official<"]) {
+      expect(html, english).not.toContain(english);
+    }
+  });
+}
+
 test("/hsr/ links to every language version", async ({ request }) => {
   const html = await (await request.get("/hsr/")).text();
   expect(html).toMatch(/<html lang="en"/);
@@ -151,22 +212,24 @@ test("/hsr/ links to every language version", async ({ request }) => {
 });
 
 test("pages without a language version have no hreflang", async ({ request }) => {
-  for (const path of ["/", "/zzz/", "/hsr/4.6/"]) {
+  for (const path of ["/", "/hsr/4.6/", "/zzz/3.3/"]) {
     const html = await (await request.get(path)).text();
     expect(alternates(html), path).toEqual({});
   }
 });
 
 test("a URL without a language version is a 404", async ({ request }) => {
-  for (const path of ["/vi/", "/vi/zzz/", "/vi/hsr/4.6/", "/pt-br/", "/pt-br/zzz/", "/pt-br/hsr/4.6/", "/pt-BR/hsr/", "/ko/hsr/", "/en/hsr/"]) {
+  for (const path of ["/vi/", "/vi/hsr/4.6/", "/vi/zzz/3.3/", "/pt-br/", "/pt-br/hsr/4.6/", "/pt-BR/hsr/", "/ko/hsr/", "/en/hsr/"]) {
     expect((await request.get(path)).status(), path).toBe(404);
   }
 });
 
-test("the game sitemap lists the language page", async ({ request }) => {
-  const xml = await (await request.get("/hsr/sitemap.xml")).text();
-  expect(xml).toContain(`${SITE}/vi/hsr/`);
-  expect(xml).toContain(`${SITE}/pt-br/hsr/`);
+test("each game sitemap lists its language pages", async ({ request }) => {
+  for (const game of ["hsr", "zzz", "genshin"]) {
+    const xml = await (await request.get(`/${game}/sitemap.xml`)).text();
+    expect(xml).toContain(`${SITE}/vi/${game}/`);
+    expect(xml).toContain(`${SITE}/pt-br/${game}/`);
+  }
 });
 
 test("the Brazilian page starts on the America server", async ({ page }) => {
@@ -189,7 +252,7 @@ test("the Vietnamese page starts on the Asia server and keeps a saved choice", a
 
 // Two root layouts leave no shared one for unmatched URLs; global-not-found.tsx keeps the site frame.
 test("a 404 keeps the site header and is not indexed", async ({ request }) => {
-  const res = await request.get("/vi/zzz/");
+  const res = await request.get("/vi/hsr/4.6/");
   expect(res.status()).toBe(404);
   const html = await res.text();
   expect(html).toMatch(/<html lang="en"/);
@@ -200,7 +263,7 @@ test("a 404 keeps the site header and is not indexed", async ({ request }) => {
 // Three languages and the server picker don't fit one 390px row; the switch must not push the page wide.
 test("the header fits a 390px screen on every language version", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  for (const path of ["/hsr/", "/vi/hsr/", "/pt-br/hsr/"]) {
+  for (const game of ["hsr", "zzz", "genshin"]) for (const path of [`/${game}/`, `/vi/${game}/`, `/pt-br/${game}/`]) {
     await page.goto(path);
     expect(await page.evaluate(() => document.documentElement.scrollWidth), path).toBeLessThanOrEqual(390);
   }

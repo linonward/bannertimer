@@ -68,6 +68,22 @@ export const GAMES: Game[] = [
       "Live ZZZ banner countdown to the second. Current banner, next banner start time, upcoming banners and the full banner schedule — updated hourly.",
     h1: "ZZZ Banner Countdown & Schedule",
     linkText: "ZZZ banner countdown",
+    translations: {
+      vi: {
+        title: "Đếm Ngược Banner ZZZ & Banner Tiếp Theo — Lịch Trực Tiếp",
+        description:
+          "Đếm ngược banner ZZZ đến từng giây. Banner hiện tại, giờ mở banner tiếp theo, các banner sắp tới và lịch banner đầy đủ — cập nhật mỗi giờ.",
+        h1: "Đếm Ngược Banner ZZZ & Lịch Banner",
+        linkText: "Đếm ngược banner ZZZ",
+      },
+      "pt-br": {
+        title: "Contagem de Banners do ZZZ & Próximo Banner — Ao Vivo",
+        description:
+          "Contagem regressiva de banners do ZZZ ao segundo. Banner atual, início do próximo banner, próximos banners e cronograma completo — atualizado a cada hora.",
+        h1: "Contagem Regressiva de Banners do ZZZ & Cronograma",
+        linkText: "Contagem de banners do ZZZ",
+      },
+    },
   },
   {
     id: "genshin",
@@ -81,6 +97,22 @@ export const GAMES: Game[] = [
       "Genshin next banner with a live countdown. Current banner, next banner start time, upcoming banners and the full banner schedule — updated hourly.",
     h1: "Genshin Next Banner & Countdown",
     linkText: "Genshin next banner",
+    translations: {
+      vi: {
+        title: "Banner Tiếp Theo Genshin & Lịch Banner — Đếm Ngược",
+        description:
+          "Banner tiếp theo Genshin với đồng hồ đếm ngược trực tiếp. Banner hiện tại, giờ mở banner tiếp theo, các banner sắp tới và lịch banner — cập nhật mỗi giờ.",
+        h1: "Banner Tiếp Theo Genshin — Đếm Ngược Trực Tiếp",
+        linkText: "Banner tiếp theo Genshin",
+      },
+      "pt-br": {
+        title: "Próximo Banner do Genshin & Cronograma — Contagem ao Vivo",
+        description:
+          "Próximo banner do Genshin com contagem ao vivo. Banner atual, início do próximo banner, próximos banners e cronograma completo — atualizado a cada hora.",
+        h1: "Próximo Banner do Genshin — Contagem ao Vivo",
+        linkText: "Próximo banner do Genshin",
+      },
+    },
   },
 ];
 

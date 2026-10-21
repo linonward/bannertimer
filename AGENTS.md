@@ -21,7 +21,7 @@ Follow [`docs/workflow.md`](docs/workflow.md): slice → worktree `../bannertime
 
 ## Project status
 
-M2 in progress (2026-10-21): `/`, `/hsr/`, `/zzz/`, `/genshin/` and the version pages `/{game}/{version}/` on official banner data (HSR 4.4–4.6, ZZZ 3.1–3.3, Genshin 6.8–7.1). M3 started (2026-10-22): `/vi/hsr/` and `/pt-br/hsr/` (`docs/product.md` §3.1). The product is a gacha banner countdown and schedule site on `bannertimer.com`, specified in `docs/product.md`.
+M2 in progress (2026-10-21): `/`, `/hsr/`, `/zzz/`, `/genshin/` and the version pages `/{game}/{version}/` on official banner data (HSR 4.4–4.6, ZZZ 3.1–3.3, Genshin 6.8–7.1). M3 (2026-10-22): `/vi/` and `/pt-br/` versions of `/hsr/`, `/zzz/` and `/genshin/` (`docs/product.md` §3.1). The product is a gacha banner countdown and schedule site on `bannertimer.com`, specified in `docs/product.md`.
 
 Planned stack, same as the sibling `coloring-pages` repo: Next.js 16 (App Router, `src/`, TypeScript, Tailwind 4, pnpm), deployed as a Cloudflare Worker with `@opennextjs/cloudflare`. Banner data lives in JSON files in the repo. No database and no sign-in. Ask before adding either.
 

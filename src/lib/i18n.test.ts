@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { GAMES, getGame } from "./games";
-import { defaultServer, gamePath, htmlLang, LANGS, languageAlternates, pageCopy } from "./i18n";
+import { defaultServer, gameLangs, gamePath, htmlLang, LANGS, languageAlternates, pageCopy } from "./i18n";
 
 describe("language pages (docs/product.md §3.1)", () => {
   it("keeps English at the root and puts other languages in a subdirectory", () => {
@@ -22,8 +22,12 @@ describe("language pages (docs/product.md §3.1)", () => {
     expect(htmlLang("pt-br")).toBe("pt-BR");
   });
 
+  it("has every game page in every M3 language", () => {
+    for (const game of GAMES) expect(gameLangs(game), game.id).toEqual(["en", "vi", "pt-br"]);
+  });
+
   it("gives no alternates to a game page without a language version", () => {
-    expect(languageAlternates(getGame("zzz"))).toBeUndefined();
+    expect(languageAlternates({ ...getGame("zzz"), translations: undefined })).toBeUndefined();
   });
 
   it("starts Vietnamese pages on the Asia server, Brazilian and English pages on America", () => {
