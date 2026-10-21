@@ -72,7 +72,7 @@ jobs:
             test-results/
           retention-days: 7
 
-  # Cloudflare Workers Builds deploys the `production` branch (docs/workflow.md).
+  # Cloudflare Workers Builds deploys the `production` branch (docs/workflow.md §8).
   # Move it to this commit only after `main` passes, so a broken `main` never goes live.
   # A plain push is fast-forward only: an older commit can't replace a newer one.
   promote:

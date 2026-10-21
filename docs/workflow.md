@@ -117,3 +117,35 @@ git worktree prune
 ```
 
 Run `git branch -D` only after the PR shows as merged (`gh pr view <PR> --json state`).
+
+## 8. Deploy
+
+Cloudflare Workers Builds builds and deploys the `production` branch. CI moves `production` to each green `main` commit (§6); never push it by hand.
+
+- `wrangler.jsonc` serves the Worker on `bannertimer.com` and `www.bannertimer.com` only (custom domains; no `workers.dev`, no preview URLs). `worker.ts` redirects www to the apex before the app runs (`src/lib/canonical-host.ts`).
+- Every hour, at minute 5, the Worker's Cron Trigger posts to a Workers Builds deploy hook (`src/lib/rebuild.ts`). The rebuild refreshes the prerendered "current banner" (`docs/product.md` §14 item 2). Without the `DEPLOY_HOOK_URL` secret the cron run does nothing.
+- `.node-version` pins Node 24 for Workers Builds, the same as CI.
+
+### One-time setup (Cloudflare dashboard, done by the owner)
+
+1. **Workers & Pages → Create → Import a repository**: pick `linonward/bannertimer`. The Worker name must stay `bannertimer` (`wrangler.jsonc`).
+2. **Build settings**:
+   - Production branch: `production`
+   - Build command: `pnpm exec opennextjs-cloudflare build`
+   - Deploy command: `pnpm exec opennextjs-cloudflare deploy`
+   - Non-production branch builds: off
+   - Do not set `BANNERTIMER_NOW`; it is for tests only.
+3. Run the first build (or wait for the next `promote`). Check the build log for the Node and pnpm versions. The custom domains attach on the first deploy.
+4. **Settings → Builds → Deploy Hooks**: create a hook named `hourly` for the `production` branch and copy its URL.
+5. Store the URL as a Worker secret. The URL is a credential: anyone who has it can start builds.
+
+   ```sh
+   pnpm exec wrangler secret put DEPLOY_HOOK_URL
+   ```
+
+6. **Google Search Console**: add a Domain property for `bannertimer.com` and verify it with the DNS TXT record (in Cloudflare DNS). Submit `https://bannertimer.com/sitemap.xml`, plus `/hsr/`, `/zzz/` and `/genshin/` `sitemap.xml` (`robots.txt` lists them all).
+
+### Check a deploy
+
+- **Workers & Pages → bannertimer → Deployments** lists each deploy; hook builds show `deploy_hook` as the trigger.
+- **Logs** show `Hourly rebuild: triggered` once an hour (`skipped` means the secret is missing).

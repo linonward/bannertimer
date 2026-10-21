@@ -1,12 +1,25 @@
 // Cloudflare Worker built by @opennextjs/cloudflare: Next.js runs in the Worker, and static
-// files (including the prerendered pages) are Workers static assets.
+// files (including the prerendered pages) are Workers static assets. Cloudflare Workers Builds
+// deploys the `production` branch (docs/workflow.md §8).
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "bannertimer",
-  "main": ".open-next/worker.js",
+  // worker.ts wraps .open-next/worker.js and adds the hourly rebuild.
+  "main": "worker.ts",
   "compatibility_date": "2026-10-19",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "assets": { "directory": ".open-next/assets", "binding": "ASSETS" },
   "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "bannertimer" }],
-  "observability": { "enabled": true }
+  // Only bannertimer.com serves the site; www redirects to it (next.config.ts). No workers.dev
+  // or preview copies, so search engines see one URL per page.
+  "routes": [
+    { "pattern": "bannertimer.com", "custom_domain": true },
+    { "pattern": "www.bannertimer.com", "custom_domain": true },
+  ],
+  "workers_dev": false,
+  "preview_urls": false,
+  // Rebuild every hour (docs/product.md §14 item 2): at minute 5, after on-the-hour banner changes.
+  // The deploy hook URL is the DEPLOY_HOOK_URL secret.
+  "triggers": { "crons": ["5 * * * *"] },
+  "observability": { "enabled": true },
 }
