@@ -16,7 +16,7 @@
 |---|---|---|
 | **M1（第 1 周）** | `/hsr/` + `/zzz/` 主表页、六模块全、en 单语、sitemap、SSR | 上线即可被索引，首屏答案段在 HTML 源码里可见 |
 | **M2（第 2 周）** | `/genshin/`、版本页自动生成器、`/zzz/3.4/` 上线 | `{game}/{version}` 可由数据自动产出，零手工 |
-| **M3（第 3 周）** | vi / pt-BR / ko 三语言 + hreflang 互链 | 四语言 hreflang 完整、各自 canonical 指向自身 |
+| **M3（第 3 周）** | `/vi/`、`/pt-br/` 两语言的三个主表页 + hreflang 互链（见 §3.1）；ko 延后 | en / vi / pt-BR 三语言 hreflang 完整、各自 canonical 指向自身 |
 | **M4（第 4 周起）** | `/maintenance`、`/livestream`、GSC 埋点校准 | 上线两周用 §11 指标验收 |
 
 **M1 只做两个站的原因**：`/hsr/` 的 `hsr banner schedule` KD **11.4** 是全部候选里最低的，`/zzz/` 的 `zzz banner countdown` KD **14.6** 次之，两个词的门槛都约 **20 个引用域**。先拿下最低门槛的词，验证模板成立，再复制到原神（KD 28.5~33.9）。
@@ -46,6 +46,51 @@
 - **URL 里不带年份**（不要 `/hsr-4.6-banners-2026`），否则每 42 天报废一批。
 - 首页 `/` 只做「三款当前卡池速览」的枢纽，**不争任何词**，防止和 `/hsr/` 自相竞争。
 - 语言用子目录 `/vi/`、`/pt-br/`、`/ko/`，不用子域、不用参数。
+
+### 3.1 语言版本（M3）
+
+2026-10-22 定，见 §14 第 12 条。
+
+**页面范围**
+
+| URL | 语言 | 文案 |
+|---|---|---|
+| `/vi/hsr/`、`/vi/zzz/`、`/vi/genshin/` | vi | §6、§6.1、§6.2 的 VI |
+| `/pt-br/hsr/`、`/pt-br/zzz/`、`/pt-br/genshin/` | pt-BR | §6、§6.1、§6.2 的 PT-BR |
+
+- 只做三个主表页。首页 `/`、版本页 `/{game}/{version}/`、M4 的维护页与直播页只有英文。
+- 英文页留在根路径，不加 `/en/`。
+- ko 延后：要等「픽업」与「배너」的实测搜索量（§6），还要给角色名加韩文译名字段。两项都到位后另开切片。
+- 没有语言版本的 URL 返回 404，例如 `/vi/`、`/vi/hsr/4.6/`。
+
+**hreflang 与 canonical**
+
+- 每个主表页的 `<head>` 列出同一游戏的三个语言版本，含自身：`en`、`vi`、`pt-BR`，再加 `x-default` 指向英文页。
+- 互链必须双向。`/hsr/` 指向 `/vi/hsr/`，`/vi/hsr/` 也必须指回 `/hsr/`。
+- canonical 指向页面自身，不指向英文页。
+- 首页与版本页不输出 hreflang，因为没有对应的语言页。
+- `<html lang>` 与页面语言一致：`en`、`vi`、`pt-BR`。
+- 语言页列入本游戏的 sitemap（如 `/hsr/sitemap.xml`），`lastmod` 规则同 §7。
+
+**翻译范围**
+
+- 整页翻译：Title、Meta、H1、答案段、FAQ，以及表头、按钮、状态标签、时区说明等全部界面文字。
+- 数据里的名字不翻译：角色名、卡池名、`versionName` 照 §4 数据原样显示（英文）。
+- 日期、时间、数字按页面语言格式化。
+- 结构化数据用页面语言：`FAQPage` 的问答、`BreadcrumbList` 的名称。
+
+**页面行为**
+
+- 默认服务器按语言定：vi 默认亚服，pt-BR 默认美服，en 默认美服。用户切换过服务器时，以浏览器里存的选择为准（§4）。
+- 页头导航与 §5 模块 6 的底部互链，指向同一语言的另两款主表页。
+- 归档表、时间轴里的版本号链接指向英文版本页。
+- 页头加语言切换，只在主表页显示，链到同一游戏的另两个语言版本。语言切换是新组件，按 `docs/workflow.md` §3 在同一 PR 里更新设计文件的 Components。
+
+**交付顺序**
+
+1. 语言路由、`<html lang>`、hreflang、canonical、sitemap，先上 `/vi/hsr/`。
+2. `/pt-br/hsr/`。
+3. 两语言的 `/zzz/`、`/genshin/`。
 
 ## 4. 数据模型（唯一数据源）
 
@@ -92,7 +137,7 @@
   - `{ "utc": "…Z" }`：全球同一时刻，如版本维护结束后的上半池开池。
   - `{ "serverLocal": "…" }`：每个服务器在各自本地时间的这一刻，如下半池 18:00 开池。不带时区后缀。
 - 服务器时区固定、无夏令时：美服 UTC-5、欧服 UTC+1、亚服 UTC+8（港澳台服同亚服）。
-- 展示层把时间换算为用户本地时区，并显示所选服务器的时间。默认服务器是美服（M1 只做 en，目标市场是美国）；用户可切换，选择存在浏览器本地。
+- 展示层把时间换算为用户本地时区，并显示所选服务器的时间。默认服务器是美服（M1 只做 en，目标市场是美国）；语言页的默认服务器见 §3.1；用户可切换，选择存在浏览器本地。
 - `status` 只有两个值：`official`（官方已确认）、`leaked`（爆料未确认）。**不允许出现第三种或空值。**
 - `leaked` 必须带 `sourceUrl` + `sourceCheckedAt`，页面上灰底显示。
 - `sourceCheckedAt` 是数据可信度的证据，**每次人工核对都要更新**。
@@ -145,6 +190,8 @@ H1 正下方 60~120 词纯文本，**服务端渲染进首轮 HTML**，倒计时
 
 ## 6. TDK / H1 / 首屏文案（四语言）
 
+VI、PT-BR 文案在 M3 用（§3.1）。KO 延后，下面的 KO 稿未定稿。
+
 ### `/hsr/`（主词 hsr banner schedule + 副 hsr next banner）
 
 **EN**
@@ -161,19 +208,33 @@ H1 正下方 60~120 词纯文本，**服务端渲染进首轮 HTML**，倒计时
 
 **VI**
 
-- Title：`Lịch Banner HSR & Banner Tiếp Theo — Đếm Ngược Trực Tiếp`
+- Title（56 字符）：`Lịch Banner HSR & Banner Tiếp Theo — Đếm Ngược Trực Tiếp`
+- Meta（156 字符）：`Lịch banner HSR trực tiếp với đồng hồ đếm ngược theo giây. Banner hiện tại, giờ mở banner tiếp theo, các banner sắp tới và lịch sử rerun — cập nhật mỗi giờ.`
 - H1：`Lịch Banner HSR — Đếm Ngược Trực Tiếp`
-- 首屏：
+- 小字：`Cập nhật lần cuối {date} · Giờ hiển thị theo múi giờ của bạn`
+- 站内链接文字：`Lịch banner HSR`
+- 首屏（2026-10-22 补全，与 EN 同结构）：
 
-> Banner hiện tại của HSR là **{CURRENT_BANNER}**, còn **{DD:HH:MM:SS}**. Banner tiếp theo, **{NEXT_BANNER}**, mở ngày **{DATE}** — **{CONFIRMATION_LABEL}**. Dưới đây là lịch banner đầy đủ cho từng phase của phiên bản **{VERSION}**, cùng các banner sắp tới của **{NEXT_VERSION}**.
+> Banner hiện tại của HSR là **{CURRENT_BANNER}**, kết thúc sau **{DD:HH:MM:SS}**. Banner tiếp theo, **{NEXT_BANNER}**, mở vào **{DATE}** — **{CONFIRMATION_LABEL}**. Dưới đây là lịch banner HSR đầy đủ cho từng phase của phiên bản **{VERSION}**, cùng các banner sắp tới của **{NEXT_VERSION}**. Đồng hồ đếm ngược banner ở đầu trang cập nhật từng giây theo giờ địa phương của bạn. Các lần rerun, đội hình 4★ và ngày của các phase trước nằm ở phía dưới.
+
+- 下一个版本没有数据时：`cùng các banner sắp tới ngay khi phiên bản tiếp theo được công bố`。
+- 一期多个池时第一句：`Các banner hiện tại của HSR là {A} và {B}; banner đầu tiên kết thúc sau {DD:HH:MM:SS}.`
+- 四种说法的对应词：`banner tiếp theo`、`lịch banner`、`banner sắp tới`、`đếm ngược banner`。
 
 **PT-BR**
 
-- Title：`Cronograma de Banners do HSR & Próximo Banner — Ao Vivo`
+- Title（55 字符）：`Cronograma de Banners do HSR & Próximo Banner — Ao Vivo`
+- Meta（153 字符）：`Cronograma de banners do HSR ao vivo com contagem regressiva. Banner atual, início do próximo banner, próximos banners e reruns — atualizado a cada hora.`
 - H1：`Cronograma de Banners do HSR — Contagem ao Vivo`
-- 首屏：
+- 小字：`Atualizado em {date} · Horários no seu fuso horário`
+- 站内链接文字：`Cronograma de banners do HSR`
+- 首屏（2026-10-22 补全，与 EN 同结构）：
 
-> O banner atual do HSR é **{CURRENT_BANNER}** e termina em **{DD:HH:MM:SS}**. O próximo banner, **{NEXT_BANNER}**, começa em **{DATE}** — **{CONFIRMATION_LABEL}**. Abaixo está o cronograma completo de banners de cada fase da versão **{VERSION}**.
+> O banner atual do HSR é **{CURRENT_BANNER}** e termina em **{DD:HH:MM:SS}**. O próximo banner, **{NEXT_BANNER}**, começa em **{DATE}** — **{CONFIRMATION_LABEL}**. Abaixo está o cronograma de banners do HSR completo, com cada fase da versão **{VERSION}**, além dos próximos banners da **{NEXT_VERSION}**. A contagem regressiva do banner no topo da página atualiza a cada segundo no seu horário local. Reruns, a lista de 4★ e as datas das fases anteriores estão mais abaixo.
+
+- 下一个版本没有数据时：`além dos próximos banners assim que a próxima versão for anunciada`。
+- 一期多个池时第一句：`Os banners atuais do HSR são {A} e {B}; o primeiro termina em {DD:HH:MM:SS}.`
+- 四种说法的对应词：`próximo banner`、`cronograma de banners`、`próximos banners`、`contagem regressiva`。
 
 **KO**
 
@@ -194,7 +255,25 @@ H1 正下方 60~120 词纯文本，**服务端渲染进首轮 HTML**，倒计时
 | What time do banners change? | {TIME} server time ({TZ})，换算你本地是 {LOCAL_EQUIV} |
 | Is {CHARACTER} getting a rerun? | {答案} · 来源 {sourceUrl}（{date}） |
 
-**韩语待验证**：韩国玩家口语常用「픽업」而不只是「배너」。M3 上线前先测两个词的量再定标题用词，不要直接照英文直译。
+FAQ 问题的 VI / PT-BR 版（答案骨架同上，用页面语言写）：
+
+| EN | VI | PT-BR |
+|---|---|---|
+| What is the next HSR banner? | Banner tiếp theo của HSR là gì? | Qual é o próximo banner do HSR? |
+| When does the current banner end? | Khi nào banner hiện tại kết thúc? | Quando termina o banner atual? |
+| What time do banners change? | Banner đổi lúc mấy giờ? | Que horas os banners mudam? |
+| Is {CHARACTER} getting a rerun? | {CHARACTER} có được rerun không? | {CHARACTER} vai ganhar rerun? |
+
+状态标签的 VI / PT-BR 版（颜色规则同 §5 模块 2、§4 `estimate`）：
+
+| EN | VI | PT-BR |
+|---|---|---|
+| Official | Chính thức | Oficial |
+| Leaked — unconfirmed | Rò rỉ — chưa xác nhận | Vazamento — não confirmado |
+| Estimate — not announced | Ước tính — chưa công bố | Estimativa — não anunciada |
+| Not announced yet | Chưa công bố | Ainda não anunciado |
+
+**韩语待验证**：韩国玩家口语常用「픽업」而不只是「배너」。ko 上线前先测两个词的量再定标题用词，不要直接照英文直译。ko 因此从 M3 延后（§3.1）。
 
 ### 6.1 `/zzz/`（主词 zzz banner countdown + 同页 next / upcoming / schedule / current）
 
@@ -209,6 +288,22 @@ H1 正下方 60~120 词纯文本，**服务端渲染进首轮 HTML**，倒计时
 
 FAQ 同 `/hsr/`，把 HSR 换成 ZZZ。
 
+**VI**（2026-10-22）
+
+- Title（56 字符）：`Đếm Ngược Banner ZZZ & Banner Tiếp Theo — Lịch Trực Tiếp`
+- Meta（138 字符）：`Đếm ngược banner ZZZ đến từng giây. Banner hiện tại, giờ mở banner tiếp theo, các banner sắp tới và lịch banner đầy đủ — cập nhật mỗi giờ.`
+- H1：`Đếm Ngược Banner ZZZ & Lịch Banner`
+- 站内链接文字：`Đếm ngược banner ZZZ`
+- 首屏答案段与 FAQ 同 `/hsr/` 的 VI，把 HSR 换成 ZZZ。
+
+**PT-BR**（2026-10-22）
+
+- Title（53 字符）：`Contagem de Banners do ZZZ & Próximo Banner — Ao Vivo`
+- Meta（154 字符）：`Contagem regressiva de banners do ZZZ ao segundo. Banner atual, início do próximo banner, próximos banners e cronograma completo — atualizado a cada hora.`
+- H1：`Contagem Regressiva de Banners do ZZZ & Cronograma`
+- 站内链接文字：`Contagem de banners do ZZZ`
+- 首屏答案段与 FAQ 同 `/hsr/` 的 PT-BR，把 HSR 换成 ZZZ。
+
 ### 6.2 `/genshin/`（主词 genshin next banner + 同页 genshin banner schedule）
 
 2026-10-21 按 `/hsr/` 结构补写，只有 EN。主词月搜更高，所以 Title 与 H1 以 next banner 开头。
@@ -218,6 +313,22 @@ FAQ 同 `/hsr/`，把 HSR 换成 ZZZ。
 - H1：`Genshin Next Banner & Countdown`
 - 站内链接文字：`Genshin next banner`
 - 首屏答案段与 FAQ 同 `/hsr/`，把 HSR 换成 Genshin。
+
+**VI**（2026-10-22）
+
+- Title（50 字符）：`Banner Tiếp Theo Genshin & Lịch Banner — Đếm Ngược`
+- Meta（153 字符）：`Banner tiếp theo Genshin với đồng hồ đếm ngược trực tiếp. Banner hiện tại, giờ mở banner tiếp theo, các banner sắp tới và lịch banner — cập nhật mỗi giờ.`
+- H1：`Banner Tiếp Theo Genshin — Đếm Ngược Trực Tiếp`
+- 站内链接文字：`Banner tiếp theo Genshin`
+- 首屏答案段与 FAQ 同 `/hsr/` 的 VI，把 HSR 换成 Genshin。
+
+**PT-BR**（2026-10-22）
+
+- Title（57 字符）：`Próximo Banner do Genshin & Cronograma — Contagem ao Vivo`
+- Meta（152 字符）：`Próximo banner do Genshin com contagem ao vivo. Banner atual, início do próximo banner, próximos banners e cronograma completo — atualizado a cada hora.`
+- H1：`Próximo Banner do Genshin — Contagem ao Vivo`
+- 站内链接文字：`Próximo banner do Genshin`
+- 首屏答案段与 FAQ 同 `/hsr/` 的 PT-BR，把 HSR 换成 Genshin。
 
 ## 7. 技术实现要求
 
@@ -284,7 +395,7 @@ FAQ 同 `/hsr/`，把 HSR 换成 ZZZ。
 | 跳出率 | **< 60%** | timesaver 75%、mmoexp 65%、ldshop 61% |
 | 人均页数 | **> 2.5** | lootbar 1.4、timesaver 1.5、mmoexp 1.9 |
 | 首屏答案 | 零点击可见 | — |
-| 四语言 hreflang | 全部互通 | bannerhistory.app 靠这层起量 |
+| 多语言 hreflang | 全部互通（M3：en / vi / pt-BR；ko 上线后四语言） | bannerhistory.app 靠这层起量 |
 
 **追赶目标是 prydwen.gg 这一档**：停留 230 秒、跳出 38%、人均 3.8 页、体验分 94~100。它在 `hsr banner schedule` 上是标题命中、真正为词定制的页——**这是唯一需要正面赢的对手，其余都是靠域名权重顺路占位**（第 9 名甚至是 reddit 帖、第 4 名是 DR 0 的 4 个月新站）。
 
@@ -302,7 +413,7 @@ FAQ 同 `/hsr/`，把 HSR 换成 ZZZ。
 
 1. **「未收录」≠ 没量**：`zzz 3.4 banners`、`hsr 4.7 banners` 处在规划师真空期（每月初才放上个月数据，10-01 至今的词全查不到）。判断依据是**盘面空着**，不是搜索量。
 2. **`zzz banner countdown` 数据只到 2026-08**，「+29%」是 2026-06~08 区间，最后一格空着是没更新到，不是没量。
-3. **vi / pt-BR / ko 三组语言搜索量一次都没实测**。间接证据只有 bannerhistory.app 的地区结构（越南 14.6%、巴西 9.2%、韩国 9%、美国仅 13.2%）。所以 **M3 先做结构（hreflang + 首屏答案段），翻译内容按实测结果排先后**，不要在没测过的语言上先投翻译成本。
+3. **vi / pt-BR / ko 三组语言搜索量一次都没实测**。间接证据只有 bannerhistory.app 的地区结构（越南 14.6%、巴西 9.2%、韩国 9%、美国仅 13.2%）。所以 **M3 先做结构（hreflang + 首屏答案段），翻译内容按实测结果排先后**，不要在没测过的语言上先投翻译成本。2026-10-22 决定 vi、pt-BR 三个主表页整页翻译、ko 延后（§3.1、§14 第 12 条）。§6 VI / PT-BR 的标题用词与「四种说法」对应词是按英文意译的，没有实测；实测数据到了再按 §6 的 ko 做法核对。VI / PT-BR 文案也没有母语者审过。
 4. **`hsr 4.7 banners` 的量目前是推断，无实测**——趋势里这几个长尾词太稀疏（连月搜 3,600 的 `hsr banner schedule` 在 90 天全球趋势里都显示 0），确认要等 11 月初规划师放出 10 月数据。
 
 ## 14. 待定问题
@@ -327,6 +438,7 @@ FAQ 同 `/hsr/`，把 HSR 换成 ZZZ。
 9. **`/genshin/7.0/` 与 §12**。§12 不做 `genshin 7.0 banners`，但 7.0 已在数据里，§8 生成器会产出该页。决定：照常生成，主表照常链接；§12 禁止的是为这个词另投内容。已写入 §12。
 10. **跳出率与停留时间**。§11 要看停留时间（> 90 秒）和跳出率（< 60%），但 Cloudflare Web Analytics 不提供这两项。决定：不测这两项，不另加工具，不自建接口；两周验收看人均页数（浏览量 ÷ 访问数）与 GSC 的点击和排名。已写入 §11。
 11. **卡池公布前的版本页**。2026-10-21 当天上线的竞品 zzzcountdown.com 已用估算日期做了 `/zzz-3.4-countdown`，抢占 `zzz 3.4 countdown / release date` 的真空期；原规则「有卡池数据才生成版本页」会把这个窗口让出去。决定：§4 新增可选 `estimate`，没有卡池时也生成版本页，日期明确标为估算；`/zzz/3.4/` 按 3.3 官方结束时刻（12-02 06:00 UTC+8）加约 5 小时维护估算为 12-02 03:00 UTC。`/hsr/4.7/`（2026-10-22 定）的依据较弱：官方只公布了 4.6 卡池结束时刻（11-10 15:00 服务器时间），没有写版本结束时刻；按 HSR 惯例（次日 06:00 UTC+8 开始维护，约 5 小时）估算为 11-11 03:00 UTC，basis 里写明是惯例。已写入 §4、§8。
+12. **M3 语言版本的范围**（2026-10-22 定）。原 §2 写 vi / pt-BR / ko 三语言，但 §6 只给了 `/hsr/` 的三语文案，§13 要求先做结构、按实测排翻译，§6 又要求 ko 先测「픽업」再定标题。决定：M3 只做 vi、pt-BR 的三个主表页，整页翻译；首页与版本页只有英文；角色名与卡池名沿用数据里的英文名，不改 §4；ko 延后到实测数据与韩文译名字段都到位。已写入 §2、§3.1、§4、§6、§11、§13。
 
 ## 数据存疑的地方
 
