@@ -831,7 +831,7 @@
               "id": "PwWIP",
               "name": "Group Label",
               "fill": "$b-ink-3",
-              "content": "NAVIGATION — tabs carry a colour dot · language switch only on translated game pages · server saved in browser",
+              "content": "NAVIGATION — colour-dot tabs · languages: inline on desktop, menu beside the tabs on mobile · server saved in browser",
               "fontFamily": "$b-font-mono",
               "fontSize": 12,
               "fontWeight": "600",
@@ -1086,6 +1086,181 @@
                           "fontSize": 12,
                           "fontWeight": "600",
                           "letterSpacing": 1
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "CMikB",
+                      "name": "Lang PT-BR",
+                      "fill": "#00000000",
+                      "cornerRadius": 4,
+                      "padding": [
+                        6,
+                        8
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "WQT73",
+                          "name": "Code",
+                          "fill": "$b-ink-3",
+                          "content": "PT-BR",
+                          "fontFamily": "$b-font-mono",
+                          "fontSize": 12,
+                          "fontWeight": "normal",
+                          "letterSpacing": 1
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "ay2tQ",
+                  "name": "B/Lang Menu",
+                  "reusable": true,
+                  "fill": "$b-panel",
+                  "cornerRadius": 6,
+                  "stroke": "$b-line",
+                  "strokeWidth": 1,
+                  "gap": 4,
+                  "padding": [
+                    4,
+                    8
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "Z6u4s",
+                      "name": "Code",
+                      "fill": "$b-ink",
+                      "content": "EN",
+                      "fontFamily": "$b-font-mono",
+                      "fontSize": 11,
+                      "fontWeight": "normal",
+                      "letterSpacing": 1
+                    },
+                    {
+                      "type": "icon",
+                      "id": "GNdSM",
+                      "name": "Chevron",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "chevron-down",
+                      "library": "lucide",
+                      "fill": "$b-ink-3"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "VHRYp",
+                  "name": "Lang Menu — open (mobile)",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "alignItems": "end",
+                  "children": [
+                    {
+                      "id": "hOHhE",
+                      "type": "ref",
+                      "ref": "ay2tQ",
+                      "name": "Button",
+                      "descendants": {
+                        "Z6u4s": {
+                          "content": "PT-BR"
+                        }
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "k6Fgwg",
+                      "name": "List",
+                      "width": 92,
+                      "fill": "$b-panel",
+                      "cornerRadius": 6,
+                      "stroke": "$b-line",
+                      "strokeWidth": 1,
+                      "layout": "vertical",
+                      "gap": 2,
+                      "padding": 4,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "WW5yG",
+                          "name": "Item EN",
+                          "width": "fill_container",
+                          "fill": "#00000000",
+                          "cornerRadius": 4,
+                          "padding": [
+                            8,
+                            12
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "ZH1kw",
+                              "name": "Code",
+                              "fill": "$b-ink-3",
+                              "content": "EN",
+                              "fontFamily": "$b-font-mono",
+                              "fontSize": 12,
+                              "fontWeight": "normal",
+                              "letterSpacing": 1
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "z2mIOo",
+                          "name": "Item VI",
+                          "width": "fill_container",
+                          "fill": "#00000000",
+                          "cornerRadius": 4,
+                          "padding": [
+                            8,
+                            12
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "i7MSm",
+                              "name": "Code",
+                              "fill": "$b-ink-3",
+                              "content": "VI",
+                              "fontFamily": "$b-font-mono",
+                              "fontSize": 12,
+                              "fontWeight": "normal",
+                              "letterSpacing": 1
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "uCn1a",
+                          "name": "Item PT-BR",
+                          "width": "fill_container",
+                          "fill": "$b-panel-2",
+                          "cornerRadius": 4,
+                          "padding": [
+                            8,
+                            12
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "U8r5SV",
+                              "name": "Code",
+                              "fill": "$b-ink",
+                              "content": "PT-BR",
+                              "fontFamily": "$b-font-mono",
+                              "fontSize": 12,
+                              "fontWeight": "600",
+                              "letterSpacing": 1
+                            }
+                          ]
                         }
                       ]
                     }
@@ -4619,6 +4794,7 @@
                 0,
                 20
               ],
+              "alignItems": "center",
               "children": [
                 {
                   "id": "x5uzu",
@@ -4685,6 +4861,19 @@
                       "fontWeight": "500"
                     }
                   }
+                },
+                {
+                  "type": "frame",
+                  "id": "vwtUl",
+                  "name": "Spacer",
+                  "width": "fill_container",
+                  "height": 1
+                },
+                {
+                  "id": "iz05k",
+                  "type": "ref",
+                  "ref": "ay2tQ",
+                  "name": "Lang Menu"
                 }
               ]
             }
