@@ -64,7 +64,10 @@ Test through public interfaces. Start bug fixes with a test that reproduces the 
 - Run `pnpm build`, `pnpm lint`, `pnpm typecheck`, `pnpm test` and `pnpm test:e2e`. `pnpm test` also checks the banner data against the §4 rules.
 - Update docs in the same PR when behavior or commands change.
 - Use [Conventional Commits](https://www.conventionalcommits.org/): `feat`, `fix`, `docs`, `refactor`, `test`, `chore`, `ci`.
-- This repo has no Git hooks yet (2026-10-21). Nothing checks a commit before CI, so run the checks above yourself.
+- Git hooks (husky, installed by `pnpm install`) check each commit:
+  - pre-commit: lint-staged runs `eslint --fix --max-warnings=0` on the staged files.
+  - commit-msg: commitlint rejects messages that aren't Conventional Commits with the types above (`commitlint.config.mjs`).
+  - A new worktree gets the hooks once you run `pnpm install` in it. If `pnpm install` reports `Already up to date`, it skips `prepare`; run `pnpm run prepare` instead. Don't skip the hooks with `--no-verify`.
 
 ## 6. Pull request
 
