@@ -81,7 +81,13 @@ export function ArchiveTable({ rows }: { rows: ArchiveRow[] }) {
                 }`}
               >
                 <td className={`${cell} font-mono font-semibold text-game max-md:text-xs`}>
-                  {r.href ? <a href={r.href}>{r.version}</a> : r.version}
+                  {r.href ? (
+                    <a href={r.href} className="hover:underline">
+                      {r.version}
+                    </a>
+                  ) : (
+                    r.version
+                  )}
                 </td>
                 <td
                   className={`${cell} text-ink-2 max-md:-ml-1 max-md:font-mono max-md:text-xs max-md:font-semibold max-md:text-game`}

@@ -43,6 +43,8 @@ export function GamePage({ gameId }: { gameId: string }) {
     five: b.featured5.map((c) => c.name),
     four: b.featured4,
     rerun: b.isRerun,
+    // §5 module 4: every row links to its version page (§8).
+    href: `/${game.id}/${b.version}/`,
   }));
 
   const faq = [
@@ -146,7 +148,7 @@ export function GamePage({ gameId }: { gameId: string }) {
           title={`Upcoming ${game.shortName} banners`}
           aside={<StatusBadge status="official" />}
         >
-          <Timeline versions={upcomingVersions(versions, renderedAt, server)} now={renderedAt} />
+          <Timeline gameId={game.id} versions={upcomingVersions(versions, renderedAt, server)} now={renderedAt} />
         </Section>
 
         <Section

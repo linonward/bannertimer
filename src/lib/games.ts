@@ -9,6 +9,8 @@ export type Game = {
   /** The header tab label; `navShort` on narrow screens. */
   navName: string;
   navShort: string;
+  /** What HoYoverse calls its banner announcements for this game. */
+  notices: string;
   title: string;
   description: string;
   h1: string;
@@ -23,6 +25,7 @@ export const GAMES: Game[] = [
     name: "Honkai: Star Rail",
     navName: "Star Rail",
     navShort: "Star Rail",
+    notices: "warp notices",
     title: "HSR Banner Schedule & Next Banner — Live Countdown",
     description:
       "Live HSR banner schedule with a real-time countdown. Current banner, next banner start time, upcoming banners and full rerun history — updated hourly.",
@@ -35,6 +38,7 @@ export const GAMES: Game[] = [
     name: "Zenless Zone Zero",
     navName: "Zenless Zone Zero",
     navShort: "Zenless",
+    notices: "channel notices",
     title: "ZZZ Banner Countdown & Next Banner — Live Schedule",
     description:
       "Live ZZZ banner countdown to the second. Current banner, next banner start time, upcoming banners and the full banner schedule — updated hourly.",

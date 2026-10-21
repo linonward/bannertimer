@@ -6,7 +6,7 @@ const server = DEFAULT_SERVER;
 
 // docs/product.md §5 module 3: HTML and CSS only, never an image, so the names are indexed.
 // One column per version, one cell per phase; `now` (the build time) marks the live phase.
-export function Timeline({ versions, now }: { versions: VersionRecord[]; now: number }) {
+export function Timeline({ gameId, versions, now }: { gameId: string; versions: VersionRecord[]; now: number }) {
   const day = (ms: number) => formatServerDay(ms, server);
   return (
     <ol className="flex flex-col gap-5 md:flex-row md:gap-0 md:border-r md:border-line">
@@ -15,9 +15,13 @@ export function Timeline({ versions, now }: { versions: VersionRecord[]; now: nu
         return (
           <li key={v.version} className="flex flex-1 flex-col gap-4">
             <p className="flex items-end gap-2.5 pt-2 md:gap-3 md:px-4 md:pt-0">
-              <span className="font-display text-5xl leading-[43px] font-extrabold italic md:text-[64px] md:leading-[58px]">
+              {/* Plain <a>: <Link> drops the trailing slash when the last segment has a dot ("4.6"). */}
+              <a
+                href={`/${gameId}/${v.version}/`}
+                className="font-display text-5xl leading-[43px] font-extrabold italic hover:text-game md:text-[64px] md:leading-[58px]"
+              >
                 {v.version}
-              </span>
+              </a>
               <span className="font-mono text-xs text-ink-3">
                 {day(windows[0].start)} → {day(windows.at(-1)!.end)}
               </span>

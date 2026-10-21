@@ -39,20 +39,31 @@ export function LiveBannerRow({ banner, end }: { banner: Banner; end: string }) 
   );
 }
 
-/** B/Banner Line: one banner inside a timetable phase cell. */
-export function BannerLine({ banner, note, ended }: { banner: Banner; note?: string; ended?: boolean }) {
+/** B/Banner Line: one banner inside a timetable phase cell; size L on the version page. */
+export function BannerLine({
+  banner,
+  note,
+  ended,
+  size = "M",
+}: {
+  banner: Banner;
+  note?: string;
+  ended?: boolean;
+  size?: "M" | "L";
+}) {
+  const large = size === "L";
   return (
-    <li className="flex flex-col gap-1">
+    <li className={`flex flex-col ${large ? "gap-1.5" : "gap-1"}`}>
       <div className="flex items-center gap-2">
         <span className="font-mono text-xs font-semibold text-game">5★</span>
         <span
-          className={`min-w-0 font-display text-2xl leading-6 font-extrabold italic ${ended ? "text-ink-3" : "text-ink"}`}
+          className={`min-w-0 font-display font-extrabold italic ${large ? "text-[28px] leading-7 md:text-4xl md:leading-9" : "text-2xl leading-6"} ${ended ? "text-ink-3" : "text-ink"}`}
         >
           {fiveNames(banner)}
         </span>
         <CharacterTag isNew={isNew(banner)} />
       </div>
-      <p className="font-mono text-xs text-ink-2">{banner.bannerName}</p>
+      <p className={`font-mono text-ink-2 ${large ? "text-[13px]" : "text-xs"}`}>{banner.bannerName}</p>
       <p className={`text-[13px] text-ink-3 ${banner.featured4.length ? "" : "italic"}`}>{fourText(banner)}</p>
       {note && <p className="font-mono text-[11px] text-game">{note}</p>}
     </li>
