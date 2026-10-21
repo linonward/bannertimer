@@ -6,7 +6,18 @@ const server = DEFAULT_SERVER;
 
 // docs/product.md §5 module 3: HTML and CSS only, never an image, so the names are indexed.
 // One column per version, one cell per phase; `now` (the build time) marks the live phase.
-export function Timeline({ gameId, versions, now }: { gameId: string; versions: VersionRecord[]; now: number }) {
+export function Timeline({
+  gameId,
+  versions,
+  estimated,
+  now,
+}: {
+  gameId: string;
+  versions: VersionRecord[];
+  /** The next version when only its estimated start is known (§4 `estimate`). */
+  estimated?: VersionRecord;
+  now: number;
+}) {
   const day = (ms: number) => formatServerDay(ms, server);
   return (
     <ol className="flex flex-col gap-5 md:flex-row md:gap-0 md:border-r md:border-line">
@@ -54,9 +65,23 @@ export function Timeline({ gameId, versions, now }: { gameId: string; versions: 
         // No next version in the data yet (Components: Multi-banner cases).
         <li className="flex flex-col gap-4 md:w-[400px]">
           <p className="flex items-end gap-2.5 pt-2 md:px-4 md:pt-0">
-            <span className="font-display text-5xl leading-[43px] font-extrabold text-ink-3 italic md:text-[64px] md:leading-[58px]">
-              NEXT
-            </span>
+            {estimated?.estimate ? (
+              <>
+                <a
+                  href={`/${gameId}/${estimated.version}/`}
+                  className="font-display text-5xl leading-[43px] font-extrabold text-ink-3 italic hover:text-game md:text-[64px] md:leading-[58px]"
+                >
+                  {estimated.version}
+                </a>
+                <span className="font-mono text-xs text-ink-3">
+                  Expected {day(instant(estimated.estimate.start, server))} · estimate
+                </span>
+              </>
+            ) : (
+              <span className="font-display text-5xl leading-[43px] font-extrabold text-ink-3 italic md:text-[64px] md:leading-[58px]">
+                NEXT
+              </span>
+            )}
           </p>
           <div className="flex flex-col gap-3.5 md:border-l md:border-line md:px-4 md:pb-[18px]">
             <span aria-hidden="true" className="-mx-4 block h-1 bg-line max-md:hidden" />

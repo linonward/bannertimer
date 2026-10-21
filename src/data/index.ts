@@ -9,5 +9,6 @@ import hsr46 from "./hsr/4.6.json";
 import zzz31 from "./zzz/3.1.json";
 import zzz32 from "./zzz/3.2.json";
 import zzz33 from "./zzz/3.3.json";
+import zzz34 from "./zzz/3.4.json";
 
-export const versionFiles: unknown[] = [genshin68, genshin70, genshin71, hsr44, hsr45, hsr46, zzz31, zzz32, zzz33];
+export const versionFiles: unknown[] = [genshin68, genshin70, genshin71, hsr44, hsr45, hsr46, zzz31, zzz32, zzz33, zzz34];

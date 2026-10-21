@@ -10,7 +10,7 @@ import { BannerLine } from "./banner-line";
 import { JsonLd } from "./json-ld";
 import { Section } from "./section";
 import { SiteFooter } from "./site-footer";
-import { StatusBadge } from "./status-badge";
+import { EstimateBadge, StatusBadge } from "./status-badge";
 import { VersionCountdown } from "./version-countdown";
 
 const server = DEFAULT_SERVER;
@@ -22,9 +22,16 @@ function findVersion(gameId: string, version: string): { versions: VersionRecord
   return { versions, index };
 }
 
-const isOfficial = (v: VersionRecord) => v.phases.every((p) => p.status === "official");
+const isOfficial = (v: VersionRecord) => v.phases.length > 0 && v.phases.every((p) => p.status === "official");
+
+/** "Official", "Leaked — unconfirmed" or "Estimate": what the version's dates rest on. */
+function versionStatus(v: VersionRecord): string {
+  if (!v.phases.length) return "Estimate";
+  return isOfficial(v) ? "Official" : "Leaked — unconfirmed";
+}
 
 function versionDates(v: VersionRecord): string {
+  if (!v.phases.length) return v.estimate ? `Expected ${formatServerDay(instant(v.estimate.start, server), server)}` : "";
   const windows = phaseWindows(v, server);
   return `${formatServerDay(windows[0].start, server)} → ${formatServerDay(windows.at(-1)!.end, server)}`;
 }
@@ -46,10 +53,9 @@ export function VersionPage({ gameId, version }: { gameId: string; version: stri
   const next = versions[index + 1];
   const now = BUILD_TIME;
   const official = isOfficial(v);
-  const checked = v.phases
-    .map((p) => p.sourceCheckedAt ?? "")
-    .sort()
-    .at(-1);
+  // A version known only by its estimated start (§4): no phases yet.
+  const estimated = v.phases.length === 0;
+  const checked = [...v.phases.map((p) => p.sourceCheckedAt ?? ""), v.estimate?.sourceCheckedAt ?? ""].sort().at(-1);
   const windows = phaseWindows(v, server);
   const pageUrl = `${SITE_URL}/${game.id}/${v.version}/`;
   const others = GAMES.filter((g) => g.id !== game.id);
@@ -71,11 +77,13 @@ export function VersionPage({ gameId, version }: { gameId: string; version: stri
         <div
           className={`flex flex-wrap items-center gap-3 border-b px-5 py-3 md:px-20 ${official ? "border-ok-line bg-ok-soft" : "border-leak-line bg-leak-soft"}`}
         >
-          <StatusBadge status={official ? "official" : "leaked"} />
+          {estimated ? <EstimateBadge /> : <StatusBadge status={official ? "official" : "leaked"} />}
           <p className="text-sm text-ink-2">
-            {official
-              ? `Every banner on this page comes from the official ${game.shortName} ${game.notices}.`
-              : "Some banners on this page are leaked and unconfirmed. Each phase shows its own status."}
+            {estimated
+              ? `The ${v.version} date is projected from the official schedule. No ${v.version} banner is announced yet.`
+              : official
+                ? `Every banner on this page comes from the official ${game.shortName} ${game.notices}.`
+                : "Some banners on this page are leaked and unconfirmed. Each phase shows its own status."}
           </p>
           {checked && (
             <p className={`font-mono text-xs ${official ? "text-ok" : "text-leak"}`}>
@@ -112,8 +120,10 @@ export function VersionPage({ gameId, version }: { gameId: string; version: stri
               aria-hidden="true"
               className={`absolute top-[150px] left-[180px] flex origin-top-left -rotate-[8deg] items-center gap-2 rounded-[3px] bg-bg px-3.5 py-2 font-display text-xl font-extrabold tracking-[1px] italic outline-2 -outline-offset-1 md:top-[300px] md:left-[300px] md:text-[26px] ${official ? "text-ok outline-ok" : "text-leak outline-leak"}`}
             >
-              <span className={`size-[9px] rounded-full ${official ? "bg-ok" : "border-2 border-leak"}`} />
-              {official ? "OFFICIAL" : "LEAKED"}
+              <span
+                className={`size-[9px] rounded-full ${official ? "bg-ok" : `border-2 border-leak ${estimated ? "border-dashed" : ""}`}`}
+              />
+              {official ? "OFFICIAL" : estimated ? "ESTIMATE" : "LEAKED"}
             </span>
           </div>
           <div className="flex flex-1 flex-col gap-5 md:gap-[22px] md:pt-10">
@@ -133,6 +143,22 @@ export function VersionPage({ gameId, version }: { gameId: string; version: stri
         />
 
         <Section id="lineup" eyebrow="01 ── LINEUP" title={`${v.version} phase by phase`}>
+          {estimated && v.estimate && (
+            <div className="flex flex-col gap-3 rounded bg-leak-soft p-5 outline outline-leak-line -outline-offset-1 md:p-7">
+              <p className="font-display text-[32px] leading-8 font-extrabold text-ink-2 italic">NOT ANNOUNCED YET</p>
+              <p className="max-w-[760px] text-[15px] leading-6 text-ink-3">
+                Both {v.version} phases appear here once HoYoverse posts the {game.notices.replace(/s$/, "")} or a
+                reliable leak with a source lands. The date above is an estimate: {v.estimate.basis}
+              </p>
+              <p className="font-mono text-[11px] text-ink-3">
+                Source:{" "}
+                <a href={v.estimate.sourceUrl} rel="nofollow noopener" className="underline">
+                  {new URL(v.estimate.sourceUrl).hostname.replace(/^www\./, "")}
+                </a>{" "}
+                · checked {v.estimate.sourceCheckedAt}
+              </p>
+            </div>
+          )}
           <ol className="flex flex-col gap-5 md:flex-row">
             {v.phases.map((p, i) => {
               const w = windows[i];
@@ -198,7 +224,7 @@ export function VersionPage({ gameId, version }: { gameId: string; version: stri
                 {versionH1(game.shortName, prev.version)}
               </span>
               <span className="text-[13px] text-ink-3">
-                {versionDates(prev)} · {isOfficial(prev) ? "Official" : "Leaked — unconfirmed"}
+                {versionDates(prev)} · {versionStatus(prev)}
               </span>
             </a>
           ) : (
@@ -226,7 +252,7 @@ export function VersionPage({ gameId, version }: { gameId: string; version: stri
                 {versionH1(game.shortName, next.version)}
               </span>
               <span className="text-[13px] text-ink-3">
-                {versionDates(next)} · {isOfficial(next) ? "Official" : "Leaked — unconfirmed"}
+                {versionDates(next)} · {versionStatus(next)}
               </span>
             </a>
           ) : (
@@ -266,7 +292,9 @@ export function versionMetadata(gameId: string, version: string): Metadata {
   const { versions, index } = findVersion(game.id, version);
   const v = versions[index];
   const title = versionTitle(game.shortName, v.version);
-  const description = `Every ${game.shortName} ${v.version} banner by phase: featured 5★ and 4★ characters, start and end times in your timezone, and a live countdown.`;
+  const description = v.phases.length
+    ? `Every ${game.shortName} ${v.version} banner by phase: featured 5★ and 4★ characters, start and end times in your timezone, and a live countdown.`
+    : `${game.shortName} ${v.version} release date estimate with a live countdown. The ${v.version} banners appear here as soon as HoYoverse announces them.`;
   const url = `/${game.id}/${v.version}/`;
   return {
     title: { absolute: title },

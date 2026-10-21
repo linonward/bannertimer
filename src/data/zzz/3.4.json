@@ -1,0 +1,15 @@
+{
+  "game": "zzz",
+  "gameName": "Zenless Zone Zero",
+  "version": "3.4",
+  "phases": [],
+  "estimate": {
+    "start": {
+      "utc": "2026-12-02T03:00:00Z"
+    },
+    "basis": "Version 3.3 ends Dec 2, 06:00 (UTC+8), and version updates usually take about five hours.",
+    "sourceUrl": "https://zenless.hoyoverse.com/en-us/news/166963",
+    "sourceCheckedAt": "2026-10-21"
+  },
+  "lastUpdated": "2026-10-21T16:00:00Z"
+}

@@ -148,7 +148,12 @@ export function GamePage({ gameId }: { gameId: string }) {
           title={`Upcoming ${game.shortName} banners`}
           aside={<StatusBadge status="official" />}
         >
-          <Timeline gameId={game.id} versions={upcomingVersions(versions, renderedAt, server)} now={renderedAt} />
+          <Timeline
+            gameId={game.id}
+            versions={upcomingVersions(versions, renderedAt, server)}
+            estimated={versions.find((v) => !v.phases.length && v.estimate && instant(v.estimate.start, server) > renderedAt)}
+            now={renderedAt}
+          />
         </Section>
 
         <Section

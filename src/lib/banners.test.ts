@@ -65,6 +65,23 @@ describe("validateVersion", () => {
     ]);
   });
 
+  it("allows a version with no phases only when it carries a sourced estimate", () => {
+    const estimate = {
+      start: { utc: "2026-12-02T03:00:00Z" },
+      basis: "Version 3.3 ends Dec 2, 06:00 (UTC+8).",
+      sourceUrl: "https://x",
+      sourceCheckedAt: "2026-10-21",
+    };
+    expect(validateVersion({ ...record("1.1"), phases: [] })).toEqual(["test 1.1: no phases"]);
+    expect(validateVersion({ ...record("1.1"), phases: [], estimate })).toEqual([]);
+    expect(validateVersion({ ...record("1.1"), phases: [], estimate: { ...estimate, sourceUrl: "" } })).toEqual([
+      "test 1.1: estimate needs basis, sourceUrl and sourceCheckedAt",
+    ]);
+    expect(
+      validateVersion({ ...record("1.1"), phases: [], estimate: { ...estimate, start: { utc: "2026-12-02" } } }),
+    ).toEqual(["test 1.1: bad estimate start"]);
+  });
+
   it("rejects an empty official version name", () => {
     expect(validateVersion({ ...record("1.1"), versionName: " " })).toEqual(["test 1.1: empty versionName"]);
     expect(validateVersion({ ...record("1.1"), versionName: "Luna VIII" })).toEqual([]);

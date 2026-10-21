@@ -86,6 +86,7 @@
 - 跨两期的池（如整个版本都开的新角色池）只写在它开始的那一期，`end` 写它真正的结束时间。
 - `featured4` 可以为空数组：游戏让玩家自选 4★ 时（如 ZZZ 3.3 起的 A 级代理人），官方不给默认名单。
 - `status`、`sourceUrl`、`sourceCheckedAt` 按期记录：同一期的池来自同一条公告或爆料。
+- `estimate` 可选：官方还没公布卡池时，用来提前上线版本页。内容是估算的开始时刻 `start`、推算依据 `basis`、`sourceUrl`、`sourceCheckedAt`，四项必填；推算只能基于官方已公布的时间（如上个版本的结束时刻加约 5 小时维护）。只有带 `estimate` 的版本，`phases` 才可以为空。页面上一律标「Estimate — not announced」，灰色，不用绿色。`status` 规则不变：估算日期不是 `official`，也不是 `leaked`（2026-10-21 定，见 §14 第 11 条）。
 - `versionName` 可选：官方不给版本号、只给名称时填写（如原神 `Luna VIII`）。`version` 仍写玩家搜索用的数字（`6.8`），用于 URL 和 Title（2026-10-21 定，见 §14 第 8 条）。
 - `start` / `end` 只有两种形态（2026-10-21 定，见 §14 第 1 条）：
   - `{ "utc": "…Z" }`：全球同一时刻，如版本维护结束后的上半池开池。
@@ -238,7 +239,7 @@ FAQ 同 `/hsr/`，把 HSR 换成 ZZZ。
 - **输出**：`/{game}/{version}/` — 该版本卡池详情 + 上下版本导航 + 未上线时的倒计时
 - **Title**：`{Game} {Version} Banners — Characters, Countdown & Release Date`。`{Game}` 用简称 `Genshin` / `HSR` / `ZZZ`（2026-10-21 定，见 §14 第 4 条）
 - **互链**：每页链回主表，主表链到已上线的版本页
-- **生成范围**：`src/data` 里有记录的版本都生成页面（含 `leaked` 的下个版本，见 §9）；没有记录的版本号返回 404。主表的归档行和时间轴版本号链到对应版本页（2026-10-21 定）
+- **生成范围**：`src/data` 里有记录的版本都生成页面（含 `leaked` 的下个版本，见 §9；也含只有 `estimate` 的下个版本，倒计时到估算开始时刻，卡池区显示 Not announced yet）；没有记录的版本号返回 404。主表的归档行和时间轴版本号链到对应版本页（2026-10-21 定）
 - **H1**：`{Game} {Version} Banners`，与 Title 不同
 - **Meta**：`Every {Game} {Version} banner by phase: featured 5★ and 4★ characters, start and end times in your timezone, and a live countdown.`
 - **首屏答案段**：全部由数据生成——版本开始时刻（全球同一时刻写 UTC，按服务器本地时间写 server time），然后每期的卡池与结束时刻；同一期各池结束时刻不同时逐个写出
@@ -325,6 +326,7 @@ FAQ 同 `/hsr/`，把 HSR 换成 ZZZ。
 8. **原神没有数字的版本**。原神官方公告把 6.x 版本写成 `Luna VI`、`Luna VII`、`Luna VIII`，从 7.0 起恢复数字。玩家搜索用数字（§3、§8 的 `genshin 6.5 banners`、`genshin 6.7 banners`）。决定：`version` 写数字（`Luna VIII` 写 `6.8`），新增可选字段 `versionName` 存官方名称，页面上一起显示。已写入 §4。
 9. **`/genshin/7.0/` 与 §12**。§12 不做 `genshin 7.0 banners`，但 7.0 已在数据里，§8 生成器会产出该页。决定：照常生成，主表照常链接；§12 禁止的是为这个词另投内容。已写入 §12。
 10. **跳出率与停留时间**。§11 要看停留时间（> 90 秒）和跳出率（< 60%），但 Cloudflare Web Analytics 不提供这两项。决定：不测这两项，不另加工具，不自建接口；两周验收看人均页数（浏览量 ÷ 访问数）与 GSC 的点击和排名。已写入 §11。
+11. **卡池公布前的版本页**。2026-10-21 当天上线的竞品 zzzcountdown.com 已用估算日期做了 `/zzz-3.4-countdown`，抢占 `zzz 3.4 countdown / release date` 的真空期；原规则「有卡池数据才生成版本页」会把这个窗口让出去。决定：§4 新增可选 `estimate`，没有卡池时也生成版本页，日期明确标为估算；`/zzz/3.4/` 按 3.3 官方结束时刻（12-02 06:00 UTC+8）加约 5 小时维护估算为 12-02 03:00 UTC。已写入 §4、§8。
 
 ## 数据存疑的地方
 
