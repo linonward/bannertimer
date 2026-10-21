@@ -41,7 +41,7 @@ export function ArchiveTable({ rows, lang = "en" }: { rows: ArchiveRow[]; lang?:
   return (
     <div className="flex flex-col gap-4 md:gap-7">
       <div className="flex flex-wrap items-center gap-2.5">
-        <label className="flex flex-1 items-center gap-2 rounded-md bg-panel px-3 py-[11px] outline outline-line-strong -outline-offset-1 md:max-w-[280px] md:flex-none md:py-[9px]">
+        <label className="flex flex-1 items-center gap-2 rounded-md bg-panel px-3 py-[11px] outline outline-line-strong -outline-offset-1 md:w-[280px] md:flex-none md:py-[9px]">
           <SearchIcon className="size-[15px] shrink-0 text-ink-3" />
           <span className="sr-only">{t.filter}</span>
           <input
@@ -110,7 +110,7 @@ export function ArchiveTable({ rows, lang = "en" }: { rows: ArchiveRow[]; lang?:
                   {r.five.join(" & ")}
                 </td>
                 <td className={`${cell} text-ink-2 max-md:hidden`}>{r.four.length ? r.four.join(" · ") : "—"}</td>
-                <td className={`${cell} font-mono text-ink-2 max-md:order-1 max-md:text-xs max-md:text-ink-3`}>
+                <td className={`${cell} font-mono whitespace-nowrap text-ink-2 max-md:order-1 max-md:text-xs max-md:text-ink-3`}>
                   {r.dates}
                 </td>
                 <td className={`${cell} text-ink-2 max-md:order-2`}>

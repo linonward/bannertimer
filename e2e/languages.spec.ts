@@ -276,3 +276,29 @@ test("the mobile language menu links to the other versions", async ({ page }) =>
   await page.getByRole("link", { name: "VI", exact: true }).click();
   await expect(page).toHaveURL(/\/vi\/hsr\/$/);
 });
+
+// Longer translations must not wrap the archive dates or cut off the filter placeholder.
+test("the archive dates and filter placeholder fit on every language version", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  for (const game of ["hsr", "zzz", "genshin"]) for (const path of [`/${game}/`, `/vi/${game}/`, `/pt-br/${game}/`]) {
+    await page.goto(path);
+    await page.evaluate(() => document.fonts.ready);
+    const fit = await page.evaluate(() => {
+      const input = document.querySelector<HTMLInputElement>('input[type="search"]')!;
+      const style = getComputedStyle(input);
+      const ctx = document.createElement("canvas").getContext("2d")!;
+      ctx.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+      const wrapped = [...document.querySelectorAll("tbody tr:not(.hidden) td:nth-child(6)")].filter((td) => {
+        const range = document.createRange();
+        range.selectNodeContents(td);
+        return new Set([...range.getClientRects()].map((r) => Math.round(r.top))).size > 1;
+      });
+      return {
+        placeholder: ctx.measureText(input.placeholder).width <= input.clientWidth,
+        wrappedDates: wrapped.map((td) => td.textContent),
+      };
+    });
+    expect(fit.placeholder, `${path} placeholder`).toBe(true);
+    expect(fit.wrappedDates, `${path} dates`).toEqual([]);
+  }
+});
