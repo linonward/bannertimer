@@ -1,0 +1,42 @@
+// Per-game page copy: docs/product.md §6 (/hsr/) and §6.1 (/zzz/). Banner facts never live
+// here; they come from src/data (§4).
+export type Game = {
+  id: "hsr" | "zzz";
+  /** The name in titles and sentences (§14 item 4: short names). */
+  shortName: string;
+  title: string;
+  description: string;
+  h1: string;
+  /** Anchor text in links from other pages: the page's main keyword. */
+  linkText: string;
+};
+
+export const GAMES: Game[] = [
+  {
+    id: "hsr",
+    shortName: "HSR",
+    title: "HSR Banner Schedule & Next Banner — Live Countdown",
+    description:
+      "Live HSR banner schedule with a real-time countdown. Current banner, next banner start time, upcoming banners and full rerun history — updated hourly.",
+    h1: "HSR Banner Schedule & Countdown",
+    linkText: "HSR banner schedule",
+  },
+  {
+    id: "zzz",
+    shortName: "ZZZ",
+    title: "ZZZ Banner Countdown & Next Banner — Live Schedule",
+    description:
+      "Live ZZZ banner countdown to the second. Current banner, next banner start time, upcoming banners and the full banner schedule — updated hourly.",
+    h1: "ZZZ Banner Countdown & Schedule",
+    linkText: "ZZZ banner countdown",
+  },
+];
+
+export function getGame(id: string): Game {
+  const game = GAMES.find((g) => g.id === id);
+  if (!game) throw new Error(`Unknown game: ${id}`);
+  return game;
+}
+
+export const SITE_URL = "https://bannertimer.com";
+export const SITE_NAME = "Bannertimer";
