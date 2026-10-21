@@ -10,7 +10,7 @@ import {
   versionsOf,
 } from "@/lib/banners";
 import { BUILD_TIME } from "@/lib/build-time";
-import { GAMES, getGame, SITE_URL } from "@/lib/games";
+import { GAMES, getGame, SHARE_IMAGE, SITE_URL } from "@/lib/games";
 import { DEFAULT_SERVER, formatServerDay, formatServerTime, instant, utcOffsetLabel } from "@/lib/time";
 import { ArchiveTable, type ArchiveRow } from "./archive-table";
 import { BannerHero } from "./banner-hero";
@@ -201,6 +201,6 @@ export function gameMetadata(gameId: string) {
     title: { absolute: game.title },
     description: game.description,
     alternates: { canonical: `/${game.id}/` },
-    openGraph: { title: game.title, description: game.description, url: `/${game.id}/` },
+    openGraph: { title: game.title, description: game.description, url: `/${game.id}/`, images: [SHARE_IMAGE] },
   };
 }
