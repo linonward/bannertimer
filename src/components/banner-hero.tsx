@@ -82,18 +82,22 @@ export function BannerHero({ shortName, banners, nextVersionOf, renderedAt }: Pr
         ) : (
           <>The next banner has not been announced yet. </>
         )}
+        {/* §5 module 5: keep "banner schedule" and "upcoming banners" even before the next patch is announced. */}
+        Below is the full {shortName} banner schedule
         {current.length > 0 && (
           <>
-            Below is the full {shortName} banner schedule for every phase of patch{" "}
-            <strong>{current[0].version}</strong>
-            {nextVersion ? (
-              <>
-                , plus upcoming banners for <strong>{nextVersion}</strong>
-              </>
-            ) : null}
-            .{" "}
+            {" "}
+            for every phase of patch <strong>{current[0].version}</strong>
           </>
         )}
+        {nextVersion ? (
+          <>
+            , plus upcoming banners for <strong>{nextVersion}</strong>
+          </>
+        ) : (
+          ", plus upcoming banners as soon as the next patch is announced"
+        )}
+        .{" "}
         The banner countdown at the top of this page updates every second in your local time. Reruns, 4★ lineups and
         past phase dates are further down.
       </p>

@@ -1,0 +1,109 @@
+{
+  "game": "zzz",
+  "gameName": "Zenless Zone Zero",
+  "version": "3.1",
+  "phases": [
+    {
+      "phase": 1,
+      "banners": [
+        {
+          "bannerName": "Paradise Regained",
+          "featured5": [
+            {
+              "name": "Remielle",
+              "isNew": true
+            }
+          ],
+          "featured4": [
+            "Piper",
+            "Seth"
+          ],
+          "isRerun": false,
+          "start": {
+            "utc": "2026-07-29T03:00:00Z"
+          },
+          "end": {
+            "serverLocal": "2026-09-08T14:59:00"
+          }
+        },
+        {
+          "bannerName": "Neon Angel",
+          "featured5": [
+            {
+              "name": "Aria",
+              "isNew": false
+            }
+          ],
+          "featured4": [
+            "Piper",
+            "Seth"
+          ],
+          "isRerun": true,
+          "start": {
+            "utc": "2026-07-29T03:00:00Z"
+          },
+          "end": {
+            "serverLocal": "2026-08-19T11:59:00"
+          }
+        }
+      ],
+      "status": "official",
+      "sourceUrl": "https://zenless.hoyoverse.com/en-us/news/165363",
+      "sourceCheckedAt": "2026-10-21"
+    },
+    {
+      "phase": 2,
+      "banners": [
+        {
+          "bannerName": "'Till the Ends of the Sky",
+          "featured5": [
+            {
+              "name": "Sigrid",
+              "isNew": true
+            }
+          ],
+          "featured4": [
+            "Soukaku",
+            "Lucy"
+          ],
+          "isRerun": false,
+          "start": {
+            "serverLocal": "2026-08-19T12:00:00"
+          },
+          "end": {
+            "serverLocal": "2026-09-08T14:59:00"
+          }
+        },
+        {
+          "bannerName": "Exclusive Rescreening",
+          "featured5": [
+            {
+              "name": "Dialyn",
+              "isNew": false
+            },
+            {
+              "name": "Ukinami Yuzuha",
+              "isNew": false
+            },
+            {
+              "name": "Asaba Harumasa",
+              "isNew": false
+            }
+          ],
+          "featured4": [],
+          "isRerun": true,
+          "start": {
+            "serverLocal": "2026-08-19T12:00:00"
+          },
+          "end": {
+            "serverLocal": "2026-09-08T14:59:00"
+          }
+        }
+      ],
+      "status": "official",
+      "sourceUrl": "https://zenless.hoyoverse.com/en-us/news/165737",
+      "sourceCheckedAt": "2026-10-21"
+    }
+  ],
+  "lastUpdated": "2026-10-21T13:18:00Z"
+}
