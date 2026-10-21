@@ -28,16 +28,18 @@ export function utcOffsetLabel(server: Server): string {
   return `UTC${offset < 0 ? "-" : "+"}${Math.abs(offset)}`;
 }
 
+// Formats take an Intl locale ("vi-VN"); times are always 24-hour.
+
 /** "Nov 11, 2026": the date on the server's clock. */
-export function formatServerDate(ms: number, server: Server): string {
+export function formatServerDate(ms: number, server: Server, locale = "en-US"): string {
   const shifted = new Date(ms + SERVERS[server].offset * 3_600_000);
-  return shifted.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" });
+  return shifted.toLocaleDateString(locale, { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" });
 }
 
 /** "Nov 11, 2026, 17:59 (UTC-5)": the time on the server's clock. */
-export function formatServerTime(ms: number, server: Server): string {
+export function formatServerTime(ms: number, server: Server, locale = "en-US"): string {
   const shifted = new Date(ms + SERVERS[server].offset * 3_600_000);
-  const date = formatServerDate(ms, server);
+  const date = formatServerDate(ms, server, locale);
   const time = shifted.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "UTC" });
   return `${date}, ${time} (${utcOffsetLabel(server)})`;
 }
@@ -56,30 +58,23 @@ export function formatLocalTime(ms: number, timeZone?: string): string {
 }
 
 /** "Nov 10": the date on the server's clock, without the year. */
-export function formatServerDay(ms: number, server: Server): string {
+export function formatServerDay(ms: number, server: Server, locale = "en-US"): string {
   const shifted = new Date(ms + SERVERS[server].offset * 3_600_000);
-  return shifted.toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
+  return shifted.toLocaleDateString(locale, { month: "short", day: "numeric", timeZone: "UTC" });
 }
 
 /** "Nov 10, 15:00": the server's date and 24-hour time, without the year. */
-export function formatServerShort(ms: number, server: Server): string {
+export function formatServerShort(ms: number, server: Server, locale = "en-US"): string {
   const shifted = new Date(ms + SERVERS[server].offset * 3_600_000);
   const time = shifted.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "UTC" });
-  return `${formatServerDay(ms, server)}, ${time}`;
+  return `${formatServerDay(ms, server, locale)}, ${time}`;
 }
 
 /** "Nov 10, 12:00" in the reader's own time zone. */
-export function formatLocalShort(ms: number, timeZone?: string): string {
-  const parts = new Intl.DateTimeFormat("en-US", {
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    hourCycle: "h23",
-    timeZone,
-  }).formatToParts(ms);
-  const part = (type: string) => parts.find((p) => p.type === type)?.value;
-  return `${part("month")} ${part("day")}, ${part("hour")}:${part("minute")}`;
+export function formatLocalShort(ms: number, timeZone?: string, locale = "en-US"): string {
+  const day = new Date(ms).toLocaleDateString(locale, { month: "short", day: "numeric", timeZone });
+  const time = new Date(ms).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", timeZone });
+  return `${day}, ${time}`;
 }
 
 /** "Los Angeles · UTC-8": the reader's zone by city and offset at that moment. */

@@ -83,3 +83,9 @@ body {
     animation: none;
   }
 }
+
+/* Vietnamese stacks marks above capitals and below the line (Ế, Ợ). The display headings set a
+   line height below the font size, so the marks would collide across lines; give them room. */
+:lang(vi) :is(h1, h2).font-display {
+  line-height: 1.25;
+}

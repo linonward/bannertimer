@@ -4,7 +4,8 @@ import { useEffect, useState, useSyncExternalStore } from "react";
 import { DEFAULT_SERVER, isServer, type Server } from "./time";
 
 // The server choice is shared by the header switch and every countdown on the page, and is
-// kept in the browser (docs/product.md §4). The prerendered HTML always uses DEFAULT_SERVER.
+// kept in the browser (docs/product.md §4). Until the reader picks one, a page shows its
+// language's default server (§3.1), and the prerendered HTML always does.
 const SERVER_KEY = "bannertimer:server";
 const listeners = new Set<() => void>();
 
@@ -17,13 +18,13 @@ function subscribe(listener: () => void) {
   };
 }
 
-function readServer(): Server {
+function readServer(fallback: Server): Server {
   const saved = localStorage.getItem(SERVER_KEY);
-  return isServer(saved) ? saved : DEFAULT_SERVER;
+  return isServer(saved) ? saved : fallback;
 }
 
-export function useServer(): Server {
-  return useSyncExternalStore(subscribe, readServer, () => DEFAULT_SERVER);
+export function useServer(fallback: Server = DEFAULT_SERVER): Server {
+  return useSyncExternalStore(subscribe, () => readServer(fallback), () => fallback);
 }
 
 export function chooseServer(server: Server) {

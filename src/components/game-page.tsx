@@ -2,7 +2,6 @@ import Link from "next/link";
 import {
   bannersOf,
   bannerTitles,
-  confirmationLabel,
   lastUpdated,
   pastBanners,
   scheduleAt,
@@ -11,7 +10,9 @@ import {
 } from "@/lib/banners";
 import { BUILD_TIME } from "@/lib/build-time";
 import { GAMES, getGame, SHARE_IMAGE, SITE_URL } from "@/lib/games";
-import { DEFAULT_SERVER, formatServerDay, formatServerTime, instant, utcOffsetLabel } from "@/lib/time";
+import { defaultServer, gameLangs, gamePath, intlLocale, languageAlternates, pageCopy, type Lang } from "@/lib/i18n";
+import { messages } from "@/lib/messages";
+import { formatServerDay, formatServerTime, instant, utcOffsetLabel } from "@/lib/time";
 import { ArchiveTable, type ArchiveRow } from "./archive-table";
 import { BannerHero } from "./banner-hero";
 import { JsonLd } from "./json-ld";
@@ -21,11 +22,18 @@ import { StatusBadge } from "./status-badge";
 import { Ticker } from "./ticker";
 import { Timeline } from "./timeline";
 
-const server = DEFAULT_SERVER;
-
-/** One game's banner page (docs/product.md §5): six modules, rendered from src/data only. */
-export function GamePage({ gameId }: { gameId: string }) {
+/**
+ * One game's banner page (docs/product.md §5): six modules, rendered from src/data only. Other
+ * languages (§3.1) show the same data on their own default server, with the text translated.
+ */
+export function GamePage({ gameId, lang = "en" }: { gameId: string; lang?: Lang }) {
   const game = getGame(gameId);
+  const copy = pageCopy(game, lang)!;
+  const t = messages(lang);
+  const locale = intlLocale(lang);
+  const server = defaultServer(lang);
+  const day = (ms: number) => formatServerDay(ms, server, locale);
+  const time = (ms: number) => formatServerTime(ms, server, locale);
   const versions = versionsOf(game.id);
   const banners = bannersOf(versions);
   const renderedAt = BUILD_TIME;
@@ -39,7 +47,7 @@ export function GamePage({ gameId }: { gameId: string }) {
     version: b.version,
     phase: b.phase,
     bannerName: b.bannerName,
-    dates: `${formatServerDay(instant(b.start, server), server)} → ${formatServerDay(instant(b.end, server), server)}`,
+    dates: `${day(instant(b.start, server))} → ${day(instant(b.end, server))}`,
     five: b.featured5.map((c) => c.name),
     four: b.featured4,
     rerun: b.isRerun,
@@ -49,24 +57,33 @@ export function GamePage({ gameId }: { gameId: string }) {
 
   const faq = [
     {
-      q: `What is the next ${game.shortName} banner?`,
+      q: t.faqNext(game.shortName),
       a: next.length
-        ? `${bannerTitles(next)} ${next.length > 1 ? "start" : "starts"} ${formatServerTime(instant(next[0].start, server), server)}. Status: ${confirmationLabel(next[0].status)}.`
-        : "The next banner has not been announced yet.",
+        ? t.faqNextAnswer(
+            bannerTitles(next, t.and),
+            next.length,
+            time(instant(next[0].start, server)),
+            next[0].status === "official" ? t.official : t.leaked,
+          )
+        : t.faqNextNone,
     },
     {
-      q: "When does the current banner end?",
+      q: t.faqEnd,
       a: current.length
-        ? `${current.map((b) => `${b.bannerName} ends ${formatServerTime(instant(b.end, server), server)}`).join(". ")}. The live countdown at the top of this page shows the time left.`
-        : "No banner is live right now. The countdown at the top of this page shows when the next one starts.",
+        ? t.faqEndAnswer(current.map((b) => ({ name: b.bannerName, at: time(instant(b.end, server)) })))
+        : t.faqEndNone,
     },
     {
-      q: "What time do banners change?",
-      a: `A new version's first banner opens for every server at the same moment, when update maintenance ends. Second-half banners open at 18:00 server time: ${utcOffsetLabel("america")} on America, ${utcOffsetLabel("europe")} on Europe and ${utcOffsetLabel("asia")} on Asia. Pick your server at the top of the page to see the time in your own time zone.`,
+      q: t.faqChange,
+      a: t.faqChangeAnswer({
+        america: utcOffsetLabel("america"),
+        europe: utcOffsetLabel("europe"),
+        asia: utcOffsetLabel("asia"),
+      }),
     },
   ];
 
-  const pageUrl = `${SITE_URL}/${game.id}/`;
+  const pageUrl = `${SITE_URL}${gamePath(lang, game.id)}`;
   const others = GAMES.filter((g) => g.id !== game.id);
 
   return (
@@ -83,7 +100,7 @@ export function GamePage({ gameId }: { gameId: string }) {
           "@context": "https://schema.org",
           "@type": "BreadcrumbList",
           itemListElement: [
-            { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
+            { "@type": "ListItem", position: 1, name: t.home, item: `${SITE_URL}/` },
             { "@type": "ListItem", position: 2, name: game.name, item: pageUrl },
           ],
         }}
@@ -115,7 +132,7 @@ export function GamePage({ gameId }: { gameId: string }) {
 
           <nav aria-label="Breadcrumb" className="relative font-mono text-[11px] text-ink-3 md:text-xs">
             <Link href="/" className="hover:text-ink">
-              Home
+              {t.home}
             </Link>{" "}
             / <span>{game.name}</span>
           </nav>
@@ -125,47 +142,47 @@ export function GamePage({ gameId }: { gameId: string }) {
             banners={banners}
             nextVersionOf={nextVersionOf}
             renderedAt={renderedAt}
+            lang={lang}
             intro={
               <>
                 <h1 className="font-display text-[52px] leading-[46px] font-extrabold tracking-[-1px] uppercase italic md:text-[88px] md:leading-[77px]">
-                  {game.h1}
+                  {copy.h1}
                 </h1>
                 <p className="flex items-center gap-2.5 font-mono text-[11px] text-ink-3 md:text-xs">
                   <span aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-ok" />
-                  <span>
-                    Last updated <time dateTime={updated}>{formatUpdated(updated)}</time> · Times shown in your timezone
-                  </span>
+                  <span>{t.updated(<time dateTime={updated}>{formatUpdated(updated, locale)}</time>)}</span>
                 </p>
               </>
             }
           />
         </div>
-        <Ticker banners={banners} renderedAt={renderedAt} />
+        <Ticker banners={banners} renderedAt={renderedAt} lang={lang} />
 
         <Section
           id="schedule"
-          eyebrow="01 ── TIMETABLE"
-          title={`Upcoming ${game.shortName} banners`}
-          aside={<StatusBadge status="official" />}
+          eyebrow={t.scheduleEyebrow}
+          title={t.scheduleTitle(game.shortName)}
+          aside={<StatusBadge status="official" lang={lang} />}
         >
           <Timeline
             gameId={game.id}
             versions={upcomingVersions(versions, renderedAt, server)}
             estimated={versions.find((v) => !v.phases.length && v.estimate && instant(v.estimate.start, server) > renderedAt)}
             now={renderedAt}
+            lang={lang}
           />
         </Section>
 
         <Section
           id="archive"
-          eyebrow="02 ── ARCHIVE"
-          title={`Past ${game.shortName} banners`}
-          sub="One row per banner, newest first"
+          eyebrow={t.archiveEyebrow}
+          title={t.archiveTitle(game.shortName)}
+          sub={t.archiveSub}
         >
-          <ArchiveTable rows={archive} />
+          <ArchiveTable rows={archive} lang={lang} />
         </Section>
 
-        <Section id="faq" eyebrow="03 ── FAQ" title={`${game.shortName} banner questions`}>
+        <Section id="faq" eyebrow={t.faqEyebrow} title={t.faqTitle(game.shortName)}>
           <dl>
             {faq.map((f) => (
               <FaqItem key={f.q} {...f} />
@@ -175,13 +192,21 @@ export function GamePage({ gameId }: { gameId: string }) {
       </main>
 
       <SiteFooter
+        lang={lang}
         groups={[
-          { heading: "Other games", links: others.map((g) => ({ href: `/${g.id}/`, text: g.linkText })) },
           {
-            heading: "This game",
+            heading: t.otherGames,
+            // Same language where the other game has it (§3.1), else its English page.
+            links: others.map((g) => {
+              const l = gameLangs(g).includes(lang) ? lang : "en";
+              return { href: gamePath(l, g.id), text: pageCopy(g, l)!.linkText };
+            }),
+          },
+          {
+            heading: t.thisGame,
             links: [
-              { href: "#archive", text: `${game.shortName} banner archive` },
-              { href: "#faq", text: `${game.shortName} banner FAQ` },
+              { href: "#archive", text: t.archiveLink(game.shortName) },
+              { href: "#faq", text: t.faqLink(game.shortName) },
             ],
           },
         ]}
@@ -191,16 +216,19 @@ export function GamePage({ gameId }: { gameId: string }) {
 }
 
 /** "Oct 21, 2026" from the ISO lastUpdated. */
-function formatUpdated(iso: string): string {
-  return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" });
+function formatUpdated(iso: string, locale: string): string {
+  return new Date(iso).toLocaleDateString(locale, { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" });
 }
 
-export function gameMetadata(gameId: string) {
+export function gameMetadata(gameId: string, lang: Lang = "en") {
   const game = getGame(gameId);
+  const { title, description } = pageCopy(game, lang)!;
+  const path = gamePath(lang, game.id);
   return {
-    title: { absolute: game.title },
-    description: game.description,
-    alternates: { canonical: `/${game.id}/` },
-    openGraph: { title: game.title, description: game.description, url: `/${game.id}/`, images: [SHARE_IMAGE] },
+    title: { absolute: title },
+    description,
+    // §3.1: canonical to itself, hreflang to every language version.
+    alternates: { canonical: path, languages: languageAlternates(game) },
+    openGraph: { title, description, url: path, images: [SHARE_IMAGE] },
   };
 }

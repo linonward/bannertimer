@@ -1,24 +1,29 @@
 import { phaseWindows, type VersionRecord } from "@/lib/banners";
-import { DEFAULT_SERVER, formatServerDay, instant } from "@/lib/time";
+import { defaultServer, intlLocale, type Lang } from "@/lib/i18n";
+import { messages } from "@/lib/messages";
+import { formatServerDay, instant } from "@/lib/time";
 import { PhaseCell, type CellBanner } from "./phase-cell";
 
-const server = DEFAULT_SERVER;
-
 // docs/product.md §5 module 3: HTML and CSS only, never an image, so the names are indexed.
-// One column per version, one cell per phase; `now` (the build time) marks the live phase.
+// One column per version, one cell per phase; `now` (the build time) marks the live phase. It is
+// prerendered on the page language's default server.
 export function Timeline({
   gameId,
   versions,
   estimated,
   now,
+  lang = "en",
 }: {
   gameId: string;
   versions: VersionRecord[];
   /** The next version when only its estimated start is known (§4 `estimate`). */
   estimated?: VersionRecord;
   now: number;
+  lang?: Lang;
 }) {
-  const day = (ms: number) => formatServerDay(ms, server);
+  const t = messages(lang);
+  const server = defaultServer(lang);
+  const day = (ms: number) => formatServerDay(ms, server, intlLocale(lang));
   return (
     <ol className="flex flex-col gap-5 md:flex-row md:gap-0 md:border-r md:border-line">
       {versions.map((v) => {
@@ -43,8 +48,8 @@ export function Timeline({
                 const w = windows[i];
                 const banners: CellBanner[] = p.banners.map((banner) => {
                   const end = instant(banner.end, server);
-                  if (end <= now) return { banner, ended: true, note: `Ended ${day(end)}` };
-                  if (end > w.end) return { banner, note: `Runs into phase ${p.phase + 1} · until ${day(end)}` };
+                  if (end <= now) return { banner, ended: true, note: t.ended(day(end)) };
+                  if (end > w.end) return { banner, note: t.runsInto(p.phase + 1, day(end)) };
                   return { banner };
                 });
                 return (
@@ -54,6 +59,7 @@ export function Timeline({
                     dates={`${day(w.start)} → ${day(w.end)}`}
                     banners={banners}
                     now={w.start <= now && now < w.end}
+                    lang={lang}
                   />
                 );
               })}
@@ -74,24 +80,21 @@ export function Timeline({
                   {estimated.version}
                 </a>
                 <span className="font-mono text-xs text-ink-3">
-                  Expected {day(instant(estimated.estimate.start, server))} · estimate
+                  {t.expected(day(instant(estimated.estimate.start, server)))}
                 </span>
               </>
             ) : (
               <span className="font-display text-5xl leading-[43px] font-extrabold text-ink-3 italic md:text-[64px] md:leading-[58px]">
-                NEXT
+                {t.nextCaps}
               </span>
             )}
           </p>
           <div className="flex flex-col gap-3.5 md:border-l md:border-line md:px-4 md:pb-[18px]">
             <span aria-hidden="true" className="-mx-4 block h-1 bg-line max-md:hidden" />
             <p className="font-display text-8xl leading-[86px] font-extrabold text-line-strong italic max-md:hidden">
-              TBA
+              {t.tba}
             </p>
-            <p className="text-[13px] leading-5 text-ink-3">
-              Not announced yet. The next phases appear here when HoYoverse posts the banner notice or a reliable leak
-              with a source lands.
-            </p>
+            <p className="text-[13px] leading-5 text-ink-3">{t.timelineNoNext}</p>
           </div>
         </li>
       )}
