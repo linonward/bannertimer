@@ -831,7 +831,7 @@
               "id": "PwWIP",
               "name": "Group Label",
               "fill": "$b-ink-3",
-              "content": "NAVIGATION — game tabs carry their own colour dot · server switch is saved in the browser",
+              "content": "NAVIGATION — tabs carry a colour dot · language switch only on translated game pages · server saved in browser",
               "fontFamily": "$b-font-mono",
               "fontSize": 12,
               "fontWeight": "600",
@@ -1026,6 +1026,66 @@
                               "fontWeight": "normal"
                             }
                           ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "JdQY8",
+                  "name": "B/Lang Switch",
+                  "reusable": true,
+                  "gap": 2,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "x00HJu",
+                      "name": "Lang EN",
+                      "fill": "#00000000",
+                      "cornerRadius": 4,
+                      "padding": [
+                        6,
+                        8
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "nAjrc",
+                          "name": "Code",
+                          "fill": "$b-ink-3",
+                          "content": "EN",
+                          "fontFamily": "$b-font-mono",
+                          "fontSize": 12,
+                          "fontWeight": "normal",
+                          "letterSpacing": 1
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "taciN",
+                      "name": "Lang VI",
+                      "fill": "$b-panel-2",
+                      "cornerRadius": 4,
+                      "padding": [
+                        6,
+                        8
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "aIX1f",
+                          "name": "Code",
+                          "fill": "$b-ink",
+                          "content": "VI",
+                          "fontFamily": "$b-font-mono",
+                          "fontSize": 12,
+                          "fontWeight": "600",
+                          "letterSpacing": 1
                         }
                       ]
                     }
@@ -8435,7 +8495,8 @@
                           "fill": "$b-ink-2",
                           "content": "An Ocean in a Pearl · Now I Am Become Blade",
                           "fontFamily": "$b-font-body",
-                          "fontSize": 13
+                          "fontSize": 13,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -8725,7 +8786,8 @@
                           "fill": "$b-ink-2",
                           "content": "Into the Flames of Life · Graceful Gale",
                           "fontFamily": "$b-font-body",
-                          "fontSize": 13
+                          "fontSize": 13,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
