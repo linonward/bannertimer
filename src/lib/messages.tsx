@@ -354,7 +354,131 @@ const vi: Messages = {
   noMatch: "Không có banner nào trước đây có nhân vật này.",
 };
 
-const MESSAGES: Record<Lang, Messages> = { en, vi };
+// docs/product.md §6 (PT-BR). "banner" and "rerun" stay as Brazilian players write them.
+const ptBr: Messages = {
+  and: "e",
+  answer: ({ shortName, current, ends, next, nextVersion }) => (
+    <>
+      {current ? (
+        <>
+          {current.count > 1 ? `Os banners atuais do ${shortName} são` : `O banner atual do ${shortName} é`}{" "}
+          <strong>{current.titles}</strong>
+          {current.count > 1 ? "; o primeiro " : " e "}
+          <strong className="tabular-nums">termina em {ends.text}</strong>.{" "}
+        </>
+      ) : (
+        <>Nenhum banner do {shortName} está ativo agora. </>
+      )}
+      {next ? (
+        <>
+          {next.count > 1 ? "Os próximos banners" : "O próximo banner"}, <strong>{next.titles}</strong>,{" "}
+          {next.count > 1 ? "começam em" : "começa em"} <strong>{next.start}</strong> — <strong>{next.status}</strong>.{" "}
+        </>
+      ) : (
+        <>O próximo banner ainda não foi anunciado. </>
+      )}
+      Abaixo está o cronograma de banners do {shortName} completo
+      {current && (
+        <>
+          , com cada fase da versão <strong>{current.version}</strong>
+        </>
+      )}
+      {nextVersion ? (
+        <>
+          , além dos próximos banners da <strong>{nextVersion}</strong>
+        </>
+      ) : (
+        ", além dos próximos banners assim que a próxima versão for anunciada"
+      )}
+      .{" "}
+      A contagem regressiva do banner no topo da página atualiza a cada segundo no seu horário local. Reruns, a lista
+      de 4★ e as datas das fases anteriores estão mais abaixo.
+    </>
+  ),
+  countdown: formatCountdown,
+  units: ["DIAS", "HORAS", "MIN", "SEG"],
+  servers: { america: "América", europe: "Europa", asia: "Ásia" },
+  official: "Oficial",
+  leaked: "Vazamento — não confirmado",
+  estimate: "Estimativa — não anunciada",
+  newTag: "NOVO",
+  rerunTag: "RERUN",
+  gamesNav: "Jogos",
+  server: "Servidor",
+  serverCaps: "SERVIDOR",
+  language: "Idioma",
+  home: "Início",
+  updated: (date) => <>Atualizado em {date} · Horários no seu fuso horário</>,
+  scheduleEyebrow: "01 ── CRONOGRAMA",
+  scheduleTitle: (game) => `Próximos banners do ${game}`,
+  archiveEyebrow: "02 ── ARQUIVO",
+  archiveTitle: (game) => `Banners anteriores do ${game}`,
+  archiveSub: "Uma linha por banner, mais recentes primeiro",
+  faqEyebrow: "03 ── PERGUNTAS",
+  faqTitle: (game) => `Perguntas sobre banners do ${game}`,
+  otherGames: "Outros jogos",
+  thisGame: "Este jogo",
+  archiveLink: (game) => `Arquivo de banners do ${game}`,
+  faqLink: (game) => `Perguntas sobre banners do ${game}`,
+  disclaimer:
+    "bannertimer é um cronograma feito por fãs, sem vínculo com a HoYoverse. Os horários são convertidos do horário oficial do servidor.",
+  faqNext: (game) => `Qual é o próximo banner do ${game}?`,
+  faqNextAnswer: (titles, count, start, status) =>
+    `${titles} ${count > 1 ? "começam" : "começa"} em ${start}. Status: ${status}.`,
+  faqNextNone: "O próximo banner ainda não foi anunciado.",
+  faqEnd: "Quando termina o banner atual?",
+  faqEndAnswer: (ends) =>
+    `${ends.map((e) => `${e.name} termina em ${e.at}`).join(". ")}. A contagem regressiva no topo da página mostra o tempo restante.`,
+  faqEndNone:
+    "Nenhum banner está ativo agora. A contagem regressiva no topo da página mostra quando o próximo começa.",
+  faqChange: "Que horas os banners mudam?",
+  faqChangeAnswer: (o) =>
+    `O primeiro banner de uma nova versão abre em todos os servidores ao mesmo tempo, quando a manutenção da atualização termina. Os banners da segunda metade abrem às 18:00 no horário do servidor: ${o.america} na América, ${o.europe} na Europa e ${o.asia} na Ásia. Escolha seu servidor no topo da página para ver o horário no seu fuso.`,
+  liveNow: "AO VIVO",
+  bannerCount: (n) => ` · ${n} BANNER${n > 1 ? "S" : ""}`,
+  phaseShort: (v, p) => ` · v${v} FASE ${p}`,
+  phaseLine: (v, p) => `v${v} · FASE ${p}`,
+  dayOf: (day, days) => `DIA ${day} DE ${days}`,
+  noBannerLive: "NENHUM BANNER ATIVO",
+  firstEndsIn: "O PRIMEIRO BANNER TERMINA EM",
+  endsIn: "O BANNER TERMINA EM",
+  endsServerTime: "TERMINA · HORÁRIO DO SERVIDOR",
+  endsYourTime: "TERMINA · SEU HORÁRIO",
+  yourTime: "Seu horário",
+  ends: "TERMINA",
+  nextHeading: (n, v, p) => `${n > 1 ? "PRÓXIMOS BANNERS" : "PRÓXIMO BANNER"} · v${v} FASE ${p}`,
+  nextBanner: "PRÓXIMO BANNER",
+  notAnnouncedCaps: "AINDA NÃO ANUNCIADO",
+  nextLands: "Os próximos banners aparecem aqui quando a HoYoverse publicar o anúncio dos banners.",
+  starts: "Começa",
+  source: "Fonte:",
+  checked: (date) => ` · verificado em ${date}`,
+  pickedInGame: "Escolhido no jogo — sem lista padrão",
+  tickerNow: "Ao vivo",
+  tickerEnds: (n) => (n > 1 ? "O primeiro termina" : "Termina"),
+  tickerShortEnds: "Termina",
+  tickerNext: "Próximo",
+  tickerNoNext: "Próximo banner · Ainda não anunciado",
+  tickerShortNoNext: "Próximo · TBA",
+  phase: (n) => `FASE ${n}`,
+  phaseNow: " · AGORA",
+  ended: (day) => `Terminou em ${day}`,
+  runsInto: (phase, day) => `Continua na fase ${phase} · até ${day}`,
+  expected: (day) => `Previsto para ${day} · estimativa`,
+  nextCaps: "PRÓXIMO",
+  tba: "TBA",
+  timelineNoNext:
+    "Ainda não anunciado. As próximas fases aparecem aqui quando a HoYoverse publicar o anúncio dos banners ou surgir um vazamento confiável com fonte.",
+  filter: "Filtrar por personagem",
+  newestFirst: "Mais recentes primeiro",
+  oldestFirst: "Mais antigos primeiro",
+  columns: { version: "VERSÃO", phase: "FASE", banner: "BANNER", dates: "DATAS", rerun: "RERUN" },
+  pickedInGameShort: "escolhido no jogo",
+  showMore: (n) => `Mostrar mais ${n} banners`,
+  noMatch: "Nenhum banner anterior tem esse personagem.",
+};
+
+const MESSAGES: Record<Lang, Messages> = { en, vi, "pt-br": ptBr };
 
 export function messages(lang: Lang): Messages {
   return MESSAGES[lang];

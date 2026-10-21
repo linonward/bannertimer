@@ -47,6 +47,13 @@ export const GAMES: Game[] = [
         h1: "Lịch Banner HSR — Đếm Ngược Trực Tiếp",
         linkText: "Lịch banner HSR",
       },
+      "pt-br": {
+        title: "Cronograma de Banners do HSR & Próximo Banner — Ao Vivo",
+        description:
+          "Cronograma de banners do HSR ao vivo com contagem regressiva. Banner atual, início do próximo banner, próximos banners e reruns — atualizado a cada hora.",
+        h1: "Cronograma de Banners do HSR — Contagem ao Vivo",
+        linkText: "Cronograma de banners do HSR",
+      },
     },
   },
   {

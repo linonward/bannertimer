@@ -3,12 +3,13 @@ import type { Server } from "./time";
 
 // Language pages (docs/product.md §3.1). English stays at the root; every other language lives
 // in its own subdirectory and only for the game pages that have its copy.
-export const LANGS = ["en", "vi"] as const;
+export const LANGS = ["en", "vi", "pt-br"] as const;
 export type Lang = (typeof LANGS)[number];
 
 const LOCALES: Record<Lang, { html: string; intl: string; server: Server }> = {
   en: { html: "en", intl: "en-US", server: "america" },
   vi: { html: "vi", intl: "vi-VN", server: "asia" },
+  "pt-br": { html: "pt-BR", intl: "pt-BR", server: "america" },
 };
 
 export function isLang(value: unknown): value is Lang {

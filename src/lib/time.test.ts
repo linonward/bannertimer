@@ -74,5 +74,8 @@ describe("formats in another language", () => {
     expect(formatServerShort(ms, "asia", "vi-VN")).toBe("11 thg 11, 04:00");
     expect(formatServerTime(ms, "america", "vi-VN")).toBe("10 thg 11, 2026, 15:00 (UTC-5)");
     expect(formatLocalShort(ms, "Asia/Ho_Chi_Minh", "vi-VN")).toBe("11 thg 11, 03:00");
+    expect(formatServerDay(ms, "america", "pt-BR")).toBe("10 de nov.");
+    expect(formatServerTime(ms, "america", "pt-BR")).toBe("10 de nov. de 2026, 15:00 (UTC-5)");
+    expect(formatLocalShort(ms, "America/Sao_Paulo", "pt-BR")).toBe("10 de nov., 17:00");
   });
 });
