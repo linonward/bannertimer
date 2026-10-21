@@ -226,6 +226,12 @@ FAQ 同 `/hsr/`，把 HSR 换成 ZZZ。
 - **输出**：`/{game}/{version}/` — 该版本卡池详情 + 上下版本导航 + 未上线时的倒计时
 - **Title**：`{Game} {Version} Banners — Characters, Countdown & Release Date`。`{Game}` 用简称 `Genshin` / `HSR` / `ZZZ`（2026-10-21 定，见 §14 第 4 条）
 - **互链**：每页链回主表，主表链到已上线的版本页
+- **生成范围**：`src/data` 里有记录的版本都生成页面（含 `leaked` 的下个版本，见 §9）；没有记录的版本号返回 404。主表的归档行和时间轴版本号链到对应版本页（2026-10-21 定）
+- **H1**：`{Game} {Version} Banners`，与 Title 不同
+- **Meta**：`Every {Game} {Version} banner by phase: featured 5★ and 4★ characters, start and end times in your timezone, and a live countdown.`
+- **首屏答案段**：全部由数据生成——版本开始时刻（全球同一时刻写 UTC，按服务器本地时间写 server time），然后每期的卡池与结束时刻；同一期各池结束时刻不同时逐个写出
+- **倒计时**：版本未开始时倒数到开始；进行中倒数到下一期开始；最后一期倒数到版本结束；版本结束后不显示倒计时
+- **上下版本导航**：数据里没有上一个或下一个版本时，不出链接，显示 `Not in the archive` / `TBA`，不猜版本号
 
 **为什么必须自动生成**——版本号词是单峰后归零：
 

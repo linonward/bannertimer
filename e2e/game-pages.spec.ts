@@ -116,3 +116,51 @@ test("robots.txt lists every sitemap and blocks nothing", async ({ request }) =>
     expect((await request.get(path)).ok()).toBe(true);
   }
 });
+
+// docs/product.md §8: version pages, generated from src/data only.
+test.describe("/zzz/3.3/ server HTML", () => {
+  let html: string;
+
+  test.beforeAll(async ({ request }) => {
+    const res = await request.get("/zzz/3.3/");
+    expect(res.ok()).toBe(true);
+    html = await res.text();
+  });
+
+  test("has the §8 title, its own canonical and an H1 that differs from the title", () => {
+    expect(html).toContain("<title>ZZZ 3.3 Banners — Characters, Countdown &amp; Release Date</title>");
+    expect(html.match(/<link rel="canonical"[^>]*>/g)).toEqual([
+      '<link rel="canonical" href="https://bannertimer.com/zzz/3.3/"/>',
+    ]);
+    expect(html.match(/<h1[\s>][\s\S]*?<\/h1>/g)).toHaveLength(1);
+    expect(html).toMatch(/<h1[^>]*>ZZZ 3.3 Banners<\/h1>/);
+  });
+
+  test("answers with every phase's banners in the source", () => {
+    const answer = html.match(/<p[^>]*data-testid="answer"[^>]*>([\s\S]*?)<\/p>/)?.[1] ?? "";
+    expect(answer).toContain("ZZZ 3.3 started Oct 21, 03:00 UTC on every server.");
+    expect(answer).toContain("Into the Flames of Life (Phoenix)");
+    expect(answer).toContain("Phase 2 opens Nov 11, 12:00 server time");
+  });
+
+  test("links back to the main page and to the previous version, with breadcrumb data only", () => {
+    expect(html).toMatch(/<a [^>]*href="\/zzz\/"/);
+    expect(html).toMatch(/<a [^>]*href="\/zzz\/3.2\/"/);
+    expect(html).toContain('"@type":"BreadcrumbList"');
+    expect(html).not.toMatch(/"@type":"(Event|SpecialAnnouncement)"/);
+  });
+});
+
+test("the main page links each archive row to its version page", async ({ request }) => {
+  const html = await (await request.get("/zzz/")).text();
+  expect(html).toMatch(/<a [^>]*href="\/zzz\/3.2\/"/);
+});
+
+test("a version that is not in the data is a 404", async ({ request }) => {
+  expect((await request.get("/zzz/9.9/")).status()).toBe(404);
+});
+
+test("the game sitemap lists every version page", async ({ request }) => {
+  const xml = await (await request.get("/zzz/sitemap.xml")).text();
+  for (const version of ["3.1", "3.2", "3.3"]) expect(xml).toContain(`https://bannertimer.com/zzz/${version}/`);
+});
