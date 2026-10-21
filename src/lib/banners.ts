@@ -132,3 +132,15 @@ export function bannerTitles(banners: Banner[]): string {
   const titles = banners.map((b) => `${b.bannerName} (${featuredNames(b)})`);
   return titles.length > 1 ? `${titles.slice(0, -1).join(", ")} and ${titles.at(-1)}` : (titles[0] ?? "");
 }
+
+export type PhaseWindow = { phase: number; start: number; end: number };
+
+/** When each phase runs on a server: from its first banner's start to the next phase's start; the last phase to its last end. */
+export function phaseWindows(version: VersionRecord, server: Server): PhaseWindow[] {
+  const starts = version.phases.map((p) => Math.min(...p.banners.map((b) => instant(b.start, server))));
+  return version.phases.map((p, i) => ({
+    phase: p.phase,
+    start: starts[i],
+    end: starts[i + 1] ?? Math.max(...p.banners.map((b) => instant(b.end, server))),
+  }));
+}

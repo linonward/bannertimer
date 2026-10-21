@@ -2,7 +2,7 @@ import { readdirSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { versionFiles } from "@/data";
-import { bannersOf, bannerTitles, pastBanners, scheduleAt, upcomingVersions, validateVersion, versionsOf, type VersionRecord } from "./banners";
+import { bannersOf, bannerTitles, pastBanners, phaseWindows, scheduleAt, upcomingVersions, validateVersion, versionsOf, type VersionRecord } from "./banners";
 
 const dataDir = join(__dirname, "../data");
 
@@ -137,5 +137,28 @@ describe("bannerTitles", () => {
     expect(bannerTitles([a])).toBe("A (Char A)");
     expect(bannerTitles([a, b])).toBe("A (Char A) and B (Char B)");
     expect(bannerTitles([a, b, c])).toBe("A (Char A), B (Char B) and C (Char C)");
+  });
+});
+
+describe("phaseWindows", () => {
+  it("runs each phase from its first start to the next phase's start, and the last to its last end", () => {
+    const version: VersionRecord = {
+      ...record("1.1"),
+      phases: [
+        {
+          phase: 1,
+          status: "official",
+          banners: [
+            banner("Long", "2026-01-01T03:00:00Z", "2026-02-10T15:00:00"),
+            banner("Short", "2026-01-01T03:00:00Z", "2026-01-20T11:59:00"),
+          ],
+        },
+        { phase: 2, status: "official", banners: [banner("Second", "2026-01-20T04:00:00Z", "2026-02-10T15:00:00")] },
+      ],
+    };
+    expect(phaseWindows(version, "asia")).toEqual([
+      { phase: 1, start: Date.parse("2026-01-01T03:00:00Z"), end: Date.parse("2026-01-20T04:00:00Z") },
+      { phase: 2, start: Date.parse("2026-01-20T04:00:00Z"), end: Date.parse("2026-02-10T07:00:00Z") },
+    ]);
   });
 });

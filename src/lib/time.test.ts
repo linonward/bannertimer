@@ -1,5 +1,16 @@
 import { describe, expect, it } from "vitest";
-import { formatCountdown, formatServerTime, instant, isServer, utcOffsetLabel } from "./time";
+import {
+  countdownParts,
+  formatCountdown,
+  formatLocalShort,
+  formatServerDay,
+  formatServerShort,
+  formatServerTime,
+  instant,
+  isServer,
+  localZoneLabel,
+  utcOffsetLabel,
+} from "./time";
 
 describe("instant", () => {
   it("treats a utc point as the same moment on every server", () => {
@@ -29,5 +40,28 @@ describe("formatting", () => {
   it("accepts only known servers", () => {
     expect(isServer("europe")).toBe(true);
     expect(isServer("toString")).toBe(false);
+  });
+});
+
+describe("short formats for the board", () => {
+  // 2026-11-10 15:00 on the America server (UTC-5) is 20:00Z.
+  const ms = Date.parse("2026-11-10T20:00:00Z");
+
+  it("shows the server's date and 24-hour time without the year", () => {
+    expect(formatServerShort(ms, "america")).toBe("Nov 10, 15:00");
+    expect(formatServerShort(ms, "asia")).toBe("Nov 11, 04:00");
+    expect(formatServerDay(ms, "america")).toBe("Nov 10");
+  });
+
+  it("shows the reader's own time and names their zone by city and offset", () => {
+    expect(formatLocalShort(ms, "America/Los_Angeles")).toBe("Nov 10, 12:00");
+    expect(localZoneLabel(ms, "America/Los_Angeles")).toBe("Los Angeles · UTC-8");
+    expect(localZoneLabel(ms, "Asia/Kolkata")).toBe("Kolkata · UTC+5:30");
+    expect(localZoneLabel(ms, "UTC")).toBe("UTC");
+  });
+
+  it("splits a countdown into two-digit units for the flap tiles", () => {
+    expect(countdownParts(((20 * 24 + 6) * 3600 + 12 * 60 + 5) * 1000)).toEqual(["20", "06", "12", "05"]);
+    expect(countdownParts(-5000)).toEqual(["00", "00", "00", "00"]);
   });
 });

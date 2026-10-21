@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { bannersOf, bannerTitles, scheduleAt, versionsOf } from "@/lib/banners";
+import { HomeBoard } from "@/components/home-board";
+import { SiteFooter } from "@/components/site-footer";
+import { bannersOf, versionsOf } from "@/lib/banners";
 import { BUILD_TIME } from "@/lib/build-time";
 import { GAMES, SITE_NAME } from "@/lib/games";
-import { DEFAULT_SERVER, formatServerTime, instant } from "@/lib/time";
 
 // The hub (docs/product.md §3): a quick view of each game's current banner. It targets no
 // keyword, so it never competes with the game pages.
@@ -13,28 +13,56 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
+const SLASHES = ["bg-hsr", "bg-hsr/33", "bg-hsr/33", "bg-zzz", "bg-zzz/33", "bg-zzz/33", "bg-genshin", "bg-genshin/33", "bg-genshin/33"];
+
 export default function Home() {
-  const now = BUILD_TIME;
   return (
     <>
-      <h1 className="text-3xl font-bold">Gacha banner timers</h1>
-      <ul className="mt-6 grid gap-4 md:grid-cols-2">
-        {GAMES.map((game) => {
-          const { current } = scheduleAt(bannersOf(versionsOf(game.id)), now, DEFAULT_SERVER);
-          return (
-            <li key={game.id} className="rounded-xl border border-line bg-surface p-5">
-              <h2 className="text-xl font-semibold">
-                <Link href={`/${game.id}/`}>{game.linkText}</Link>
-              </h2>
-              <p className="mt-2 text-sm">
-                {current.length
-                  ? `Now: ${bannerTitles(current)}. ${current.length > 1 ? "The first ends" : "Ends"} ${formatServerTime(instant(current[0].end, DEFAULT_SERVER), DEFAULT_SERVER)}.`
-                  : "No banner is live right now."}
-              </p>
-            </li>
-          );
-        })}
-      </ul>
+      <main>
+        <div className="relative flex flex-col gap-4 overflow-hidden px-5 pt-10 pb-6 md:px-20 md:pt-[72px] md:pb-10">
+          <span aria-hidden="true" className="pointer-events-none absolute top-[-40px] right-[108px] h-px w-[252px] max-md:hidden">
+            {SLASHES.map((color, i) => (
+              <span
+                key={i}
+                style={{ left: `${i * 30}px` }}
+                className={`absolute top-0 h-80 w-3 origin-top-left rotate-[28deg] ${color}`}
+              />
+            ))}
+          </span>
+          <p className="relative font-mono text-[13px] font-semibold tracking-[2px] text-ink-3">
+            LIVE BANNER BOARD · 3 GAMES
+          </p>
+          <h1 className="relative max-w-[900px] font-display text-[52px] leading-[46px] font-extrabold tracking-[-1px] uppercase italic md:text-8xl md:leading-[84px]">
+            What&apos;s on the banner right now
+          </h1>
+          <p className="relative max-w-[640px] text-[17px] leading-[27px] text-ink-2">
+            Current banners for {GAMES.map((g) => g.name).join(" and ")}, counting down to the second in your timezone.
+            Open a game for the full banner schedule.
+          </p>
+        </div>
+        <ul className="flex flex-col gap-5 px-5 pt-6 pb-10 md:flex-row md:px-20 md:pb-[72px]">
+          {GAMES.map((game) => (
+            <HomeBoard key={game.id} game={game} banners={bannersOf(versionsOf(game.id))} renderedAt={BUILD_TIME} />
+          ))}
+          <li
+            data-game="genshin"
+            className="relative flex flex-col justify-end gap-3.5 overflow-hidden rounded bg-bg p-7 outline outline-game-line -outline-offset-1 md:w-[300px]"
+          >
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute top-[-40px] left-[-10px] font-display text-[360px] leading-none font-extrabold text-game-soft italic select-none"
+            >
+              ?
+            </span>
+            <p className="relative font-mono text-xs font-bold tracking-[2px] text-game">GENSHIN IMPACT</p>
+            <p className="relative font-display text-[40px] leading-[37px] font-extrabold italic">BOARD OPENS SOON</p>
+            <p className="relative text-sm leading-[21px] text-ink-3">Genshin banners join the board in the next release.</p>
+          </li>
+        </ul>
+      </main>
+      <SiteFooter
+        groups={[{ heading: "Games", links: GAMES.map((g) => ({ href: `/${g.id}/`, text: g.linkText })) }]}
+      />
     </>
   );
 }

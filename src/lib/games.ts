@@ -4,6 +4,11 @@ export type Game = {
   id: "hsr" | "zzz";
   /** The name in titles and sentences (§14 item 4: short names). */
   shortName: string;
+  /** The full name, for breadcrumbs and the home page boards. */
+  name: string;
+  /** The header tab label; `navShort` on narrow screens. */
+  navName: string;
+  navShort: string;
   title: string;
   description: string;
   h1: string;
@@ -15,6 +20,9 @@ export const GAMES: Game[] = [
   {
     id: "hsr",
     shortName: "HSR",
+    name: "Honkai: Star Rail",
+    navName: "Star Rail",
+    navShort: "Star Rail",
     title: "HSR Banner Schedule & Next Banner — Live Countdown",
     description:
       "Live HSR banner schedule with a real-time countdown. Current banner, next banner start time, upcoming banners and full rerun history — updated hourly.",
@@ -24,6 +32,9 @@ export const GAMES: Game[] = [
   {
     id: "zzz",
     shortName: "ZZZ",
+    name: "Zenless Zone Zero",
+    navName: "Zenless Zone Zero",
+    navShort: "Zenless",
     title: "ZZZ Banner Countdown & Next Banner — Live Schedule",
     description:
       "Live ZZZ banner countdown to the second. Current banner, next banner start time, upcoming banners and the full banner schedule — updated hourly.",

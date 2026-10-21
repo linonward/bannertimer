@@ -1,23 +1,85 @@
 @import "tailwindcss";
 
-/* Site tokens. Status colors follow docs/product.md §5 module 2: official green, leaked grey. */
+/* Site tokens: the b-* variables of docs/design/bannertimer.pen (Foundation frame). The design is
+   dark only. Status colours follow docs/product.md §5 module 2: official green, leaked grey. */
 @theme {
-  --color-ink: #16181d;
-  --color-muted: #5b6270;
-  --color-line: #dde1e8;
-  --color-page: #f6f7f9;
-  --color-surface: #ffffff;
-  --color-accent: #4b3fd1;
-  --color-official: #16803c;
-  --color-leaked: #d4d7dd;
-  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --color-bg: #0a0b0d;
+  --color-panel: #121418;
+  --color-panel-2: #1a1d23;
+  --color-line: #262a31;
+  --color-line-strong: #3a3f48;
+  --color-ink: #f2f1ec;
+  --color-ink-2: #a9adb5;
+  --color-ink-3: #6e737d;
+  --color-flap: #17191e;
+  --color-flap-hi: #1f2228;
+  --color-flap-ink: #f5f3ea;
+  --color-flap-seam: #050607;
+  --color-ok: #3ddc84;
+  --color-ok-soft: #3ddc841a;
+  --color-ok-line: #3ddc8455;
+  --color-leak: #a3a8b1;
+  --color-leak-soft: #a3a8b10f;
+  --color-leak-line: #4a4f58;
+  --color-hsr: #a9b8ff;
+  --color-zzz: #d4ff3a;
+  --color-genshin: #7fe0d0;
+}
+
+/* The game signal colour: the design's one theme axis, `game`. A page sets data-game on <main>;
+   a card can set its own. HSR is the default (the home page uses it too). */
+@theme inline {
+  --color-game: var(--game);
+  --color-game-ink: var(--game-ink);
+  --color-game-soft: var(--game-soft);
+  --color-game-line: var(--game-line);
+  --font-display: var(--font-barlow-condensed), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-ibm-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-ibm-plex-mono), ui-monospace, monospace;
+}
+
+:root,
+[data-game="hsr"] {
+  --game: #a9b8ff;
+  --game-ink: #0b0f2a;
+  --game-soft: #a9b8ff1f;
+  --game-line: #a9b8ff59;
+}
+
+:root:has(main[data-game="zzz"]),
+[data-game="zzz"] {
+  --game: #d4ff3a;
+  --game-ink: #121600;
+  --game-soft: #d4ff3a1a;
+  --game-line: #d4ff3a59;
+}
+
+:root:has(main[data-game="genshin"]),
+[data-game="genshin"] {
+  --game: #7fe0d0;
+  --game-ink: #032019;
+  --game-soft: #7fe0d01f;
+  --game-line: #7fe0d059;
 }
 
 body {
-  background: var(--color-page);
+  background: var(--color-bg);
   color: var(--color-ink);
 }
 
-a {
-  color: var(--color-accent);
+/* The ticker band scrolls; it stands still for readers who ask for less motion. */
+@keyframes ticker {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.ticker-track {
+  animation: ticker 40s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticker-track {
+    animation: none;
+  }
 }
