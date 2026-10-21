@@ -18,6 +18,7 @@ import { JsonLd } from "./json-ld";
 import { FaqItem, Section } from "./section";
 import { SiteFooter } from "./site-footer";
 import { StatusBadge } from "./status-badge";
+import { Ticker } from "./ticker";
 import { Timeline } from "./timeline";
 
 const server = DEFAULT_SERVER;
@@ -87,32 +88,57 @@ export function GamePage({ gameId }: { gameId: string }) {
       />
 
       <main data-game={game.id}>
-        <div className="flex flex-col gap-[18px] px-5 pt-5 pb-9 md:gap-7 md:px-20 md:pt-8 md:pb-[72px]">
-          <nav aria-label="Breadcrumb" className="font-mono text-[11px] text-ink-3 md:text-xs">
+        <div className="relative flex flex-col gap-[18px] overflow-hidden bg-[radial-gradient(ellipse_90%_35%_at_90%_12%,var(--game-line),transparent)] px-5 pt-5 pb-9 md:gap-7 md:bg-[linear-gradient(180deg,transparent_60%,var(--color-bg)_100%),radial-gradient(ellipse_45%_70%_at_72%_45%,var(--game-line),transparent)] md:px-20 md:pt-8 md:pb-[72px]">
+          {/* Decoration only: the version watermark and the game slashes. */}
+          {current.length > 0 && (
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute top-[-170px] left-[380px] font-display text-[640px] leading-[640px] font-extrabold tracking-[-20px] text-game-soft italic select-none max-md:hidden"
+            >
+              {current[0].version}
+            </span>
+          )}
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute top-[-30px] right-[22px] h-px w-[68px] [--step:20px] md:top-[-40px] md:right-[76px] md:w-[114px] md:[--step:26px]"
+          >
+            {[0, 1, 2, 3, 4].map((i) => (
+              <span
+                key={i}
+                style={{ left: `calc(var(--step) * ${i})` }}
+                className={`absolute top-0 h-[180px] w-2 origin-top-left rotate-[28deg] md:h-[260px] md:w-2.5 ${i === 0 ? "bg-game" : "bg-game-line"} ${i === 4 ? "max-md:hidden" : ""}`}
+              />
+            ))}
+          </span>
+
+          <nav aria-label="Breadcrumb" className="relative font-mono text-[11px] text-ink-3 md:text-xs">
             <Link href="/" className="hover:text-ink">
               Home
             </Link>{" "}
             / <span>{game.name}</span>
           </nav>
-          <div className="flex flex-col gap-3 md:gap-5">
-            <h1 className="max-w-[900px] font-display text-[52px] leading-[46px] font-extrabold tracking-[-1px] uppercase italic md:text-[88px] md:leading-[77px]">
-              {game.h1}
-            </h1>
-            <p className="flex items-center gap-2.5 font-mono text-[11px] text-ink-3 md:text-xs">
-              <span aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-ok" />
-              <span>
-                Last updated <time dateTime={updated}>{updated.slice(0, 10)}</time> · Times shown in your timezone
-              </span>
-            </p>
-          </div>
           <BannerHero
             shortName={game.shortName}
             versions={versions}
             banners={banners}
             nextVersionOf={nextVersionOf}
             renderedAt={renderedAt}
+            intro={
+              <>
+                <h1 className="font-display text-[52px] leading-[46px] font-extrabold tracking-[-1px] uppercase italic md:text-[88px] md:leading-[77px]">
+                  {game.h1}
+                </h1>
+                <p className="flex items-center gap-2.5 font-mono text-[11px] text-ink-3 md:text-xs">
+                  <span aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-ok" />
+                  <span>
+                    Last updated <time dateTime={updated}>{formatUpdated(updated)}</time> · Times shown in your timezone
+                  </span>
+                </p>
+              </>
+            }
           />
         </div>
+        <Ticker banners={banners} renderedAt={renderedAt} />
 
         <Section
           id="schedule"
@@ -155,6 +181,11 @@ export function GamePage({ gameId }: { gameId: string }) {
       />
     </>
   );
+}
+
+/** "Oct 21, 2026" from the ISO lastUpdated. */
+function formatUpdated(iso: string): string {
+  return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" });
 }
 
 export function gameMetadata(gameId: string) {

@@ -32,6 +32,8 @@ type Props = {
   nextVersionOf: Record<string, string | undefined>;
   /** Build time. The first render uses it so the server HTML and hydration match. */
   renderedAt: number;
+  /** The H1 and the "last updated" line; the answer paragraph follows them. */
+  intro: React.ReactNode;
 };
 
 const DAY = 86_400_000;
@@ -41,7 +43,7 @@ const DAY = 86_400_000;
  * with the live banners and the next ones. The server HTML states end and start times as dates;
  * after hydration the countdown runs every second, and the banners switch if the build is stale.
  */
-export function BannerHero({ shortName, versions, banners, nextVersionOf, renderedAt }: Props) {
+export function BannerHero({ shortName, versions, banners, nextVersionOf, renderedAt, intro }: Props) {
   const { now, live } = useNow(renderedAt);
   const server = useServer();
 
@@ -65,8 +67,10 @@ export function BannerHero({ shortName, versions, banners, nextVersionOf, render
     live ? `${word} in ${formatCountdown(ms - now)}` : `${word} ${formatServerTime(ms, server)}`;
 
   return (
-    <div className="flex flex-col gap-7">
-      <p className="max-w-3xl text-[15px] leading-6 text-ink-2 md:text-base md:leading-[26px] [&_strong]:font-semibold [&_strong]:text-ink" data-testid="answer">
+    <div className="relative flex flex-col gap-[18px] md:flex-row md:gap-12">
+      <div className="flex flex-col gap-3 md:w-[440px] md:shrink-0 md:gap-5 md:pt-2">
+      {intro}
+      <p className="text-[15px] leading-6 text-ink-2 md:text-base md:leading-[26px] [&_strong]:font-normal" data-testid="answer">
         {current.length ? (
           <>
             The current {shortName} {current.length > 1 ? "banners are" : "banner is"}{" "}
@@ -105,10 +109,11 @@ export function BannerHero({ shortName, versions, banners, nextVersionOf, render
         The banner countdown at the top of this page updates every second in your local time. Reruns, 4★ lineups and
         past phase dates are further down.
       </p>
+      </div>
 
       <section
         aria-labelledby="current-banner"
-        className="flex max-w-[792px] flex-col overflow-hidden rounded bg-panel shadow-[0_30px_80px_#000000cc] outline outline-game-line -outline-offset-1"
+        className="flex min-w-0 flex-1 flex-col overflow-hidden rounded bg-panel shadow-[0_30px_80px_#000000cc] outline outline-game-line -outline-offset-1"
       >
         <span aria-hidden="true" className="h-1 bg-game" />
         <div className="flex flex-col gap-4 px-4 pt-[18px] pb-5 md:gap-[22px] md:px-8 md:pt-7 md:pb-8">
@@ -118,10 +123,19 @@ export function BannerHero({ shortName, versions, banners, nextVersionOf, render
               className="flex items-center gap-2 rounded-[2px] bg-game px-2 py-1 font-mono text-[11px] font-bold tracking-[1.5px] text-game-ink md:px-2.5 md:py-[5px] md:text-xs md:tracking-[2px]"
             >
               <span aria-hidden="true" className="size-[7px] rounded-full bg-game-ink md:size-2" />
-              {current.length ? `LIVE NOW · ${current.length} BANNER${current.length > 1 ? "S" : ""}` : "NO BANNER LIVE"}
+              {current.length ? (
+                <>
+                  <span className="max-md:hidden">
+                    LIVE NOW · {current.length} BANNER{current.length > 1 ? "S" : ""}
+                  </span>
+                  <span className="md:hidden">LIVE NOW{latest ? ` · v${latest.version} PHASE ${latest.phase}` : ""}</span>
+                </>
+              ) : (
+                "NO BANNER LIVE"
+              )}
             </h2>
             {latest && (
-              <p className="font-mono text-xs tracking-[1px] text-ink-3">
+              <p className="font-mono text-xs tracking-[1px] text-ink-3 max-md:hidden">
                 v{latest.version} · PHASE {latest.phase}
                 {live && day ? ` · ${day}` : ""}
               </p>
