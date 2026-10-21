@@ -65,6 +65,11 @@ describe("validateVersion", () => {
     ]);
   });
 
+  it("rejects an empty official version name", () => {
+    expect(validateVersion({ ...record("1.1"), versionName: " " })).toEqual(["test 1.1: empty versionName"]);
+    expect(validateVersion({ ...record("1.1"), versionName: "Luna VIII" })).toEqual([]);
+  });
+
   it("requires at least one banner per phase and one 5★ per banner", () => {
     expect(validateVersion(record("1.1", "official", {}, { banners: [] }))).toEqual(["test 1.1 phase 1: no banners"]);
     expect(validateVersion(record("1.1", "official", { featured5: [] }))).toEqual(["test 1.1 phase 1 Banner 1.1: no 5★"]);

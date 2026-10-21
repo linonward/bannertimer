@@ -15,6 +15,9 @@ export const metadata: Metadata = {
 
 const SLASHES = ["bg-hsr", "bg-hsr/33", "bg-hsr/33", "bg-zzz", "bg-zzz/33", "bg-zzz/33", "bg-genshin", "bg-genshin/33", "bg-genshin/33"];
 
+const names = GAMES.map((g) => g.name);
+const gameList = names.length > 1 ? `${names.slice(0, -1).join(", ")} and ${names.at(-1)}` : names[0];
+
 export default function Home() {
   return (
     <>
@@ -30,13 +33,13 @@ export default function Home() {
             ))}
           </span>
           <p className="relative font-mono text-[13px] font-semibold tracking-[2px] text-ink-3">
-            LIVE BANNER BOARD · 3 GAMES
+            LIVE BANNER BOARD · {GAMES.length} GAMES
           </p>
           <h1 className="relative max-w-[900px] font-display text-[52px] leading-[46px] font-extrabold tracking-[-1px] uppercase italic md:text-8xl md:leading-[84px]">
             What&apos;s on the banner right now
           </h1>
           <p className="relative max-w-[640px] text-[17px] leading-[27px] text-ink-2">
-            Current banners for {GAMES.map((g) => g.name).join(" and ")}, counting down to the second in your timezone.
+            Current banners for {gameList}, counting down to the second in your timezone.
             Open a game for the full banner schedule.
           </p>
         </div>
@@ -44,20 +47,6 @@ export default function Home() {
           {GAMES.map((game) => (
             <HomeBoard key={game.id} game={game} banners={bannersOf(versionsOf(game.id))} renderedAt={BUILD_TIME} />
           ))}
-          <li
-            data-game="genshin"
-            className="relative flex flex-col justify-end gap-3.5 overflow-hidden rounded bg-bg p-7 outline outline-game-line -outline-offset-1 md:w-[300px]"
-          >
-            <span
-              aria-hidden="true"
-              className="pointer-events-none absolute top-[-40px] left-[-10px] font-display text-[360px] leading-none font-extrabold text-game-soft italic select-none"
-            >
-              ?
-            </span>
-            <p className="relative font-mono text-xs font-bold tracking-[2px] text-game">GENSHIN IMPACT</p>
-            <p className="relative font-display text-[40px] leading-[37px] font-extrabold italic">BOARD OPENS SOON</p>
-            <p className="relative text-sm leading-[21px] text-ink-3">Genshin banners join the board in the next release.</p>
-          </li>
         </ul>
       </main>
       <SiteFooter

@@ -1,0 +1,108 @@
+{
+  "game": "genshin",
+  "gameName": "Genshin Impact",
+  "version": "7.1",
+  "phases": [
+    {
+      "phase": 1,
+      "banners": [
+        {
+          "bannerName": "When Warm Winds Cavort",
+          "featured5": [
+            {
+              "name": "Vesna",
+              "isNew": true
+            }
+          ],
+          "featured4": [
+            "Diona",
+            "Faruzan",
+            "Chongyun"
+          ],
+          "isRerun": false,
+          "start": {
+            "utc": "2026-09-23T03:00:00Z"
+          },
+          "end": {
+            "serverLocal": "2026-10-13T17:59:00"
+          }
+        },
+        {
+          "bannerName": "Surging Ballad",
+          "featured5": [
+            {
+              "name": "Vodyanitsa",
+              "isNew": true
+            }
+          ],
+          "featured4": [
+            "Diona",
+            "Faruzan",
+            "Chongyun"
+          ],
+          "isRerun": false,
+          "start": {
+            "utc": "2026-09-23T03:00:00Z"
+          },
+          "end": {
+            "serverLocal": "2026-10-13T17:59:00"
+          }
+        }
+      ],
+      "status": "official",
+      "sourceUrl": "https://genshin.hoyoverse.com/en/news/detail/166228",
+      "sourceCheckedAt": "2026-10-21"
+    },
+    {
+      "phase": 2,
+      "banners": [
+        {
+          "bannerName": "Void Star's Advent",
+          "featured5": [
+            {
+              "name": "Skirk",
+              "isNew": false
+            }
+          ],
+          "featured4": [
+            "Dahlia",
+            "Candace",
+            "Mika"
+          ],
+          "isRerun": true,
+          "start": {
+            "serverLocal": "2026-10-13T18:00:00"
+          },
+          "end": {
+            "serverLocal": "2026-11-03T14:59:00"
+          }
+        },
+        {
+          "bannerName": "La Chanson Cerise",
+          "featured5": [
+            {
+              "name": "Escoffier",
+              "isNew": false
+            }
+          ],
+          "featured4": [
+            "Dahlia",
+            "Candace",
+            "Mika"
+          ],
+          "isRerun": true,
+          "start": {
+            "serverLocal": "2026-10-13T18:00:00"
+          },
+          "end": {
+            "serverLocal": "2026-11-03T14:59:00"
+          }
+        }
+      ],
+      "status": "official",
+      "sourceUrl": "https://genshin.hoyoverse.com/en/news/detail/166634",
+      "sourceCheckedAt": "2026-10-21"
+    }
+  ],
+  "lastUpdated": "2026-10-21T14:19:00Z"
+}

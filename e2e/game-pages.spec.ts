@@ -19,6 +19,14 @@ const pages = [
     other: "/hsr/",
     otherData: "An Ocean in a Pearl",
   },
+  {
+    path: "/genshin/",
+    title: "Genshin Next Banner &amp; Banner Schedule — Live Countdown",
+    h1: "Genshin Next Banner &amp; Countdown",
+    current: "La Chanson Cerise",
+    other: "/hsr/",
+    otherData: "An Ocean in a Pearl",
+  },
 ];
 
 for (const p of pages) {
@@ -111,7 +119,7 @@ test("the archive filters by character name", async ({ page }) => {
 test("robots.txt lists every sitemap and blocks nothing", async ({ request }) => {
   const robots = await (await request.get("/robots.txt")).text();
   expect(robots).not.toMatch(/Disallow: \S/);
-  for (const path of ["/sitemap.xml", "/hsr/sitemap.xml", "/zzz/sitemap.xml"]) {
+  for (const path of ["/sitemap.xml", "/hsr/sitemap.xml", "/zzz/sitemap.xml", "/genshin/sitemap.xml"]) {
     expect(robots).toContain(`https://bannertimer.com${path}`);
     expect((await request.get(path)).ok()).toBe(true);
   }
@@ -163,4 +171,12 @@ test("a version that is not in the data is a 404", async ({ request }) => {
 test("the game sitemap lists every version page", async ({ request }) => {
   const xml = await (await request.get("/zzz/sitemap.xml")).text();
   for (const version of ["3.1", "3.2", "3.3"]) expect(xml).toContain(`https://bannertimer.com/zzz/${version}/`);
+});
+
+test("a named version keeps its number in the URL and its official name in the answer", async ({ request }) => {
+  const res = await request.get("/genshin/6.8/");
+  expect(res.ok()).toBe(true);
+  const html = await res.text();
+  expect(html).toContain("<title>Genshin 6.8 Banners — Characters, Countdown &amp; Release Date</title>");
+  expect(html).toContain("Genshin 6.8 (Luna VIII) started Jul 1, 03:00 UTC on every server.");
 });

@@ -44,7 +44,7 @@ export function versionAnswer(shortName: string, version: VersionRecord, now: nu
   const started = instant(start, "asia") <= now;
   const where = "utc" in start ? " on every server" : "";
   return [
-    `${shortName} ${version.version} ${started ? "started" : "starts"} ${formatTimePoint(start)}${where}.`,
+    `${shortName} ${version.version}${version.versionName ? ` (${version.versionName})` : ""} ${started ? "started" : "starts"} ${formatTimePoint(start)}${where}.`,
     `Phase ${first.phase} runs ${runsUntil(first.banners)}.`,
     ...rest.map((p) => `Phase ${p.phase} opens ${formatTimePoint(p.banners[0].start)} with ${bannerTitles(p.banners)}.`),
   ].join(" ");

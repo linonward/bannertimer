@@ -52,6 +52,12 @@ describe("version page copy", () => {
     expect(versionAnswer("ZZZ", v33, Date.parse("2026-10-01T00:00:00Z"))).toMatch(/^ZZZ 3\.3 starts Oct 21/);
   });
 
+  it("adds the official version name when the version has one", () => {
+    expect(versionAnswer("Genshin", { ...v33, version: "6.8", versionName: "Luna VIII" }, Date.parse("2026-10-21T12:00:00Z"))).toMatch(
+      /^Genshin 6\.8 \(Luna VIII\) started Oct 21, 03:00 UTC on every server\./,
+    );
+  });
+
   it("names each end when banners in one phase end at different times", () => {
     const pearl: VersionRecord = {
       ...v33,
