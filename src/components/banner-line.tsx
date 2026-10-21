@@ -1,4 +1,6 @@
 import type { Banner } from "@/lib/banners";
+import type { Lang } from "@/lib/i18n";
+import { messages } from "@/lib/messages";
 import { CharacterTag } from "./status-badge";
 
 /** 5★ names first; several 5★ on one banner join with "&" (Components: Multi-banner cases). */
@@ -7,8 +9,8 @@ export function fiveNames(banner: Banner): string {
 }
 
 /** An empty featured4 means players pick the 4★ in game; it never shows as a blank. */
-export function fourText(banner: Banner): string {
-  return banner.featured4.length ? `4★ ${banner.featured4.join(" · ")}` : "4★ Picked in game — no default lineup";
+export function fourText(banner: Banner, lang: Lang = "en"): string {
+  return banner.featured4.length ? `4★ ${banner.featured4.join(" · ")}` : `4★ ${messages(lang).pickedInGame}`;
 }
 
 function isNew(banner: Banner): boolean {
@@ -16,7 +18,7 @@ function isNew(banner: Banner): boolean {
 }
 
 /** B/Live Banner Row: one live banner in the hero, with its own end on the right. */
-export function LiveBannerRow({ banner, end }: { banner: Banner; end: string }) {
+export function LiveBannerRow({ banner, end, lang = "en" }: { banner: Banner; end: string; lang?: Lang }) {
   return (
     <li className="flex items-center gap-3 border-t border-line py-3 md:gap-6 md:py-3.5">
       <div className="flex min-w-0 flex-1 flex-col gap-1.5">
@@ -25,14 +27,14 @@ export function LiveBannerRow({ banner, end }: { banner: Banner; end: string }) 
           <span className="font-display text-[26px] leading-none font-extrabold italic md:text-[34px]">
             {fiveNames(banner)}
           </span>
-          <CharacterTag isNew={isNew(banner)} />
+          <CharacterTag isNew={isNew(banner)} lang={lang} />
         </div>
         <p className="font-mono text-[11px] text-ink-3 md:text-xs">
-          {banner.bannerName} · {fourText(banner)}
+          {banner.bannerName} · {fourText(banner, lang)}
         </p>
       </div>
       <div className="flex shrink-0 flex-col items-end gap-1">
-        <span className="font-mono text-[10px] tracking-[2px] text-ink-3">ENDS</span>
+        <span className="font-mono text-[10px] tracking-[2px] text-ink-3">{messages(lang).ends}</span>
         <span className="font-mono text-[13px] font-medium md:text-[15px]">{end}</span>
       </div>
     </li>
@@ -45,11 +47,13 @@ export function BannerLine({
   note,
   ended,
   size = "M",
+  lang = "en",
 }: {
   banner: Banner;
   note?: string;
   ended?: boolean;
   size?: "M" | "L";
+  lang?: Lang;
 }) {
   const large = size === "L";
   return (
@@ -61,10 +65,10 @@ export function BannerLine({
         >
           {fiveNames(banner)}
         </span>
-        <CharacterTag isNew={isNew(banner)} />
+        <CharacterTag isNew={isNew(banner)} lang={lang} />
       </div>
       <p className={`font-mono text-ink-2 ${large ? "text-[13px]" : "text-xs"}`}>{banner.bannerName}</p>
-      <p className={`text-[13px] text-ink-3 ${banner.featured4.length ? "" : "italic"}`}>{fourText(banner)}</p>
+      <p className={`text-[13px] text-ink-3 ${banner.featured4.length ? "" : "italic"}`}>{fourText(banner, lang)}</p>
       {note && <p className="font-mono text-[11px] text-game">{note}</p>}
     </li>
   );

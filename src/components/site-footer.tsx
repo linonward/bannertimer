@@ -1,10 +1,13 @@
+import type { Lang } from "@/lib/i18n";
+import { messages } from "@/lib/messages";
+
 export type FooterGroup = { heading: string; links: { href: string; text: string }[] };
 
 /**
  * B/Site Footer: link columns and the fine print. Plain <a>, because <Link> drops the trailing
  * slash from version URLs ("/zzz/3.2/").
  */
-export function SiteFooter({ groups }: { groups: FooterGroup[] }) {
+export function SiteFooter({ groups, lang = "en" }: { groups: FooterGroup[]; lang?: Lang }) {
   return (
     <footer className="mx-5 flex flex-col gap-7 border-t border-line pt-8 pb-10 md:mx-20 md:pt-10 md:pb-12">
       <div className="flex gap-10 md:gap-16">
@@ -19,9 +22,7 @@ export function SiteFooter({ groups }: { groups: FooterGroup[] }) {
           </nav>
         ))}
       </div>
-      <p className="text-xs text-ink-3">
-        bannertimer is a fan-made schedule. Not affiliated with HoYoverse. Times are converted from official server time.
-      </p>
+      <p className="text-xs text-ink-3">{messages(lang).disclaimer}</p>
     </footer>
   );
 }

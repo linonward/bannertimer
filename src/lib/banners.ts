@@ -141,10 +141,10 @@ export function featuredNames(banner: Banner): string {
   return banner.featured5.map((c) => c.name).join(" & ");
 }
 
-/** "A (X) and B (Y)": the banners with their 5★ characters, for sentences. */
-export function bannerTitles(banners: Banner[]): string {
+/** "A (X) and B (Y)": the banners with their 5★ characters, for sentences; `and` in the page language. */
+export function bannerTitles(banners: Banner[], and = "and"): string {
   const titles = banners.map((b) => `${b.bannerName} (${featuredNames(b)})`);
-  return titles.length > 1 ? `${titles.slice(0, -1).join(", ")} and ${titles.at(-1)}` : (titles[0] ?? "");
+  return titles.length > 1 ? `${titles.slice(0, -1).join(", ")} ${and} ${titles.at(-1)}` : (titles[0] ?? "");
 }
 
 export type PhaseWindow = { phase: number; start: number; end: number };

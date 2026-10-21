@@ -1,5 +1,11 @@
+import type { Lang } from "./i18n";
+
 // Per-game page copy: docs/product.md §6 (/hsr/), §6.1 (/zzz/) and §6.2 (/genshin/). Banner
 // facts never live here; they come from src/data (§4).
+
+/** The words a game page ranks with, in one language. */
+export type PageCopy = { title: string; description: string; h1: string; linkText: string };
+
 export type Game = {
   id: "hsr" | "zzz" | "genshin";
   /** The name in titles and sentences (§14 item 4: short names). */
@@ -16,6 +22,8 @@ export type Game = {
   h1: string;
   /** Anchor text in links from other pages: the page's main keyword. */
   linkText: string;
+  /** The page's copy in other languages; a language listed here gets its own page (§3.1). */
+  translations?: Partial<Record<Exclude<Lang, "en">, PageCopy>>;
 };
 
 export const GAMES: Game[] = [
@@ -31,6 +39,15 @@ export const GAMES: Game[] = [
       "Live HSR banner schedule with a real-time countdown. Current banner, next banner start time, upcoming banners and full rerun history — updated hourly.",
     h1: "HSR Banner Schedule & Countdown",
     linkText: "HSR banner schedule",
+    translations: {
+      vi: {
+        title: "Lịch Banner HSR & Banner Tiếp Theo — Đếm Ngược Trực Tiếp",
+        description:
+          "Lịch banner HSR trực tiếp với đồng hồ đếm ngược theo giây. Banner hiện tại, giờ mở banner tiếp theo, các banner sắp tới và lịch sử rerun — cập nhật mỗi giờ.",
+        h1: "Lịch Banner HSR — Đếm Ngược Trực Tiếp",
+        linkText: "Lịch banner HSR",
+      },
+    },
   },
   {
     id: "zzz",

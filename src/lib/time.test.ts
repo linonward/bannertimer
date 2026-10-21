@@ -65,3 +65,14 @@ describe("short formats for the board", () => {
     expect(countdownParts(-5000)).toEqual(["00", "00", "00", "00"]);
   });
 });
+
+describe("formats in another language", () => {
+  const ms = Date.parse("2026-11-10T20:00:00Z");
+
+  it("uses the locale's date order and month names, and keeps 24-hour time", () => {
+    expect(formatServerDay(ms, "america", "vi-VN")).toBe("10 thg 11");
+    expect(formatServerShort(ms, "asia", "vi-VN")).toBe("11 thg 11, 04:00");
+    expect(formatServerTime(ms, "america", "vi-VN")).toBe("10 thg 11, 2026, 15:00 (UTC-5)");
+    expect(formatLocalShort(ms, "Asia/Ho_Chi_Minh", "vi-VN")).toBe("11 thg 11, 03:00");
+  });
+});
