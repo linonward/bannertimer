@@ -21,13 +21,24 @@ Slice → branch (never commit to `main`) → TDD → verify → rebase → PR �
 
 ## Project status
 
-Spec only (2026-10-21). No code yet. The product is a gacha banner countdown and schedule site on `bannertimer.com`, specified in `docs/product.md`.
+M1 in progress (2026-10-21): `/`, `/hsr/` and `/zzz/` on sample data. The product is a gacha banner countdown and schedule site on `bannertimer.com`, specified in `docs/product.md`.
 
 Planned stack, same as the sibling `coloring-pages` repo: Next.js 16 (App Router, `src/`, TypeScript, Tailwind 4, pnpm), deployed as a Cloudflare Worker with `@opennextjs/cloudflare`. Banner data lives in JSON files in the repo. No database and no sign-in. Ask before adding either.
 
 ## Commands
 
-None yet. Add the table when the project is scaffolded.
+| Task      | Command |
+| --------- | ------- |
+| Install   | `pnpm install && pnpm exec playwright install chromium` |
+| Dev       | `pnpm dev` |
+| Build     | `pnpm build` (OpenNext build to `.open-next/`, then the page cache) |
+| Preview   | `pnpm preview` (the Worker in `wrangler dev`, as in production) |
+| Lint      | `pnpm lint` |
+| Typecheck | `pnpm typecheck` |
+| Unit      | `pnpm test` (`src/**/*.test.ts(x)`, jsdom) |
+| E2E       | `pnpm test:e2e` (builds with `BANNERTIMER_NOW` pinned, serves the Worker on a per-worktree port) |
+
+Banner data: one JSON file per version in `src/data/<game>/`, listed in `src/data/index.ts`. `pnpm test` checks the §4 rules.
 
 ## Constraints that shape the implementation
 
