@@ -1,0 +1,15 @@
+{
+  "game": "genshin",
+  "gameName": "Genshin Impact",
+  "version": "7.2",
+  "phases": [],
+  "estimate": {
+    "start": {
+      "utc": "2026-11-04T03:00:00Z"
+    },
+    "basis": "The last 7.1 wishes end Nov 3, 14:59 server time. Recent updates began at 06:00 (UTC+8) the next morning and took about five hours.",
+    "sourceUrl": "https://genshin.hoyoverse.com/en/news/detail/166634",
+    "sourceCheckedAt": "2026-10-22"
+  },
+  "lastUpdated": "2026-10-22T00:00:00Z"
+}

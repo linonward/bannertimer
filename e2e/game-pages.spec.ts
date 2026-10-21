@@ -233,3 +233,14 @@ test("every page has Open Graph tags and a share image", async ({ request }) => 
     expect(html, path).toContain(`<meta name="twitter:image" content="${image}"/>`);
   }
 });
+
+test("the next HSR and Genshin versions have estimate pages before their banners", async ({ request }) => {
+  for (const [path, line] of [
+    ["/hsr/4.7/", "HSR 4.7 is expected Nov 11, 03:00 UTC on every server — an estimate, not an announcement."],
+    ["/genshin/7.2/", "Genshin 7.2 is expected Nov 4, 03:00 UTC on every server — an estimate, not an announcement."],
+  ]) {
+    const html = await (await request.get(path)).text();
+    expect(html).toContain(line);
+    expect(html).toContain('data-status="estimate"');
+  }
+});
