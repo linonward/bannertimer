@@ -39,12 +39,22 @@ function runsUntil(banners: Banner[]): string {
  * tense follows `now` (the build time; pages rebuild hourly).
  */
 export function versionAnswer(shortName: string, version: VersionRecord, now: number): string {
+  const name = `${shortName} ${version.version}${version.versionName ? ` (${version.versionName})` : ""}`;
+  if (!version.phases.length && version.estimate) {
+    const { start, basis } = version.estimate;
+    const where = "utc" in start ? " on every server" : "";
+    return [
+      `${name} ${instant(start, "asia") <= now ? "was" : "is"} expected ${formatTimePoint(start)}${where} — an estimate, not an announcement.`,
+      basis,
+      `HoYoverse has not announced the ${version.version} banners yet; they appear here once the official notice or a reliable leak with a source is out.`,
+    ].join(" ");
+  }
   const [first, ...rest] = version.phases;
   const start = first.banners[0].start;
   const started = instant(start, "asia") <= now;
   const where = "utc" in start ? " on every server" : "";
   return [
-    `${shortName} ${version.version}${version.versionName ? ` (${version.versionName})` : ""} ${started ? "started" : "starts"} ${formatTimePoint(start)}${where}.`,
+    `${name} ${started ? "started" : "starts"} ${formatTimePoint(start)}${where}.`,
     `Phase ${first.phase} runs ${runsUntil(first.banners)}.`,
     ...rest.map((p) => `Phase ${p.phase} opens ${formatTimePoint(p.banners[0].start)} with ${bannerTitles(p.banners)}.`),
   ].join(" ");
@@ -54,6 +64,10 @@ export type CountdownTarget = { label: string; at: number };
 
 /** What the version page counts down to: the version start, the next phase, or the version end. */
 export function countdownTarget(version: VersionRecord, now: number, server: Server): CountdownTarget | null {
+  if (!version.phases.length) {
+    const at = version.estimate ? instant(version.estimate.start, server) : 0;
+    return now < at ? { label: `${version.version} EXPECTED IN`, at } : null;
+  }
   const starts = version.phases.map((p) => ({
     phase: p.phase,
     at: Math.min(...p.banners.map((b) => instant(b.start, server))),

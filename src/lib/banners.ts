@@ -28,10 +28,15 @@ export type VersionRecord = {
   version: string;
   /** The official name when HoYoverse names a version instead of numbering it ("Luna VIII" is 6.8). */
   versionName?: string;
+  /** Empty only while the version is known by its `estimate` alone (§4). */
   phases: Phase[];
+  /** An estimated start before any banner is announced; always shown as an estimate. */
+  estimate?: Estimate;
   serverResetUTC?: string;
   lastUpdated: string;
 };
+
+export type Estimate = { start: TimePoint; basis: string; sourceUrl: string; sourceCheckedAt: string };
 
 /** A banner with its version and phase: the unit every page module works with. */
 export type BannerEntry = Banner & Omit<Phase, "banners"> & { version: string };
@@ -51,7 +56,13 @@ function isTimePoint(value: unknown): value is TimePoint {
 export function validateVersion(record: VersionRecord): string[] {
   const where = `${record.game} ${record.version}`;
   const errors: string[] = [];
-  if (!record.phases?.length) errors.push(`${where}: no phases`);
+  if (!record.phases?.length && !record.estimate) errors.push(`${where}: no phases`);
+  if (record.estimate) {
+    const e = record.estimate;
+    if (!e.basis?.trim() || !e.sourceUrl || !e.sourceCheckedAt)
+      errors.push(`${where}: estimate needs basis, sourceUrl and sourceCheckedAt`);
+    if (!isTimePoint(e.start)) errors.push(`${where}: bad estimate start`);
+  }
   if (Number.isNaN(Date.parse(record.lastUpdated))) errors.push(`${where}: bad lastUpdated`);
   if (record.versionName !== undefined && !record.versionName.trim()) errors.push(`${where}: empty versionName`);
   for (const p of record.phases ?? []) {

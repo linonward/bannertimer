@@ -78,6 +78,40 @@ describe("version page copy", () => {
   });
 });
 
+// Shaped like ZZZ 3.4 before its banner notice: no phases, only a sourced estimate.
+const v34: VersionRecord = {
+  game: "zzz",
+  gameName: "Zenless Zone Zero",
+  version: "3.4",
+  lastUpdated: "2026-10-21T16:00:00Z",
+  phases: [],
+  estimate: {
+    start: { utc: "2026-12-02T03:00:00Z" },
+    basis: "Version 3.3 ends Dec 2, 06:00 (UTC+8), and updates usually take about five hours.",
+    sourceUrl: "https://zenless.hoyoverse.com/en-us/news/166963",
+    sourceCheckedAt: "2026-10-21",
+  },
+};
+
+describe("a version known only by its estimated start", () => {
+  it("says the date is an estimate and that the banners are not announced", () => {
+    expect(versionAnswer("ZZZ", v34, Date.parse("2026-10-21T12:00:00Z"))).toBe(
+      "ZZZ 3.4 is expected Dec 2, 03:00 UTC on every server — an estimate, not an announcement. " +
+        "Version 3.3 ends Dec 2, 06:00 (UTC+8), and updates usually take about five hours. " +
+        "HoYoverse has not announced the 3.4 banners yet; they appear here once the official notice or a reliable leak with a source is out.",
+    );
+    expect(versionAnswer("ZZZ", v34, Date.parse("2026-12-03T00:00:00Z"))).toMatch(/^ZZZ 3\.4 was expected Dec 2/);
+  });
+
+  it("counts down to the estimated start, then stops", () => {
+    expect(countdownTarget(v34, Date.parse("2026-10-21T12:00:00Z"), "america")).toEqual({
+      label: "3.4 EXPECTED IN",
+      at: Date.parse("2026-12-02T03:00:00Z"),
+    });
+    expect(countdownTarget(v34, Date.parse("2026-12-03T00:00:00Z"), "america")).toBeNull();
+  });
+});
+
 describe("countdownTarget", () => {
   it("counts down to the version start, then the next phase, then the version end", () => {
     expect(countdownTarget(v33, Date.parse("2026-10-01T00:00:00Z"), "america")).toEqual({

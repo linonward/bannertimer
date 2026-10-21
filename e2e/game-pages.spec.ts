@@ -170,7 +170,7 @@ test("a version that is not in the data is a 404", async ({ request }) => {
 
 test("the game sitemap lists every version page", async ({ request }) => {
   const xml = await (await request.get("/zzz/sitemap.xml")).text();
-  for (const version of ["3.1", "3.2", "3.3"]) expect(xml).toContain(`https://bannertimer.com/zzz/${version}/`);
+  for (const version of ["3.1", "3.2", "3.3", "3.4"]) expect(xml).toContain(`https://bannertimer.com/zzz/${version}/`);
 });
 
 test("a named version keeps its number in the URL and its official name in the answer", async ({ request }) => {
@@ -193,4 +193,21 @@ test("the analytics loader is in the page source and stays off outside bannertim
   await page.goto("/hsr/");
   await page.waitForLoadState("networkidle");
   expect(beacons).toEqual([]);
+});
+
+// §4 `estimate`: a version page before any banner is announced, labelled as an estimate.
+test("/zzz/3.4/ shows the estimated start as an estimate and no banners", async ({ request }) => {
+  const res = await request.get("/zzz/3.4/");
+  expect(res.ok()).toBe(true);
+  const html = await res.text();
+  expect(html).toContain("<title>ZZZ 3.4 Banners — Characters, Countdown &amp; Release Date</title>");
+  expect(html).toMatch(/<h1[^>]*>ZZZ 3.4 Banners<\/h1>/);
+  const answer = html.match(/<p[^>]*data-testid="answer"[^>]*>([\s\S]*?)<\/p>/)?.[1] ?? "";
+  expect(answer).toContain("ZZZ 3.4 is expected Dec 2, 03:00 UTC on every server — an estimate, not an announcement.");
+  expect(html).toContain('data-status="estimate"');
+  expect(html).not.toContain('data-status="official"');
+  expect(html).toContain("NOT ANNOUNCED YET");
+
+  const main = await (await request.get("/zzz/")).text();
+  expect(main).toMatch(/<a [^>]*href="\/zzz\/3.4\/"/);
 });
