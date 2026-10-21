@@ -1,0 +1,6 @@
+allowBuilds:
+  # wrangler (local Cloudflare preview): workerd downloads its runtime, esbuild its binary.
+  esbuild: true
+  workerd: true
+  sharp: false
+  unrs-resolver: false

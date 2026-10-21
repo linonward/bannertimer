@@ -1,0 +1,58 @@
+{
+  "game": "hsr",
+  "gameName": "Honkai: Star Rail",
+  "version": "4.7",
+  "phases": [
+    {
+      "phase": 1,
+      "bannerName": "Sample Banner 47A",
+      "featured5": [
+        {
+          "name": "Sample 5★ 47A",
+          "isNew": true
+        }
+      ],
+      "featured4": [
+        "Sample 4★ 47A1",
+        "Sample 4★ 47A2",
+        "Sample 4★ 47A3"
+      ],
+      "isRerun": false,
+      "start": {
+        "utc": "2026-10-21T03:00:00Z"
+      },
+      "end": {
+        "serverLocal": "2026-11-11T17:59:00"
+      },
+      "status": "official",
+      "sourceUrl": "https://example.com/",
+      "sourceCheckedAt": "2026-10-20"
+    },
+    {
+      "phase": 2,
+      "bannerName": "Sample Banner 47B",
+      "featured5": [
+        {
+          "name": "Sample 5★ 47B",
+          "isNew": true
+        }
+      ],
+      "featured4": [
+        "Sample 4★ 47B1",
+        "Sample 4★ 47B2",
+        "Sample 4★ 47B3"
+      ],
+      "isRerun": false,
+      "start": {
+        "serverLocal": "2026-11-11T18:00:00"
+      },
+      "end": {
+        "utc": "2026-12-02T03:00:00Z"
+      },
+      "status": "official",
+      "sourceUrl": "https://example.com/",
+      "sourceCheckedAt": "2026-10-20"
+    }
+  ],
+  "lastUpdated": "2026-10-21T11:41:00Z"
+}

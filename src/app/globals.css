@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+/* Site tokens. Status colors follow docs/product.md §5 module 2: official green, leaked grey. */
+@theme {
+  --color-ink: #16181d;
+  --color-muted: #5b6270;
+  --color-line: #dde1e8;
+  --color-page: #f6f7f9;
+  --color-surface: #ffffff;
+  --color-accent: #4b3fd1;
+  --color-official: #16803c;
+  --color-leaked: #d4d7dd;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+  background: var(--color-page);
+  color: var(--color-ink);
+}
+
+a {
+  color: var(--color-accent);
+}
