@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { BUILD_NOW } from "./server";
 
 // docs/product.md §5-§7, checked against the raw server HTML (no client JS).
 const pages = [
@@ -88,9 +89,14 @@ test("the countdown runs and the banner switches when the build is stale", async
 });
 
 test("the server choice changes the end time and is remembered", async ({ page }) => {
+  // The switch is in the header. At the build moment America still runs Evanescia's banner
+  // (ends 11:59 server time); Asia has moved to phase 2, whose banners end Nov 10.
+  await page.clock.setFixedTime(new Date(BUILD_NOW));
   await page.goto("/hsr/");
+  const ends = page.getByTestId("ends-server");
+  await expect(ends).toHaveText("Oct 21, 11:59");
   await page.getByRole("button", { name: "Asia" }).click();
-  await expect(page.getByText(/Ends .*\(UTC\+8\) server time/)).toBeVisible();
+  await expect(ends).toHaveText("Nov 10, 15:00");
   await page.reload();
   await expect(page.getByRole("button", { name: "Asia" })).toHaveAttribute("aria-pressed", "true");
 });

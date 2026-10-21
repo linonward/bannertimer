@@ -1,23 +1,32 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { bannerTitles, confirmationLabel, scheduleAt, type BannerEntry } from "@/lib/banners";
 import {
-  DEFAULT_SERVER,
+  bannerTitles,
+  confirmationLabel,
+  phaseWindows,
+  scheduleAt,
+  type BannerEntry,
+  type VersionRecord,
+} from "@/lib/banners";
+import { useNow, useServer } from "@/lib/live";
+import {
   formatCountdown,
-  formatLocalTime,
+  formatLocalShort,
+  formatServerShort,
   formatServerTime,
   instant,
-  isServer,
+  localZoneLabel,
   SERVERS,
-  type Server,
+  utcOffsetLabel,
 } from "@/lib/time";
+import { fiveNames, LiveBannerRow } from "./banner-line";
+import { FlapCountdown } from "./flap-countdown";
+import { HourglassIcon } from "./icons";
 import { StatusBadge } from "./status-badge";
-
-const SERVER_KEY = "bannertimer:server";
 
 type Props = {
   shortName: string;
+  versions: VersionRecord[];
   banners: BannerEntry[];
   /** The version after the current one, for the answer paragraph. */
   nextVersionOf: Record<string, string | undefined>;
@@ -25,31 +34,16 @@ type Props = {
   renderedAt: number;
 };
 
+const DAY = 86_400_000;
+
 /**
- * The first fold (docs/product.md §5 modules 1, 2 and 5): the answer paragraph, the current
- * banner and the next banner. The server HTML states end and start times as dates; after
- * hydration the same spans count down every second, and the phases switch if the build is stale.
+ * The first fold (docs/product.md §5 modules 1, 2 and 5): the answer paragraph and the board
+ * with the live banners and the next ones. The server HTML states end and start times as dates;
+ * after hydration the countdown runs every second, and the banners switch if the build is stale.
  */
-export function BannerHero({ shortName, banners, nextVersionOf, renderedAt }: Props) {
-  const [now, setNow] = useState(renderedAt);
-  const [live, setLive] = useState(false);
-  const [server, setServer] = useState<Server>(DEFAULT_SERVER);
-
-  useEffect(() => {
-    const saved = localStorage.getItem(SERVER_KEY);
-    // Restoring a saved choice and the clock after hydration; both differ from the build.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (isServer(saved)) setServer(saved);
-    setNow(Date.now());
-    setLive(true);
-    const timer = setInterval(() => setNow(Date.now()), 1000);
-    return () => clearInterval(timer);
-  }, []);
-
-  function chooseServer(value: Server) {
-    setServer(value);
-    localStorage.setItem(SERVER_KEY, value);
-  }
+export function BannerHero({ shortName, versions, banners, nextVersionOf, renderedAt }: Props) {
+  const { now, live } = useNow(renderedAt);
+  const server = useServer();
 
   const { current, next } = scheduleAt(banners, now, server);
   // The first live banner to end is the next change of lineup.
@@ -57,12 +51,22 @@ export function BannerHero({ shortName, banners, nextVersionOf, renderedAt }: Pr
   const startsAt = next.length ? instant(next[0].start, server) : 0;
   const nextVersion = current.length ? nextVersionOf[current[0].version] : undefined;
 
+  // The phase of the newest live banner, for "v4.6 · PHASE 2 · DAY 1 OF 21".
+  const latest = current.reduce<BannerEntry | null>(
+    (a, b) => (!a || instant(b.start, server) > instant(a.start, server) ? b : a),
+    null,
+  );
+  const window = latest
+    ? phaseWindows(versions.find((v) => v.version === latest.version)!, server).find((w) => w.phase === latest.phase)
+    : undefined;
+  const day = window ? `DAY ${Math.floor((now - window.start) / DAY) + 1} OF ${Math.ceil((window.end - window.start) / DAY)}` : "";
+
   const until = (ms: number, word: string) =>
     live ? `${word} in ${formatCountdown(ms - now)}` : `${word} ${formatServerTime(ms, server)}`;
 
   return (
-    <div className="space-y-6">
-      <p className="max-w-3xl text-lg leading-relaxed" data-testid="answer">
+    <div className="flex flex-col gap-7">
+      <p className="max-w-3xl text-[15px] leading-6 text-ink-2 md:text-base md:leading-[26px] [&_strong]:font-semibold [&_strong]:text-ink" data-testid="answer">
         {current.length ? (
           <>
             The current {shortName} {current.length > 1 ? "banners are" : "banner is"}{" "}
@@ -102,113 +106,120 @@ export function BannerHero({ shortName, banners, nextVersionOf, renderedAt }: Pr
         past phase dates are further down.
       </p>
 
-      <fieldset className="flex flex-wrap items-center gap-2 text-sm">
-        <legend className="sr-only">Server</legend>
-        <span className="text-muted">Server:</span>
-        {(Object.keys(SERVERS) as Server[]).map((key) => (
-          <button
-            key={key}
-            type="button"
-            aria-pressed={server === key}
-            onClick={() => chooseServer(key)}
-            className="rounded-full border border-line px-3 py-1 aria-pressed:border-accent aria-pressed:bg-accent aria-pressed:text-white"
-          >
-            {SERVERS[key].label}
-          </button>
-        ))}
-      </fieldset>
-
-      <div className="grid gap-4 md:grid-cols-2">
-        <section className="rounded-xl border border-line bg-surface p-5" aria-labelledby="current-banner">
-          <h2 id="current-banner" className="text-sm font-semibold uppercase tracking-wide text-muted">
-            Current banner
-          </h2>
-          {current.length ? (
-            <BannersCard banners={current} label="Ends" at={endsAt} server={server} live={live}>
-              <p className="mt-3 text-3xl font-bold tabular-nums" data-testid="countdown">
-                {live ? formatCountdown(endsAt - now) : formatServerTime(endsAt, server)}
+      <section
+        aria-labelledby="current-banner"
+        className="flex max-w-[792px] flex-col overflow-hidden rounded bg-panel shadow-[0_30px_80px_#000000cc] outline outline-game-line -outline-offset-1"
+      >
+        <span aria-hidden="true" className="h-1 bg-game" />
+        <div className="flex flex-col gap-4 px-4 pt-[18px] pb-5 md:gap-[22px] md:px-8 md:pt-7 md:pb-8">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <h2
+              id="current-banner"
+              className="flex items-center gap-2 rounded-[2px] bg-game px-2 py-1 font-mono text-[11px] font-bold tracking-[1.5px] text-game-ink md:px-2.5 md:py-[5px] md:text-xs md:tracking-[2px]"
+            >
+              <span aria-hidden="true" className="size-[7px] rounded-full bg-game-ink md:size-2" />
+              {current.length ? `LIVE NOW · ${current.length} BANNER${current.length > 1 ? "S" : ""}` : "NO BANNER LIVE"}
+            </h2>
+            {latest && (
+              <p className="font-mono text-xs tracking-[1px] text-ink-3">
+                v{latest.version} · PHASE {latest.phase}
+                {live && day ? ` · ${day}` : ""}
               </p>
-            </BannersCard>
-          ) : (
-            <p className="mt-2">No banner is live. The next one starts soon.</p>
-          )}
-        </section>
+            )}
+          </div>
 
-        <section className="rounded-xl border border-line bg-surface p-5" aria-labelledby="next-banner">
-          <h2 id="next-banner" className="text-sm font-semibold uppercase tracking-wide text-muted">
-            Next banner
-          </h2>
-          {next.length ? (
-            <BannersCard banners={next} label="Starts" at={startsAt} server={server} live={live}>
-              <div className="mt-3 flex flex-wrap items-center gap-2">
-                <StatusBadge status={next[0].status} />
-                <p className="text-xl font-semibold tabular-nums">
-                  {live ? `in ${formatCountdown(startsAt - now)}` : formatServerTime(startsAt, server)}
+          {current.length > 0 && (
+            <>
+              <ul className="flex flex-col">
+                {current.map((b) => (
+                  <LiveBannerRow
+                    key={`${b.version}-${b.bannerName}`}
+                    banner={b}
+                    end={formatServerShort(instant(b.end, server), server)}
+                  />
+                ))}
+              </ul>
+              <div className="flex flex-col gap-2.5 md:gap-3">
+                <p className="font-mono text-[10px] font-semibold tracking-[2px] text-game md:text-[11px]">
+                  {current.length > 1 ? "FIRST BANNER ENDS IN" : "BANNER ENDS IN"}
+                </p>
+                <FlapCountdown ms={live ? endsAt - now : null} size="L" />
+                <p className="sr-only" data-testid="countdown">
+                  {live ? formatCountdown(endsAt - now) : formatServerTime(endsAt, server)}
                 </p>
               </div>
-              {next[0].status === "leaked" && next[0].sourceUrl && (
-                <p className="mt-2 text-xs text-muted">
+              <dl className="flex flex-col gap-2 border-t border-line pt-3.5 md:flex-row md:gap-10 md:border-transparent md:pt-[18px]">
+                <div className="flex items-center justify-between md:flex-col md:items-start md:gap-1">
+                  <dt className="font-mono text-[11px] tracking-[1.5px] text-ink-3 max-md:font-sans max-md:text-[13px] max-md:tracking-normal">
+                    <span className="max-md:hidden">ENDS · SERVER TIME</span>
+                    <span className="md:hidden">Server · {utcOffsetLabel(server)}</span>
+                  </dt>
+                  <dd className="font-mono text-sm font-medium md:text-lg" data-testid="ends-server">
+                    {formatServerShort(endsAt, server)}
+                  </dd>
+                  <dd className="text-[13px] text-ink-3 max-md:hidden">
+                    {SERVERS[server].label} · {utcOffsetLabel(server)}
+                  </dd>
+                </div>
+                <div className="flex min-h-[46px] items-center justify-between md:flex-col md:items-start md:gap-1">
+                  <dt className="font-mono text-[11px] tracking-[1.5px] text-ink-3 max-md:font-sans max-md:text-[13px] max-md:tracking-normal">
+                    <span className="max-md:hidden">ENDS · YOUR TIME</span>
+                    <span className="md:hidden">
+                      Your time{live ? ` · ${localZoneLabel(endsAt).split(" · ").at(-1)}` : ""}
+                    </span>
+                  </dt>
+                  <dd className="font-mono text-sm font-medium md:text-lg">{live ? formatLocalShort(endsAt) : "—"}</dd>
+                  <dd className="text-[13px] text-ink-3 max-md:hidden">{live ? localZoneLabel(endsAt) : " "}</dd>
+                </div>
+              </dl>
+            </>
+          )}
+        </div>
+
+        <div className="flex flex-col gap-2 border-t border-line bg-panel-2 p-4 md:flex-row md:items-center md:gap-6 md:px-8 md:py-5">
+          <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+            <h2 id="next-banner" className="font-mono text-[10px] tracking-[2px] text-ink-3 md:text-[11px]">
+              {next.length
+                ? `NEXT BANNER${next.length > 1 ? "S" : ""} · v${next[0].version} PHASE ${next[0].phase}`
+                : "NEXT BANNER"}
+            </h2>
+            {next.length ? (
+              <>
+                <p className="font-display text-2xl font-extrabold text-ink uppercase italic md:text-[26px]">
+                  {next.map(fiveNames).join(" & ")}
+                </p>
+                <p className="text-sm text-ink-2">{next.map((b) => b.bannerName).join(" · ")}</p>
+              </>
+            ) : (
+              <>
+                <p className="font-display text-2xl font-extrabold text-ink-2 italic md:text-[26px]">NOT ANNOUNCED YET</p>
+                <p className="text-[13px] text-ink-2 md:font-mono">
+                  The next banners land here when HoYoverse posts the banner notice.
+                </p>
+              </>
+            )}
+          </div>
+          {next.length ? (
+            <div className="flex flex-col gap-1.5 md:items-end">
+              <StatusBadge status={next[0].status} />
+              <p className="font-mono text-[13px] text-ink-2">
+                Starts {formatServerShort(startsAt, server)} {utcOffsetLabel(server)}
+              </p>
+              {next[0].sourceUrl && (
+                <p className="font-mono text-[11px] text-ink-3">
                   Source:{" "}
                   <a href={next[0].sourceUrl} rel="nofollow noopener" className="underline">
-                    {new URL(next[0].sourceUrl).hostname}
-                  </a>{" "}
-                  · checked {next[0].sourceCheckedAt}
+                    {new URL(next[0].sourceUrl).hostname.replace(/^www\./, "")}
+                  </a>
+                  {next[0].sourceCheckedAt ? ` · checked ${next[0].sourceCheckedAt}` : ""}
                 </p>
               )}
-            </BannersCard>
+            </div>
           ) : (
-            <p className="mt-2">Not announced yet.</p>
+            <HourglassIcon className="size-[22px] text-ink-3 max-md:hidden" />
           )}
-        </section>
-      </div>
-    </div>
-  );
-}
-
-/** Banners that start or end together; a banner that runs on past `at` shows its own end. */
-function BannersCard({
-  banners,
-  label,
-  at,
-  server,
-  live,
-  children,
-}: {
-  banners: BannerEntry[];
-  label: string;
-  at: number;
-  server: Server;
-  live: boolean;
-  children: React.ReactNode;
-}) {
-  return (
-    <div>
-      <ul className="mt-2 space-y-2">
-        {banners.map((b) => (
-          <li key={b.bannerName}>
-            <p className="text-lg font-semibold">{b.bannerName}</p>
-            <ul className="text-sm">
-              {b.featured5.map((c) => (
-                <li key={c.name}>
-                  5★ {c.name}
-                  {c.isNew && (
-                    <span className="ml-2 rounded bg-accent/15 px-1.5 text-xs font-semibold text-accent">New</span>
-                  )}
-                </li>
-              ))}
-            </ul>
-            {label === "Ends" && instant(b.end, server) !== at && (
-              <p className="text-sm text-muted">Runs until {formatServerTime(instant(b.end, server), server)}</p>
-            )}
-          </li>
-        ))}
-      </ul>
-      {children}
-      <p className="mt-2 min-h-10 text-sm text-muted">
-        {label} {formatServerTime(at, server)} server time
-        <br />
-        {live ? `${formatLocalTime(at)} your time` : " "}
-      </p>
+        </div>
+      </section>
     </div>
   );
 }

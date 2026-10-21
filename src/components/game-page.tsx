@@ -11,10 +11,13 @@ import {
 } from "@/lib/banners";
 import { BUILD_TIME } from "@/lib/build-time";
 import { GAMES, getGame, SITE_URL } from "@/lib/games";
-import { DEFAULT_SERVER, formatServerDate, formatServerTime, instant, utcOffsetLabel } from "@/lib/time";
+import { DEFAULT_SERVER, formatServerDay, formatServerTime, instant, utcOffsetLabel } from "@/lib/time";
 import { ArchiveTable, type ArchiveRow } from "./archive-table";
 import { BannerHero } from "./banner-hero";
 import { JsonLd } from "./json-ld";
+import { FaqItem, Section } from "./section";
+import { SiteFooter } from "./site-footer";
+import { StatusBadge } from "./status-badge";
 import { Timeline } from "./timeline";
 
 const server = DEFAULT_SERVER;
@@ -33,8 +36,9 @@ export function GamePage({ gameId }: { gameId: string }) {
   const archive: ArchiveRow[] = pastBanners(banners, renderedAt, server).map((b) => ({
     key: `${b.version}-${b.phase}-${b.bannerName}`,
     version: b.version,
-    dates: `${formatServerDate(instant(b.start, server), server)} – ${formatServerDate(instant(b.end, server), server)}`,
-    half: b.phase === 1 ? "1st half" : "2nd half",
+    phase: b.phase,
+    bannerName: b.bannerName,
+    dates: `${formatServerDay(instant(b.start, server), server)} → ${formatServerDay(instant(b.end, server), server)}`,
     five: b.featured5.map((c) => c.name),
     four: b.featured4,
     rerun: b.isRerun,
@@ -76,63 +80,79 @@ export function GamePage({ gameId }: { gameId: string }) {
           "@context": "https://schema.org",
           "@type": "BreadcrumbList",
           itemListElement: [
-            { "@type": "ListItem", position: 1, name: "Banner timers", item: `${SITE_URL}/` },
-            { "@type": "ListItem", position: 2, name: game.linkText, item: pageUrl },
+            { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
+            { "@type": "ListItem", position: 2, name: game.name, item: pageUrl },
           ],
         }}
       />
 
-      <nav aria-label="Breadcrumb" className="text-sm text-muted">
-        <Link href="/">Banner timers</Link> › <span>{game.linkText}</span>
-      </nav>
+      <main data-game={game.id}>
+        <div className="flex flex-col gap-[18px] px-5 pt-5 pb-9 md:gap-7 md:px-20 md:pt-8 md:pb-[72px]">
+          <nav aria-label="Breadcrumb" className="font-mono text-[11px] text-ink-3 md:text-xs">
+            <Link href="/" className="hover:text-ink">
+              Home
+            </Link>{" "}
+            / <span>{game.name}</span>
+          </nav>
+          <div className="flex flex-col gap-3 md:gap-5">
+            <h1 className="max-w-[900px] font-display text-[52px] leading-[46px] font-extrabold tracking-[-1px] uppercase italic md:text-[88px] md:leading-[77px]">
+              {game.h1}
+            </h1>
+            <p className="flex items-center gap-2.5 font-mono text-[11px] text-ink-3 md:text-xs">
+              <span aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-ok" />
+              <span>
+                Last updated <time dateTime={updated}>{updated.slice(0, 10)}</time> · Times shown in your timezone
+              </span>
+            </p>
+          </div>
+          <BannerHero
+            shortName={game.shortName}
+            versions={versions}
+            banners={banners}
+            nextVersionOf={nextVersionOf}
+            renderedAt={renderedAt}
+          />
+        </div>
 
-      <h1 className="mt-3 text-3xl font-bold md:text-4xl">{game.h1}</h1>
-      <p className="mt-1 mb-4 text-sm text-muted">
-        Last updated <time dateTime={updated}>{updated.slice(0, 10)}</time> · Times shown in your timezone
-      </p>
+        <Section
+          id="schedule"
+          eyebrow="01 ── TIMETABLE"
+          title={`Upcoming ${game.shortName} banners`}
+          aside={<StatusBadge status="official" />}
+        >
+          <Timeline versions={upcomingVersions(versions, renderedAt, server)} now={renderedAt} />
+        </Section>
 
-      <BannerHero shortName={game.shortName} banners={banners} nextVersionOf={nextVersionOf} renderedAt={renderedAt} />
+        <Section
+          id="archive"
+          eyebrow="02 ── ARCHIVE"
+          title={`Past ${game.shortName} banners`}
+          sub="One row per banner, newest first"
+        >
+          <ArchiveTable rows={archive} />
+        </Section>
 
-      <section className="mt-12" aria-labelledby="schedule">
-        <h2 id="schedule" className="mb-4 text-2xl font-bold">
-          Upcoming {game.shortName} banners
-        </h2>
-        <Timeline versions={upcomingVersions(versions, renderedAt, server)} />
-      </section>
+        <Section id="faq" eyebrow="03 ── FAQ" title={`${game.shortName} banner questions`}>
+          <dl>
+            {faq.map((f) => (
+              <FaqItem key={f.q} {...f} />
+            ))}
+          </dl>
+        </Section>
+      </main>
 
-      <section className="mt-12" aria-labelledby="archive">
-        <h2 id="archive" className="mb-4 text-2xl font-bold">
-          {game.shortName} banner history
-        </h2>
-        <ArchiveTable rows={archive} />
-      </section>
-
-      <section className="mt-12" aria-labelledby="faq">
-        <h2 id="faq" className="mb-4 text-2xl font-bold">
-          FAQ
-        </h2>
-        <dl className="space-y-4">
-          {faq.map((f) => (
-            <div key={f.q}>
-              <dt className="font-semibold">{f.q}</dt>
-              <dd className="mt-1 text-muted">{f.a}</dd>
-            </div>
-          ))}
-        </dl>
-      </section>
-
-      <nav aria-label="More banner timers" className="mt-12 border-t border-line pt-6 text-sm">
-        <ul className="flex flex-wrap gap-x-6 gap-y-2">
-          {others.map((g) => (
-            <li key={g.id}>
-              <Link href={`/${g.id}/`}>{g.linkText}</Link>
-            </li>
-          ))}
-          <li>
-            <a href="#archive">{game.shortName} banner history</a>
-          </li>
-        </ul>
-      </nav>
+      <SiteFooter
+        groups={[
+          { heading: "Other games", links: others.map((g) => ({ href: `/${g.id}/`, text: g.linkText })) },
+          {
+            heading: "This game",
+            links: [
+              { href: "#archive", text: `${game.shortName} banner archive` },
+              { href: "#faq", text: `${game.shortName} banner FAQ` },
+            ],
+          },
+        ]}
+      />
     </>
   );
 }

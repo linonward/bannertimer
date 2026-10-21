@@ -1,7 +1,18 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { GAMES, SITE_NAME, SITE_URL } from "@/lib/games";
+import { Barlow_Condensed, IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
+import { SiteHeader } from "@/components/site-header";
+import { SITE_NAME, SITE_URL } from "@/lib/games";
 import "./globals.css";
+
+// Self-hosted by next/font at build time, so no third-party request on the critical path (§7).
+const display = Barlow_Condensed({
+  subsets: ["latin"],
+  weight: ["600", "800"],
+  style: ["italic"],
+  variable: "--font-barlow-condensed",
+});
+const sans = IBM_Plex_Sans({ subsets: ["latin"], weight: ["400", "500", "600"], variable: "--font-ibm-plex-sans" });
+const mono = IBM_Plex_Mono({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-ibm-plex-mono" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -10,24 +21,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${display.variable} ${sans.variable} ${mono.variable}`}>
       <body className="min-h-screen font-sans antialiased">
-        <header className="border-b border-line bg-surface">
-          <nav className="mx-auto flex max-w-5xl items-center gap-6 px-4 py-3 text-sm">
-            <Link href="/" className="font-bold text-ink">
-              {SITE_NAME}
-            </Link>
-            {GAMES.map((g) => (
-              <Link key={g.id} href={`/${g.id}/`}>
-                {g.shortName}
-              </Link>
-            ))}
-          </nav>
-        </header>
-        <main className="mx-auto max-w-5xl px-4 py-8">{children}</main>
-        <footer className="mx-auto max-w-5xl px-4 py-8 text-xs text-muted">
-          {SITE_NAME} is a fan site and is not affiliated with HoYoverse.
-        </footer>
+        <SiteHeader />
+        {children}
       </body>
     </html>
   );
