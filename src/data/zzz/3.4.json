@@ -5,50 +5,58 @@
   "phases": [
     {
       "phase": 1,
-      "bannerName": "Sample Banner 34A",
-      "featured5": [
+      "banners": [
         {
-          "name": "Sample 5★ 34A",
-          "isNew": true
+          "bannerName": "Sample Banner 34A",
+          "featured5": [
+            {
+              "name": "Sample 5★ 34A",
+              "isNew": true
+            }
+          ],
+          "featured4": [
+            "Sample 4★ 34A1",
+            "Sample 4★ 34A2",
+            "Sample 4★ 34A3"
+          ],
+          "isRerun": false,
+          "start": {
+            "utc": "2026-11-05T03:00:00Z"
+          },
+          "end": {
+            "serverLocal": "2026-11-26T17:59:00"
+          }
         }
       ],
-      "featured4": [
-        "Sample 4★ 34A1",
-        "Sample 4★ 34A2",
-        "Sample 4★ 34A3"
-      ],
-      "isRerun": false,
-      "start": {
-        "utc": "2026-11-05T03:00:00Z"
-      },
-      "end": {
-        "serverLocal": "2026-11-26T17:59:00"
-      },
       "status": "leaked",
       "sourceUrl": "https://example.com/",
       "sourceCheckedAt": "2026-10-20"
     },
     {
       "phase": 2,
-      "bannerName": "Sample Banner 34B",
-      "featured5": [
+      "banners": [
         {
-          "name": "Sample 5★ 34B",
-          "isNew": true
+          "bannerName": "Sample Banner 34B",
+          "featured5": [
+            {
+              "name": "Sample 5★ 34B",
+              "isNew": true
+            }
+          ],
+          "featured4": [
+            "Sample 4★ 34B1",
+            "Sample 4★ 34B2",
+            "Sample 4★ 34B3"
+          ],
+          "isRerun": false,
+          "start": {
+            "serverLocal": "2026-11-26T18:00:00"
+          },
+          "end": {
+            "utc": "2026-12-17T03:00:00Z"
+          }
         }
       ],
-      "featured4": [
-        "Sample 4★ 34B1",
-        "Sample 4★ 34B2",
-        "Sample 4★ 34B3"
-      ],
-      "isRerun": false,
-      "start": {
-        "serverLocal": "2026-11-26T18:00:00"
-      },
-      "end": {
-        "utc": "2026-12-17T03:00:00Z"
-      },
       "status": "leaked",
       "sourceUrl": "https://example.com/",
       "sourceCheckedAt": "2026-10-20"

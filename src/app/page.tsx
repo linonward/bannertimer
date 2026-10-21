@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { featuredNames, phasesOf, scheduleAt, versionsOf } from "@/lib/banners";
+import { bannersOf, bannerTitles, scheduleAt, versionsOf } from "@/lib/banners";
 import { BUILD_TIME } from "@/lib/build-time";
 import { GAMES, SITE_NAME } from "@/lib/games";
 import { DEFAULT_SERVER, formatServerTime, instant } from "@/lib/time";
@@ -20,15 +20,15 @@ export default function Home() {
       <h1 className="text-3xl font-bold">Gacha banner timers</h1>
       <ul className="mt-6 grid gap-4 md:grid-cols-2">
         {GAMES.map((game) => {
-          const { current } = scheduleAt(phasesOf(versionsOf(game.id)), now, DEFAULT_SERVER);
+          const { current } = scheduleAt(bannersOf(versionsOf(game.id)), now, DEFAULT_SERVER);
           return (
             <li key={game.id} className="rounded-xl border border-line bg-surface p-5">
               <h2 className="text-xl font-semibold">
                 <Link href={`/${game.id}/`}>{game.linkText}</Link>
               </h2>
               <p className="mt-2 text-sm">
-                {current
-                  ? `Now: ${current.bannerName} (${featuredNames(current)}), ends ${formatServerTime(instant(current.end, DEFAULT_SERVER), DEFAULT_SERVER)}.`
+                {current.length
+                  ? `Now: ${bannerTitles(current)}. ${current.length > 1 ? "The first ends" : "Ends"} ${formatServerTime(instant(current[0].end, DEFAULT_SERVER), DEFAULT_SERVER)}.`
                   : "No banner is live right now."}
               </p>
             </li>

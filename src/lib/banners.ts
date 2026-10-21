@@ -3,14 +3,20 @@ import { instant, type Server, type TimePoint } from "./time";
 
 export type Status = "official" | "leaked";
 
-export type Phase = {
-  phase: number;
+/** One character banner. Several run at once, and one can run past its phase (§4). */
+export type Banner = {
   bannerName: string;
   featured5: { name: string; isNew: boolean }[];
+  /** Empty when the game lets players pick the 4★ characters. */
   featured4: string[];
   isRerun: boolean;
   start: TimePoint;
   end: TimePoint;
+};
+
+export type Phase = {
+  phase: number;
+  banners: Banner[];
   status: Status;
   sourceUrl?: string;
   sourceCheckedAt?: string;
@@ -25,8 +31,8 @@ export type VersionRecord = {
   lastUpdated: string;
 };
 
-/** A phase with the version it belongs to: the unit every page module works with. */
-export type BannerPhase = Phase & { version: string };
+/** A banner with its version and phase: the unit every page module works with. */
+export type BannerEntry = Banner & Omit<Phase, "banners"> & { version: string };
 
 function isTimePoint(value: unknown): value is TimePoint {
   if (typeof value !== "object" || value === null) return false;
@@ -50,9 +56,13 @@ export function validateVersion(record: VersionRecord): string[] {
     if (p.status !== "official" && p.status !== "leaked") errors.push(`${at}: status must be official or leaked`);
     if (p.status === "leaked" && (!p.sourceUrl || !p.sourceCheckedAt))
       errors.push(`${at}: leaked needs sourceUrl and sourceCheckedAt`);
-    if (!isTimePoint(p.start)) errors.push(`${at}: bad start`);
-    if (!isTimePoint(p.end)) errors.push(`${at}: bad end`);
-    if (!p.featured5?.length) errors.push(`${at}: no 5★`);
+    if (!p.banners?.length) errors.push(`${at}: no banners`);
+    for (const b of p.banners ?? []) {
+      const of = `${at} ${b.bannerName}`;
+      if (!isTimePoint(b.start)) errors.push(`${of}: bad start`);
+      if (!isTimePoint(b.end)) errors.push(`${of}: bad end`);
+      if (!b.featured5?.length) errors.push(`${of}: no 5★`);
+    }
   }
   return errors;
 }
@@ -70,8 +80,10 @@ export function versionsOf(game: string, files: unknown[] = versionFiles): Versi
     .sort((a, b) => compareVersions(a.version, b.version));
 }
 
-export function phasesOf(versions: VersionRecord[]): BannerPhase[] {
-  return versions.flatMap((v) => v.phases.map((p) => ({ ...p, version: v.version })));
+export function bannersOf(versions: VersionRecord[]): BannerEntry[] {
+  return versions.flatMap((v) =>
+    v.phases.flatMap(({ banners, ...phase }) => banners.map((b) => ({ ...b, ...phase, version: v.version }))),
+  );
 }
 
 export function lastUpdated(versions: VersionRecord[]): string {
@@ -79,32 +91,44 @@ export function lastUpdated(versions: VersionRecord[]): string {
 }
 
 export type Schedule = {
-  /** The phase that is live now, or null between phases (for example in maintenance). */
-  current: BannerPhase | null;
-  /** The first phase that starts after now. */
-  next: BannerPhase | null;
+  /** The banners live now, soonest end first. Empty between phases (for example in maintenance). */
+  current: BannerEntry[];
+  /** The banners that open next, all at the same moment. */
+  next: BannerEntry[];
 };
 
-export function scheduleAt(phases: BannerPhase[], now: number, server: Server): Schedule {
-  const current = phases.find((p) => instant(p.start, server) <= now && now < instant(p.end, server)) ?? null;
-  const next = phases.find((p) => instant(p.start, server) > now) ?? null;
-  return { current, next };
+export function scheduleAt(banners: BannerEntry[], now: number, server: Server): Schedule {
+  const start = (b: BannerEntry) => instant(b.start, server);
+  const end = (b: BannerEntry) => instant(b.end, server);
+  const current = banners.filter((b) => start(b) <= now && now < end(b)).sort((a, b) => end(a) - end(b));
+  const nextStart = Math.min(...banners.map(start).filter((t) => t > now));
+  return { current, next: banners.filter((b) => start(b) === nextStart) };
 }
 
 /** Versions that have not ended yet, oldest first: the timeline (§5 module 3). */
 export function upcomingVersions(versions: VersionRecord[], now: number, server: Server, count = 3): VersionRecord[] {
-  return versions.filter((v) => v.phases.some((p) => instant(p.end, server) > now)).slice(0, count);
+  return versions
+    .filter((v) => v.phases.some((p) => p.banners.some((b) => instant(b.end, server) > now)))
+    .slice(0, count);
 }
 
-/** Phases that have ended, newest first: the archive (§5 module 4). */
-export function pastPhases(phases: BannerPhase[], now: number, server: Server): BannerPhase[] {
-  return phases.filter((p) => instant(p.end, server) <= now).reverse();
+/** Banners that have ended, newest first: the archive (§5 module 4). */
+export function pastBanners(banners: BannerEntry[], now: number, server: Server): BannerEntry[] {
+  return banners
+    .filter((b) => instant(b.end, server) <= now)
+    .sort((a, b) => instant(b.end, server) - instant(a.end, server) || b.phase - a.phase);
 }
 
 export function confirmationLabel(status: Status): string {
   return status === "official" ? "Official" : "Leaked — unconfirmed";
 }
 
-export function featuredNames(phase: BannerPhase): string {
-  return phase.featured5.map((c) => c.name).join(" & ");
+export function featuredNames(banner: Banner): string {
+  return banner.featured5.map((c) => c.name).join(" & ");
+}
+
+/** "A (X) and B (Y)": the banners with their 5★ characters, for sentences. */
+export function bannerTitles(banners: Banner[]): string {
+  const titles = banners.map((b) => `${b.bannerName} (${featuredNames(b)})`);
+  return titles.length > 1 ? `${titles.slice(0, -1).join(", ")} and ${titles.at(-1)}` : (titles[0] ?? "");
 }

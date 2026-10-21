@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { confirmationLabel, featuredNames, scheduleAt, type BannerPhase } from "@/lib/banners";
+import { bannerTitles, confirmationLabel, scheduleAt, type BannerEntry } from "@/lib/banners";
 import {
   DEFAULT_SERVER,
   formatCountdown,
@@ -18,7 +18,7 @@ const SERVER_KEY = "bannertimer:server";
 
 type Props = {
   shortName: string;
-  phases: BannerPhase[];
+  banners: BannerEntry[];
   /** The version after the current one, for the answer paragraph. */
   nextVersionOf: Record<string, string | undefined>;
   /** Build time. The first render uses it so the server HTML and hydration match. */
@@ -30,7 +30,7 @@ type Props = {
  * banner and the next banner. The server HTML states end and start times as dates; after
  * hydration the same spans count down every second, and the phases switch if the build is stale.
  */
-export function BannerHero({ shortName, phases, nextVersionOf, renderedAt }: Props) {
+export function BannerHero({ shortName, banners, nextVersionOf, renderedAt }: Props) {
   const [now, setNow] = useState(renderedAt);
   const [live, setLive] = useState(false);
   const [server, setServer] = useState<Server>(DEFAULT_SERVER);
@@ -51,10 +51,11 @@ export function BannerHero({ shortName, phases, nextVersionOf, renderedAt }: Pro
     localStorage.setItem(SERVER_KEY, value);
   }
 
-  const { current, next } = scheduleAt(phases, now, server);
-  const endsAt = current ? instant(current.end, server) : 0;
-  const startsAt = next ? instant(next.start, server) : 0;
-  const nextVersion = current ? nextVersionOf[current.version] : undefined;
+  const { current, next } = scheduleAt(banners, now, server);
+  // The first live banner to end is the next change of lineup.
+  const endsAt = current.length ? instant(current[0].end, server) : 0;
+  const startsAt = next.length ? instant(next[0].start, server) : 0;
+  const nextVersion = current.length ? nextVersionOf[current[0].version] : undefined;
 
   const until = (ms: number, word: string) =>
     live ? `${word} in ${formatCountdown(ms - now)}` : `${word} ${formatServerTime(ms, server)}`;
@@ -62,25 +63,29 @@ export function BannerHero({ shortName, phases, nextVersionOf, renderedAt }: Pro
   return (
     <div className="space-y-6">
       <p className="max-w-3xl text-lg leading-relaxed" data-testid="answer">
-        {current ? (
+        {current.length ? (
           <>
-            The current {shortName} banner is <strong>{bannerTitle(current)}</strong> and{" "}
+            The current {shortName} {current.length > 1 ? "banners are" : "banner is"}{" "}
+            <strong>{bannerTitles(current)}</strong>
+            {current.length > 1 ? "; the first " : " and "}
             <strong className="tabular-nums">{until(endsAt, live ? "ends" : "ends on")}</strong>.{" "}
           </>
         ) : (
           <>No {shortName} banner is live right now. </>
         )}
-        {next ? (
+        {next.length ? (
           <>
-            The next banner, <strong>{bannerTitle(next)}</strong>, starts{" "}
-            <strong>{formatServerTime(startsAt, server)}</strong> — <strong>{confirmationLabel(next.status)}</strong>.{" "}
+            The next banner{next.length > 1 ? "s" : ""}, <strong>{bannerTitles(next)}</strong>,{" "}
+            {next.length > 1 ? "start" : "starts"} <strong>{formatServerTime(startsAt, server)}</strong> —{" "}
+            <strong>{confirmationLabel(next[0].status)}</strong>.{" "}
           </>
         ) : (
           <>The next banner has not been announced yet. </>
         )}
-        {current && (
+        {current.length > 0 && (
           <>
-            Below is the full {shortName} banner schedule for every phase of patch <strong>{current.version}</strong>
+            Below is the full {shortName} banner schedule for every phase of patch{" "}
+            <strong>{current[0].version}</strong>
             {nextVersion ? (
               <>
                 , plus upcoming banners for <strong>{nextVersion}</strong>
@@ -114,12 +119,12 @@ export function BannerHero({ shortName, phases, nextVersionOf, renderedAt }: Pro
           <h2 id="current-banner" className="text-sm font-semibold uppercase tracking-wide text-muted">
             Current banner
           </h2>
-          {current ? (
-            <PhaseCard phase={current} label="Ends" at={endsAt} server={server} live={live}>
+          {current.length ? (
+            <BannersCard banners={current} label="Ends" at={endsAt} server={server} live={live}>
               <p className="mt-3 text-3xl font-bold tabular-nums" data-testid="countdown">
                 {live ? formatCountdown(endsAt - now) : formatServerTime(endsAt, server)}
               </p>
-            </PhaseCard>
+            </BannersCard>
           ) : (
             <p className="mt-2">No banner is live. The next one starts soon.</p>
           )}
@@ -129,24 +134,24 @@ export function BannerHero({ shortName, phases, nextVersionOf, renderedAt }: Pro
           <h2 id="next-banner" className="text-sm font-semibold uppercase tracking-wide text-muted">
             Next banner
           </h2>
-          {next ? (
-            <PhaseCard phase={next} label="Starts" at={startsAt} server={server} live={live}>
+          {next.length ? (
+            <BannersCard banners={next} label="Starts" at={startsAt} server={server} live={live}>
               <div className="mt-3 flex flex-wrap items-center gap-2">
-                <StatusBadge status={next.status} />
+                <StatusBadge status={next[0].status} />
                 <p className="text-xl font-semibold tabular-nums">
                   {live ? `in ${formatCountdown(startsAt - now)}` : formatServerTime(startsAt, server)}
                 </p>
               </div>
-              {next.status === "leaked" && next.sourceUrl && (
+              {next[0].status === "leaked" && next[0].sourceUrl && (
                 <p className="mt-2 text-xs text-muted">
                   Source:{" "}
-                  <a href={next.sourceUrl} rel="nofollow noopener" className="underline">
-                    {new URL(next.sourceUrl).hostname}
+                  <a href={next[0].sourceUrl} rel="nofollow noopener" className="underline">
+                    {new URL(next[0].sourceUrl).hostname}
                   </a>{" "}
-                  · checked {next.sourceCheckedAt}
+                  · checked {next[0].sourceCheckedAt}
                 </p>
               )}
-            </PhaseCard>
+            </BannersCard>
           ) : (
             <p className="mt-2">Not announced yet.</p>
           )}
@@ -156,19 +161,16 @@ export function BannerHero({ shortName, phases, nextVersionOf, renderedAt }: Pro
   );
 }
 
-function bannerTitle(phase: BannerPhase): string {
-  return `${phase.bannerName} (${featuredNames(phase)})`;
-}
-
-function PhaseCard({
-  phase,
+/** Banners that start or end together; a banner that runs on past `at` shows its own end. */
+function BannersCard({
+  banners,
   label,
   at,
   server,
   live,
   children,
 }: {
-  phase: BannerPhase;
+  banners: BannerEntry[];
   label: string;
   at: number;
   server: Server;
@@ -177,12 +179,23 @@ function PhaseCard({
 }) {
   return (
     <div>
-      <p className="mt-2 text-lg font-semibold">{phase.bannerName}</p>
-      <ul className="mt-1 text-sm">
-        {phase.featured5.map((c) => (
-          <li key={c.name}>
-            5★ {c.name}
-            {c.isNew && <span className="ml-2 rounded bg-accent/15 px-1.5 text-xs font-semibold text-accent">New</span>}
+      <ul className="mt-2 space-y-2">
+        {banners.map((b) => (
+          <li key={b.bannerName}>
+            <p className="text-lg font-semibold">{b.bannerName}</p>
+            <ul className="text-sm">
+              {b.featured5.map((c) => (
+                <li key={c.name}>
+                  5★ {c.name}
+                  {c.isNew && (
+                    <span className="ml-2 rounded bg-accent/15 px-1.5 text-xs font-semibold text-accent">New</span>
+                  )}
+                </li>
+              ))}
+            </ul>
+            {label === "Ends" && instant(b.end, server) !== at && (
+              <p className="text-sm text-muted">Runs until {formatServerTime(instant(b.end, server), server)}</p>
+            )}
           </li>
         ))}
       </ul>
@@ -190,7 +203,7 @@ function PhaseCard({
       <p className="mt-2 min-h-10 text-sm text-muted">
         {label} {formatServerTime(at, server)} server time
         <br />
-        {live ? `${formatLocalTime(at)} your time` : " "}
+        {live ? `${formatLocalTime(at)} your time` : " "}
       </p>
     </div>
   );
