@@ -12,6 +12,6 @@ function worktreePort(): number {
 export const port = worktreePort();
 export const baseURL = `http://127.0.0.1:${port}`;
 
-// The build pretends it is this moment, so the sample data in src/data has a fixed current banner:
-// HSR 4.7 phase 1 and ZZZ 3.3 phase 2.
+// The build pretends it is this moment, so the data in src/data has a fixed current banner:
+// HSR 4.6 phase 1 (America server) and ZZZ 3.3 phase 1.
 export const BUILD_NOW = "2026-10-21T12:00:00Z";

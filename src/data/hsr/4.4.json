@@ -1,0 +1,171 @@
+{
+  "game": "hsr",
+  "gameName": "Honkai: Star Rail",
+  "version": "4.4",
+  "phases": [
+    {
+      "phase": 1,
+      "banners": [
+        {
+          "bannerName": "Ad Astra Nova",
+          "featured5": [
+            {
+              "name": "Himeko • Nova",
+              "isNew": true
+            }
+          ],
+          "featured4": [
+            "Moze",
+            "Hanya",
+            "Serval"
+          ],
+          "isRerun": false,
+          "start": {
+            "utc": "2026-07-15T03:00:00Z"
+          },
+          "end": {
+            "serverLocal": "2026-08-25T15:00:00"
+          }
+        },
+        {
+          "bannerName": "Indelible Coterie: Sparxie",
+          "featured5": [
+            {
+              "name": "Sparxie",
+              "isNew": false
+            }
+          ],
+          "featured4": [
+            "Moze",
+            "Hanya",
+            "Serval"
+          ],
+          "isRerun": true,
+          "start": {
+            "utc": "2026-07-15T03:00:00Z"
+          },
+          "end": {
+            "serverLocal": "2026-08-05T11:59:00"
+          }
+        },
+        {
+          "bannerName": "Indelible Coterie: Dan Heng • Permansor Terrae",
+          "featured5": [
+            {
+              "name": "Dan Heng • Permansor Terrae",
+              "isNew": false
+            }
+          ],
+          "featured4": [
+            "Moze",
+            "Hanya",
+            "Serval"
+          ],
+          "isRerun": true,
+          "start": {
+            "utc": "2026-07-15T03:00:00Z"
+          },
+          "end": {
+            "serverLocal": "2026-08-05T11:59:00"
+          }
+        },
+        {
+          "bannerName": "Indelible Coterie: Evernight",
+          "featured5": [
+            {
+              "name": "Evernight",
+              "isNew": false
+            }
+          ],
+          "featured4": [
+            "Moze",
+            "Hanya",
+            "Serval"
+          ],
+          "isRerun": true,
+          "start": {
+            "utc": "2026-07-15T03:00:00Z"
+          },
+          "end": {
+            "serverLocal": "2026-08-05T11:59:00"
+          }
+        }
+      ],
+      "status": "official",
+      "sourceUrl": "https://www.hoyolab.com/article/45842578",
+      "sourceCheckedAt": "2026-10-21"
+    },
+    {
+      "phase": 2,
+      "banners": [
+        {
+          "bannerName": "Indelible Coterie: Cerydra",
+          "featured5": [
+            {
+              "name": "Cerydra",
+              "isNew": false
+            }
+          ],
+          "featured4": [
+            "Moze",
+            "Hanya",
+            "Serval"
+          ],
+          "isRerun": true,
+          "start": {
+            "serverLocal": "2026-08-05T12:00:00"
+          },
+          "end": {
+            "serverLocal": "2026-08-25T15:00:00"
+          }
+        },
+        {
+          "bannerName": "Indelible Coterie: Anaxa",
+          "featured5": [
+            {
+              "name": "Anaxa",
+              "isNew": false
+            }
+          ],
+          "featured4": [
+            "Moze",
+            "Hanya",
+            "Serval"
+          ],
+          "isRerun": true,
+          "start": {
+            "serverLocal": "2026-08-05T12:00:00"
+          },
+          "end": {
+            "serverLocal": "2026-08-25T15:00:00"
+          }
+        },
+        {
+          "bannerName": "Indelible Coterie: Aventurine",
+          "featured5": [
+            {
+              "name": "Aventurine",
+              "isNew": false
+            }
+          ],
+          "featured4": [
+            "Moze",
+            "Hanya",
+            "Serval"
+          ],
+          "isRerun": true,
+          "start": {
+            "serverLocal": "2026-08-05T12:00:00"
+          },
+          "end": {
+            "serverLocal": "2026-08-25T15:00:00"
+          }
+        }
+      ],
+      "status": "official",
+      "sourceUrl": "https://www.hoyolab.com/article/46135086",
+      "sourceCheckedAt": "2026-10-21"
+    }
+  ],
+  "lastUpdated": "2026-10-21T13:18:00Z"
+}
