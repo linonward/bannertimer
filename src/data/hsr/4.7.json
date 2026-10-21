@@ -1,0 +1,15 @@
+{
+  "game": "hsr",
+  "gameName": "Honkai: Star Rail",
+  "version": "4.7",
+  "phases": [],
+  "estimate": {
+    "start": {
+      "utc": "2026-11-11T03:00:00Z"
+    },
+    "basis": "Version 4.6 banners end Nov 10, 15:00 server time. The version update usually starts at 06:00 (UTC+8) the next day and takes about five hours.",
+    "sourceUrl": "https://www.hoyolab.com/article/47142215",
+    "sourceCheckedAt": "2026-10-22"
+  },
+  "lastUpdated": "2026-10-22T00:00:00Z"
+}
