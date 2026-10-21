@@ -26,7 +26,7 @@ Each worktree has its own `node_modules`, so run `pnpm install` in it once. Play
 
 ## 3. Design file
 
-`docs/design/bannertimer.pen` holds one board per page **template**, not one per page. A template is a page type with its own layout. `/zzz/` and `/genshin/` reuse the `/hsr/` template, so they get no board of their own. One exception: `/zzz/ — Desktop` stays as a reference board for the `game` theme and a Leaked next banner. Keep it in step with the `/hsr/` board.
+`docs/design/bannertimer.pen` holds one board per page **template**, not one per page. A template is a page type with its own layout. `/zzz/` and `/genshin/` reuse the `/hsr/` template, so they get no board of their own. One exception: `/zzz/ — Desktop` stays as a reference board for the `game` theme and a next banner that is already announced. Keep it in step with the `/hsr/` board.
 
 The design is dark only. Colours are `b-*` variables with one theme axis, `game` (`hsr`, `zzz`, `genshin`). Set it on the page board's root frame.
 
@@ -43,7 +43,7 @@ Top row: the Foundation, Components and Brand frames. Page boards (2026-10-21) s
 |---|---|---|
 | Home | `/` | `/ Home — Desktop` |
 | Game page | `/hsr/`, `/zzz/`, later `/genshin/` | `/hsr/ — Desktop`, `/hsr/ — Mobile 390`, `/zzz/ — Desktop` (reference) |
-| Version page (M2) | `/{game}/{version}/` | `/zzz/3.4/ — Version Desktop`, drawn ahead of the M2 code. Update it in the M2 PR if the layout changes |
+| Version page (M2) | `/{game}/{version}/` | `/zzz/3.3/ — Version Desktop`, drawn ahead of the M2 code. Update it in the M2 PR if the layout changes |
 | Maintenance, livestream (M4) | `/{game}/maintenance/`, `/{game}/livestream/` | None yet. Add them with the M4 code |
 
 - Language pages (`/vi/`, `/pt-br/`, `/ko/`, M3) reuse the English template's board.
