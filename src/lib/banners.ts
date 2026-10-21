@@ -26,6 +26,8 @@ export type VersionRecord = {
   game: string;
   gameName: string;
   version: string;
+  /** The official name when HoYoverse names a version instead of numbering it ("Luna VIII" is 6.8). */
+  versionName?: string;
   phases: Phase[];
   serverResetUTC?: string;
   lastUpdated: string;
@@ -51,6 +53,7 @@ export function validateVersion(record: VersionRecord): string[] {
   const errors: string[] = [];
   if (!record.phases?.length) errors.push(`${where}: no phases`);
   if (Number.isNaN(Date.parse(record.lastUpdated))) errors.push(`${where}: bad lastUpdated`);
+  if (record.versionName !== undefined && !record.versionName.trim()) errors.push(`${where}: empty versionName`);
   for (const p of record.phases ?? []) {
     const at = `${where} phase ${p.phase}`;
     if (p.status !== "official" && p.status !== "leaked") errors.push(`${at}: status must be official or leaked`);

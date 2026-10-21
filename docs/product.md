@@ -56,6 +56,7 @@
   "game": "hsr",
   "gameName": "Honkai: Star Rail",
   "version": "4.7",
+  "versionName": "…",
   "phases": [
     {
       "phase": 1,
@@ -85,6 +86,7 @@
 - 跨两期的池（如整个版本都开的新角色池）只写在它开始的那一期，`end` 写它真正的结束时间。
 - `featured4` 可以为空数组：游戏让玩家自选 4★ 时（如 ZZZ 3.3 起的 A 级代理人），官方不给默认名单。
 - `status`、`sourceUrl`、`sourceCheckedAt` 按期记录：同一期的池来自同一条公告或爆料。
+- `versionName` 可选：官方不给版本号、只给名称时填写（如原神 `Luna VIII`）。`version` 仍写玩家搜索用的数字（`6.8`），用于 URL 和 Title（2026-10-21 定，见 §14 第 8 条）。
 - `start` / `end` 只有两种形态（2026-10-21 定，见 §14 第 1 条）：
   - `{ "utc": "…Z" }`：全球同一时刻，如版本维护结束后的上半池开池。
   - `{ "serverLocal": "…" }`：每个服务器在各自本地时间的这一刻，如下半池 18:00 开池。不带时区后缀。
@@ -206,6 +208,16 @@ H1 正下方 60~120 词纯文本，**服务端渲染进首轮 HTML**，倒计时
 
 FAQ 同 `/hsr/`，把 HSR 换成 ZZZ。
 
+### 6.2 `/genshin/`（主词 genshin next banner + 同页 genshin banner schedule）
+
+2026-10-21 按 `/hsr/` 结构补写，只有 EN。主词月搜更高，所以 Title 与 H1 以 next banner 开头。
+
+- Title（54 字符）：`Genshin Next Banner & Banner Schedule — Live Countdown`
+- Meta（146 字符）：`Genshin next banner with a live countdown. Current banner, next banner start time, upcoming banners and the full banner schedule — updated hourly.`
+- H1：`Genshin Next Banner & Countdown`
+- 站内链接文字：`Genshin next banner`
+- 首屏答案段与 FAQ 同 `/hsr/`，把 HSR 换成 Genshin。
+
 ## 7. 技术实现要求
 
 | 项 | 要求 | 为什么 |
@@ -278,7 +290,7 @@ FAQ 同 `/hsr/`，把 HSR 换成 ZZZ。
 - ❌ 不做 `zzz upcoming characters`（KD 34.6 看似容易，实际门槛约 **246** 个引用域 vs P0 词的 20 个；需求是爆料前瞻，与工具站能力错位；月搜一年跌 58%）
 - ❌ 不做 `genshin banner history` 作主打词（KD 41.2，6/9 席定制页）
 - ❌ 不做 `zzz livestream` 第一期（KD 40.5，6/9 席定制页，红海）
-- ❌ 不做 `genshin 7.0 banners`（从 12,100 跌到 1,000 + 5/9 席定制页）
+- ❌ 不做 `genshin 7.0 banners`（从 12,100 跌到 1,000 + 5/9 席定制页）。`/genshin/7.0/` 由 §8 生成器零成本产出，照常生成；不为这个词另投内容（2026-10-21 定，见 §14 第 9 条）
 - ❌ 不为任何单个版本词单独投内容成本
 - ❌ 不做多游戏混排页
 - ❌ 不追求 EMD 红利（`banner timer` 这个词只有 10/月，域名是纯品牌名）
@@ -308,6 +320,8 @@ FAQ 同 `/hsr/`，把 HSR 换成 ZZZ。
 5. **M1 归档表的版本页链接**。§5 模块 4 要求每行链到版本页，但版本页 M2 才有。决定：M1 归档行先不出链接；M2 版本页上线后自动出链接。不出指向 404 的链接。
 6. **`/zzz/` 文案**。§6 只给了 `/hsr/` 的文案。`/zzz/` 按同一结构写，主词换成 `zzz banner countdown`（见 §6.1）。
 7. **一期多个卡池**。官方数据里同一期有 2~4 个角色池同时开（HSR 4.4 上半 4 个，ZZZ 每期 2 个），各池结束时间不同，有的池跨两期。原 §4 每期只有一个 `bannerName` 和一个 `end`，表达不了。决定：每期改为 `banners` 数组，每个池有自己的起止时间；`featured4` 允许为空。页面上「当前卡池」是此刻在开的所有池，倒计时到最早结束的那个池；「下一个卡池」是下一个开池时刻开的所有池。多个池时，§6 答案段的第一句写成 `The current HSR banners are {A} and {B}; the first ends in {DD:HH:MM:SS}.`，只有一个池时不变。已写入 §4。
+8. **原神没有数字的版本**。原神官方公告把 6.x 版本写成 `Luna VI`、`Luna VII`、`Luna VIII`，从 7.0 起恢复数字。玩家搜索用数字（§3、§8 的 `genshin 6.5 banners`、`genshin 6.7 banners`）。决定：`version` 写数字（`Luna VIII` 写 `6.8`），新增可选字段 `versionName` 存官方名称，页面上一起显示。已写入 §4。
+9. **`/genshin/7.0/` 与 §12**。§12 不做 `genshin 7.0 banners`，但 7.0 已在数据里，§8 生成器会产出该页。决定：照常生成，主表照常链接；§12 禁止的是为这个词另投内容。已写入 §12。
 
 ## 数据存疑的地方
 
@@ -320,3 +334,9 @@ FAQ 同 `/hsr/`，把 HSR 换成 ZZZ。
   - **ZZZ 官方公告是经转载读到的**。zenless.hoyoverse.com 的公告页要执行 JS 才显示内容，取不到。ZZZ 3.1–3.3 的公告文字取自 zenless.gg 的转载页，转载页注明了官方链接，`sourceUrl` 填官方链接。
   - **ZZZ 3.3 下半**。官方 3.3 更新公告确认 Severian 和 `2026/11/11 12:00 (server time)` 开始；Norma 复刻来自 10-09 前瞻直播的报道。结束时间 `2026/12/01 14:59` 只有攻略站给出（bannerhistory.app）。频道名「Answers in the Wind」来自 games.gg 和 fandom 搜索摘要，本次未能打开原页核对；「Outlier of Prodigies」是 Norma 首次 UP 时的频道名（timesaver.gg），复刻沿用。官方下半卡池公告发布后要核对并更新 `sourceUrl`。
   - **ZZZ 的 4★（A 级代理人）留空的期**。3.3 起玩家自选 A 级代理人，官方不给默认名单，3.3 两期 `featured4` 为空。3.1 下半「Exclusive Rescreening」（Dialyn、Ukinami Yuzuha、Asaba Harumasa 三选一）的转载页没有列 A 级代理人，也留空。
+- 原神卡池数据（2026-10-21 核对，来源 genshin.hoyoverse.com 公告，经官网内容接口读取）：
+  - **Luna N = 6.N 是推断**。官方公告只写 `Luna VIII`，不写 6.8。依据：§8 的 `genshin 6.7 banners` 峰值在 2026-06，与 Luna VII（2026-05-20 上线）的版本期一致；`genshin 6.5 banners` 峰值在 2026-03，早于 Luna VI（2026-04 上线）一个版本。官方公告里未见 Luna V 的日期，未核对。
+  - **上半开池时刻是估算值**。原神维护公告写「06:00 (UTC+8) 开始，约 5 小时」，`start` 按 `03:00Z` 填，同 HSR、ZZZ。
+  - **祈愿公告的英文版不写 `(server time)`**，只写 `2026/10/13 18:00–2026/11/03 14:59`。按原神惯例（其他官方公告写 `(Server Time)`）按服务器本地时间填 `serverLocal`。
+  - **新角色 / 复刻的判定**。祈愿公告不写是否复刻，按同版本「更新内容」公告的 New Character 列表判定：列表里的为新角色，其余为复刻。
+  - **7.2 未收录**。官方只公布了 10-23 前瞻直播；爆料只见 allthings.how，未注明一手来源，不满足 `leaked` 需要可靠来源的要求。

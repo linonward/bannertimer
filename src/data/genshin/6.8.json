@@ -1,0 +1,109 @@
+{
+  "game": "genshin",
+  "gameName": "Genshin Impact",
+  "version": "6.8",
+  "versionName": "Luna VIII",
+  "phases": [
+    {
+      "phase": 1,
+      "banners": [
+        {
+          "bannerName": "To the Looking-Glass the Mademoiselle Said",
+          "featured5": [
+            {
+              "name": "Sandrone",
+              "isNew": true
+            }
+          ],
+          "featured4": [
+            "Beidou",
+            "Diona",
+            "Freminet"
+          ],
+          "isRerun": false,
+          "start": {
+            "utc": "2026-07-01T03:00:00Z"
+          },
+          "end": {
+            "serverLocal": "2026-07-21T17:59:00"
+          }
+        },
+        {
+          "bannerName": "Starry Night's Whispers",
+          "featured5": [
+            {
+              "name": "Citlali",
+              "isNew": false
+            }
+          ],
+          "featured4": [
+            "Beidou",
+            "Diona",
+            "Freminet"
+          ],
+          "isRerun": true,
+          "start": {
+            "utc": "2026-07-01T03:00:00Z"
+          },
+          "end": {
+            "serverLocal": "2026-07-21T17:59:00"
+          }
+        }
+      ],
+      "status": "official",
+      "sourceUrl": "https://genshin.hoyoverse.com/en/news/detail/165007",
+      "sourceCheckedAt": "2026-10-21"
+    },
+    {
+      "phase": 2,
+      "banners": [
+        {
+          "bannerName": "Somnias a Luna",
+          "featured5": [
+            {
+              "name": "Columbina",
+              "isNew": false
+            }
+          ],
+          "featured4": [
+            "Jahoda",
+            "Ororon",
+            "Sethos"
+          ],
+          "isRerun": true,
+          "start": {
+            "serverLocal": "2026-07-21T18:00:00"
+          },
+          "end": {
+            "serverLocal": "2026-08-11T14:59:00"
+          }
+        },
+        {
+          "bannerName": "Reign of Serenity",
+          "featured5": [
+            {
+              "name": "Raiden Shogun",
+              "isNew": false
+            }
+          ],
+          "featured4": [
+            "Jahoda",
+            "Ororon",
+            "Sethos"
+          ],
+          "isRerun": true,
+          "start": {
+            "serverLocal": "2026-07-21T18:00:00"
+          },
+          "end": {
+            "serverLocal": "2026-08-11T14:59:00"
+          }
+        }
+      ],
+      "status": "official",
+      "sourceUrl": "https://genshin.hoyoverse.com/en/news/detail/165236",
+      "sourceCheckedAt": "2026-10-21"
+    }
+  ],
+  "lastUpdated": "2026-10-21T14:19:00Z"
+}

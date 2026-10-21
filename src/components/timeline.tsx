@@ -23,6 +23,7 @@ export function Timeline({ gameId, versions, now }: { gameId: string; versions: 
                 {v.version}
               </a>
               <span className="font-mono text-xs text-ink-3">
+                {v.versionName ? `${v.versionName} · ` : ""}
                 {day(windows[0].start)} → {day(windows.at(-1)!.end)}
               </span>
             </p>
