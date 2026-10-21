@@ -26,22 +26,24 @@ Each worktree has its own `node_modules`, so run `pnpm install` in it once. Play
 
 ## 3. Design file
 
-`docs/design/bannertimer.pen` holds one board per page **template**, not one per page. A template is a page type with its own layout. `/zzz/` and `/genshin/` reuse the `/hsr/` template, so they get no board of their own.
+`docs/design/bannertimer.pen` holds one board per page **template**, not one per page. A template is a page type with its own layout. `/zzz/` and `/genshin/` reuse the `/hsr/` template, so they get no board of their own. One exception: `/zzz/ — Desktop` stays as a reference board for the `game` theme and a Leaked next banner. Keep it in step with the `/hsr/` board.
+
+The design is dark only. Colours are `b-*` variables with one theme axis, `game` (`hsr`, `zzz`, `genshin`). Set it on the page board's root frame.
 
 | Change | Design file |
 |---|---|
-| New template: the version page, `maintenance`, `livestream`, a new layout | Add a page board first, in the same PR as the code |
+| New template: `maintenance`, `livestream`, a new layout | Add a page board first, in the same PR as the code |
 | New page on an existing template: another game, another version, a language copy | No new board. Add its new tokens (such as a game accent color) to Foundation |
 | Change to a template's layout or components | Update that template's board and the Components frame in the same PR |
 | Banner data or copy only | No change |
 
-Boards (2026-10-21), all in the Pages frame:
+Top row: the Foundation, Components and Brand frames. Page boards (2026-10-21) sit below them:
 
 | Template | URLs (docs/product.md §3) | Board |
 |---|---|---|
-| Home | `/` | Home — Desktop 1440 |
-| Game page | `/hsr/`, `/zzz/`, later `/genshin/` | HSR — Desktop 1440, HSR — Mobile 390 |
-| Version page (M2) | `/{game}/{version}/` | None yet. Add it with the M2 code |
+| Home | `/` | `/ Home — Desktop` |
+| Game page | `/hsr/`, `/zzz/`, later `/genshin/` | `/hsr/ — Desktop`, `/hsr/ — Mobile 390`, `/zzz/ — Desktop` (reference) |
+| Version page (M2) | `/{game}/{version}/` | `/zzz/3.4/ — Version Desktop`, drawn ahead of the M2 code. Update it in the M2 PR if the layout changes |
 | Maintenance, livestream (M4) | `/{game}/maintenance/`, `/{game}/livestream/` | None yet. Add them with the M4 code |
 
 - Language pages (`/vi/`, `/pt-br/`, `/ko/`, M3) reuse the English template's board.
