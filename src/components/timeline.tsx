@@ -10,7 +10,7 @@ export function Timeline({ versions }: { versions: VersionRecord[] }) {
         <li key={v.version} className="w-72 shrink-0 snap-start rounded-xl border border-line bg-surface p-4">
           <p className="text-lg font-bold">Version {v.version}</p>
           <p className="text-sm text-muted">
-            Starts {formatServerTime(instant(v.phases[0].start, DEFAULT_SERVER), DEFAULT_SERVER)}
+            Starts {formatServerTime(instant(v.phases[0].banners[0].start, DEFAULT_SERVER), DEFAULT_SERVER)}
           </p>
           <ol className="mt-3 space-y-3">
             {v.phases.map((p) => (
@@ -19,8 +19,14 @@ export function Timeline({ versions }: { versions: VersionRecord[] }) {
                   <span className="text-sm font-semibold">Phase {p.phase}</span>
                   <StatusBadge status={p.status} />
                 </div>
-                <p className="mt-1 text-sm">5★ {p.featured5.map((c) => c.name).join(", ")}</p>
-                <p className="text-sm text-muted">4★ {p.featured4.join(", ")}</p>
+                <ul className="space-y-1">
+                  {p.banners.map((b) => (
+                    <li key={b.bannerName}>
+                      <p className="mt-1 text-sm">5★ {b.featured5.map((c) => c.name).join(", ")}</p>
+                      {b.featured4.length > 0 && <p className="text-sm text-muted">4★ {b.featured4.join(", ")}</p>}
+                    </li>
+                  ))}
+                </ul>
               </li>
             ))}
           </ol>

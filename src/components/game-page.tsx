@@ -1,10 +1,10 @@
 import Link from "next/link";
 import {
+  bannersOf,
+  bannerTitles,
   confirmationLabel,
-  featuredNames,
   lastUpdated,
-  pastPhases,
-  phasesOf,
+  pastBanners,
   scheduleAt,
   upcomingVersions,
   versionsOf,
@@ -23,34 +23,34 @@ const server = DEFAULT_SERVER;
 export function GamePage({ gameId }: { gameId: string }) {
   const game = getGame(gameId);
   const versions = versionsOf(game.id);
-  const phases = phasesOf(versions);
+  const banners = bannersOf(versions);
   const renderedAt = BUILD_TIME;
-  const { current, next } = scheduleAt(phases, renderedAt, server);
+  const { current, next } = scheduleAt(banners, renderedAt, server);
   const updated = lastUpdated(versions);
 
   const nextVersionOf = Object.fromEntries(versions.map((v, i) => [v.version, versions[i + 1]?.version]));
 
-  const archive: ArchiveRow[] = pastPhases(phases, renderedAt, server).map((p) => ({
-    key: `${p.version}-${p.phase}`,
-    version: p.version,
-    dates: `${formatServerDate(instant(p.start, server), server)} – ${formatServerDate(instant(p.end, server), server)}`,
-    half: p.phase === 1 ? "1st half" : "2nd half",
-    five: p.featured5.map((c) => c.name),
-    four: p.featured4,
-    rerun: p.isRerun,
+  const archive: ArchiveRow[] = pastBanners(banners, renderedAt, server).map((b) => ({
+    key: `${b.version}-${b.phase}-${b.bannerName}`,
+    version: b.version,
+    dates: `${formatServerDate(instant(b.start, server), server)} – ${formatServerDate(instant(b.end, server), server)}`,
+    half: b.phase === 1 ? "1st half" : "2nd half",
+    five: b.featured5.map((c) => c.name),
+    four: b.featured4,
+    rerun: b.isRerun,
   }));
 
   const faq = [
     {
       q: `What is the next ${game.shortName} banner?`,
-      a: next
-        ? `${next.bannerName} (${featuredNames(next)}) starts ${formatServerTime(instant(next.start, server), server)}. Status: ${confirmationLabel(next.status)}.`
+      a: next.length
+        ? `${bannerTitles(next)} ${next.length > 1 ? "start" : "starts"} ${formatServerTime(instant(next[0].start, server), server)}. Status: ${confirmationLabel(next[0].status)}.`
         : "The next banner has not been announced yet.",
     },
     {
       q: "When does the current banner end?",
-      a: current
-        ? `${current.bannerName} ends ${formatServerTime(instant(current.end, server), server)}. The live countdown at the top of this page shows the time left.`
+      a: current.length
+        ? `${current.map((b) => `${b.bannerName} ends ${formatServerTime(instant(b.end, server), server)}`).join(". ")}. The live countdown at the top of this page shows the time left.`
         : "No banner is live right now. The countdown at the top of this page shows when the next one starts.",
     },
     {
@@ -91,7 +91,7 @@ export function GamePage({ gameId }: { gameId: string }) {
         Last updated <time dateTime={updated}>{updated.slice(0, 10)}</time> · Times shown in your timezone
       </p>
 
-      <BannerHero shortName={game.shortName} phases={phases} nextVersionOf={nextVersionOf} renderedAt={renderedAt} />
+      <BannerHero shortName={game.shortName} banners={banners} nextVersionOf={nextVersionOf} renderedAt={renderedAt} />
 
       <section className="mt-12" aria-labelledby="schedule">
         <h2 id="schedule" className="mb-4 text-2xl font-bold">

@@ -59,12 +59,16 @@
   "phases": [
     {
       "phase": 1,
-      "bannerName": "…",
-      "featured5": [{ "name": "…", "isNew": true }],
-      "featured4": ["…", "…"],
-      "isRerun": false,
-      "start": { "utc": "2026-10-21T03:00:00Z" },
-      "end": { "serverLocal": "2026-11-11T17:59:00" },
+      "banners": [
+        {
+          "bannerName": "…",
+          "featured5": [{ "name": "…", "isNew": true }],
+          "featured4": ["…", "…"],
+          "isRerun": false,
+          "start": { "utc": "2026-10-21T03:00:00Z" },
+          "end": { "serverLocal": "2026-11-11T17:59:00" }
+        }
+      ],
       "status": "official",
       "sourceUrl": "…",
       "sourceCheckedAt": "2026-10-20"
@@ -77,6 +81,10 @@
 
 **字段规则**
 
+- 每期（`phase`）有一个 `banners` 数组，至少一个池（2026-10-21 定，见 §14 第 7 条）。同一期常有 2~4 个角色池同时开，每个池有自己的名字、5★、4★ 和起止时间。
+- 跨两期的池（如整个版本都开的新角色池）只写在它开始的那一期，`end` 写它真正的结束时间。
+- `featured4` 可以为空数组：游戏让玩家自选 4★ 时（如 ZZZ 3.3 起的 A 级代理人），官方不给默认名单。
+- `status`、`sourceUrl`、`sourceCheckedAt` 按期记录：同一期的池来自同一条公告或爆料。
 - `start` / `end` 只有两种形态（2026-10-21 定，见 §14 第 1 条）：
   - `{ "utc": "…Z" }`：全球同一时刻，如版本维护结束后的上半池开池。
   - `{ "serverLocal": "…" }`：每个服务器在各自本地时间的这一刻，如下半池 18:00 开池。不带时区后缀。
@@ -291,6 +299,7 @@ FAQ 同 `/hsr/`，把 HSR 换成 ZZZ。
 4. **版本页 Title 超长**。§8 模板套用全名时超过 60 字符（`Genshin Impact 6.3 Banners — Characters, Countdown & Release Date` 为 65 字符）。决定：`{Game}` 用简称。已写入 §8。
 5. **M1 归档表的版本页链接**。§5 模块 4 要求每行链到版本页，但版本页 M2 才有。决定：M1 归档行先不出链接；M2 版本页上线后自动出链接。不出指向 404 的链接。
 6. **`/zzz/` 文案**。§6 只给了 `/hsr/` 的文案。`/zzz/` 按同一结构写，主词换成 `zzz banner countdown`（见 §6.1）。
+7. **一期多个卡池**。官方数据里同一期有 2~4 个角色池同时开（HSR 4.4 上半 4 个，ZZZ 每期 2 个），各池结束时间不同，有的池跨两期。原 §4 每期只有一个 `bannerName` 和一个 `end`，表达不了。决定：每期改为 `banners` 数组，每个池有自己的起止时间；`featured4` 允许为空。页面上「当前卡池」是此刻在开的所有池，倒计时到最早结束的那个池；「下一个卡池」是下一个开池时刻开的所有池。多个池时，§6 答案段的第一句写成 `The current HSR banners are {A} and {B}; the first ends in {DD:HH:MM:SS}.`，只有一个池时不变。已写入 §4。
 
 ## 数据存疑的地方
 
