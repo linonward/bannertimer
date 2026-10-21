@@ -275,6 +275,8 @@ FAQ 同 `/hsr/`，把 HSR 换成 ZZZ。
 
 ## 11. 埋点与上线验收（两周看这几项）
 
+埋点工具：Cloudflare Web Analytics（2026-10-21 定，上线同日接入）。无 cookie、脚本延迟加载、只在 `bannertimer.com` 上计数（`src/components/analytics.tsx`）。它直接给出页面浏览量与访问数；人均页数 = 浏览量 ÷ 访问数，跳出率与停留时间以它的口径为准，与竞品数据（不同工具）比较时注意口径差异。
+
 | 指标 | 目标 | 垫底参照 |
 |---|---|---|
 | 平均停留 | **> 90 秒** | lootbar 13 秒、timesaver 40 秒、mmoexp 86 秒、ldshop 87 秒 |

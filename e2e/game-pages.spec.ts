@@ -180,3 +180,17 @@ test("a named version keeps its number in the URL and its official name in the a
   expect(html).toContain("<title>Genshin 6.8 Banners — Characters, Countdown &amp; Release Date</title>");
   expect(html).toContain("Genshin 6.8 (Luna VIII) started Jul 1, 03:00 UTC on every server.");
 });
+
+// Cloudflare Web Analytics (docs/product.md §11): the beacon loads on bannertimer.com only, so
+// local runs and tests never count as visits.
+test("the analytics loader is in the page source and stays off outside bannertimer.com", async ({ page, request }) => {
+  const html = await (await request.get("/hsr/")).text();
+  expect(html).toContain("0360c442a9984e738a292cd684f3fd89");
+  expect(html).toContain('location.hostname==="bannertimer.com"');
+
+  const beacons: string[] = [];
+  page.on("request", (r) => r.url().includes("cloudflareinsights.com") && beacons.push(r.url()));
+  await page.goto("/hsr/");
+  await page.waitForLoadState("networkidle");
+  expect(beacons).toEqual([]);
+});
