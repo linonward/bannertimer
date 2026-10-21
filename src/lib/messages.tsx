@@ -371,8 +371,17 @@ const ptBr: Messages = {
       )}
       {next ? (
         <>
-          {next.count > 1 ? "Os próximos banners" : "O próximo banner"}, <strong>{next.titles}</strong>,{" "}
-          {next.count > 1 ? "começam em" : "começa em"} <strong>{next.start}</strong> — <strong>{next.status}</strong>.{" "}
+          {/* The plural keeps "próximo banner", one of the four §6 phrases. */}
+          {next.count > 1 ? (
+            <>
+              O próximo banner traz <strong>{next.titles}</strong>, a partir de <strong>{next.start}</strong>
+            </>
+          ) : (
+            <>
+              O próximo banner, <strong>{next.titles}</strong>, começa em <strong>{next.start}</strong>
+            </>
+          )}{" "}
+          — <strong>{next.status}</strong>.{" "}
         </>
       ) : (
         <>O próximo banner ainda não foi anunciado. </>
