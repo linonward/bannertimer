@@ -302,3 +302,37 @@ test("the archive dates and filter placeholder fit on every language version", a
     expect(fit.wrappedDates, `${path} dates`).toEqual([]);
   }
 });
+
+// The font files in src/fonts cover Vietnamese, so letters like ạ, ễ and đ use the site fonts,
+// not a fallback face. Chrome reports the font that drew each node's glyphs.
+test("Vietnamese text on /vi/hsr/ renders in the site fonts only", async ({ page }) => {
+  await page.goto("/vi/hsr/");
+  await page.evaluate(() => document.fonts.ready);
+  const probed = await page.evaluate(() => {
+    const vietnamese = /[ĂăĐđĨĩŨũƠơƯưẠ-ỹ]/;
+    // Skip text with symbols the fonts never had (★, arrows): only letters are in scope.
+    const outside = /[^\u0000-ɏ̀-ͯẠ-ỹ -⁯]/;
+    let n = 0;
+    for (const el of document.querySelectorAll("body *")) {
+      const own = [...el.childNodes].filter((c) => c.nodeType === Node.TEXT_NODE).map((c) => c.textContent).join("");
+      if (vietnamese.test(own) && !outside.test(el.textContent ?? "") && el.checkVisibility()) {
+        el.setAttribute("data-font-probe", "");
+        n++;
+      }
+    }
+    return n;
+  });
+  expect(probed).toBeGreaterThan(5);
+
+  const cdp = await page.context().newCDPSession(page);
+  await cdp.send("DOM.enable");
+  await cdp.send("CSS.enable");
+  const { root } = await cdp.send("DOM.getDocument", { depth: -1 });
+  const { nodeIds } = await cdp.send("DOM.querySelectorAll", { nodeId: root.nodeId, selector: "[data-font-probe]" });
+  const used = new Set<string>();
+  for (const nodeId of nodeIds) {
+    const { fonts } = await cdp.send("CSS.getPlatformFontsForNode", { nodeId });
+    for (const f of fonts) used.add(`${f.familyName}${f.isCustomFont ? "" : " (system)"}`);
+  }
+  expect([...used].filter((f) => f.endsWith("(system)"))).toEqual([]);
+});
