@@ -8846,6 +8846,33 @@
               "fontFamily": "$b-font-body",
               "fontSize": 17,
               "fontWeight": "normal"
+            },
+            {
+              "type": "frame",
+              "id": "aTs3J",
+              "name": "Meta",
+              "gap": 10,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ellipse",
+                  "id": "z7V4B",
+                  "name": "Live",
+                  "fill": "$b-ok",
+                  "width": 6,
+                  "height": 6
+                },
+                {
+                  "type": "text",
+                  "id": "mGvmf",
+                  "name": "Updated",
+                  "fill": "$b-ink-3",
+                  "content": "Last updated Oct 22, 2026",
+                  "fontFamily": "$b-font-mono",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
             }
           ]
         },
@@ -10784,6 +10811,16 @@
                           "fontFamily": "$b-font-mono",
                           "fontSize": 13,
                           "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "b6bhap",
+                          "name": "Source",
+                          "fill": "$b-ink-3",
+                          "content": "Source: zenless.hoyoverse.com · checked Oct 21, 2026",
+                          "fontFamily": "$b-font-mono",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
                         }
                       ]
                     }
@@ -10918,6 +10955,16 @@
                           "content": "Nov 11, 12:00 → Dec 1, 14:59 server",
                           "fontFamily": "$b-font-mono",
                           "fontSize": 13,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "fgnon",
+                          "name": "Source",
+                          "fill": "$b-ink-3",
+                          "content": "Source: zenless.hoyoverse.com · checked Oct 21, 2026",
+                          "fontFamily": "$b-font-mono",
+                          "fontSize": 11,
                           "fontWeight": "normal"
                         }
                       ]

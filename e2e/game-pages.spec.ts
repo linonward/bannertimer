@@ -252,3 +252,16 @@ test("the home page title names no game keyword, fits 60 characters and differs 
   expect(title.length).toBeLessThanOrEqual(60);
   expect(html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/)![1]).not.toContain(title);
 });
+
+test("a version page links the official notice of every official phase", async ({ request }) => {
+  const html = await (await request.get("/zzz/3.3/")).text();
+  expect(html).toContain('href="https://zenless.hoyoverse.com/en-us/news/166926"');
+  expect(html).toContain('href="https://zenless.hoyoverse.com/en-us/news/166963"');
+});
+
+test("checked and updated dates are machine-readable", async ({ request }) => {
+  const version = await (await request.get("/zzz/3.3/")).text();
+  expect(version).toMatch(/<time dateTime="2026-10-21">Oct 21, 2026<\/time>/i);
+  const home = await (await request.get("/")).text();
+  expect(home).toMatch(/<time dateTime="\d{4}-\d\d-\d\dT[\d:.]+Z">\w{3} \d{1,2}, \d{4}<\/time>/i);
+});

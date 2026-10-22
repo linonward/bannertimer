@@ -205,7 +205,7 @@ export function BannerHero({ gameId, shortName, versions, banners, nextVersionOf
                   <a href={next[0].sourceUrl} rel="nofollow noopener" className="underline">
                     {new URL(next[0].sourceUrl).hostname.replace(/^www\./, "")}
                   </a>
-                  {next[0].sourceCheckedAt ? t.checked(next[0].sourceCheckedAt) : ""}
+                  {next[0].sourceCheckedAt && <time dateTime={next[0].sourceCheckedAt}>{t.checked(next[0].sourceCheckedAt)}</time>}
                 </p>
               )}
             </div>
