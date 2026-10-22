@@ -11,6 +11,7 @@ import { JsonLd } from "./json-ld";
 import { Section } from "./section";
 import { SiteFooter } from "./site-footer";
 import { EstimateBadge, StatusBadge } from "./status-badge";
+import { CalendarMenu } from "./calendar-menu";
 import { VersionCountdown } from "./version-countdown";
 
 const server = DEFAULT_SERVER;
@@ -134,6 +135,7 @@ export function VersionPage({ gameId, version }: { gameId: string; version: stri
               {versionAnswer(game.shortName, v, now)}
             </p>
             <VersionCountdown version={v} renderedAt={now} />
+            <CalendarMenu gameId={game.id} />
           </div>
         </div>
 

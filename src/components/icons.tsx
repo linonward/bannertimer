@@ -63,3 +63,47 @@ export function ArrowRightIcon(props: IconProps) {
     </Icon>
   );
 }
+
+export function CalendarPlusIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M16 19h6" />
+      <path d="M16 2v4" />
+      <path d="M19 16v6" />
+      <path d="M21 12.598V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8.5" />
+      <path d="M3 10h18" />
+      <path d="M8 2v4" />
+    </Icon>
+  );
+}
+
+export function MonitorSmartphoneIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M18 8V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h8" />
+      <path d="M10 19v-3.96 3.15" />
+      <path d="M7 19h5" />
+      <rect width="6" height="10" x="16" y="12" rx="2" />
+    </Icon>
+  );
+}
+
+export function GlobeIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <circle cx="12" cy="12" r="10" />
+      <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+      <path d="M2 12h20" />
+    </Icon>
+  );
+}
+
+export function DownloadIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M12 15V3" />
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <path d="m7 10 5 5 5-5" />
+    </Icon>
+  );
+}

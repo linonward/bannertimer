@@ -2820,6 +2820,303 @@
               ]
             }
           ]
+        },
+        {
+          "type": "frame",
+          "id": "e0vUl",
+          "name": "Calendar subscribe",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "children": [
+            {
+              "type": "text",
+              "id": "i2Iieh",
+              "name": "Group Label",
+              "fill": "$b-ink-3",
+              "content": "CALENDAR SUBSCRIBE · /{game}/calendar/{server}.ics · menu opens without JS (details/summary) · links follow the server switch",
+              "fontFamily": "$b-font-mono",
+              "fontSize": 12,
+              "fontWeight": "600",
+              "letterSpacing": 2
+            },
+            {
+              "type": "frame",
+              "id": "cQy6I",
+              "name": "Items",
+              "gap": 48,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "j0vsL",
+                  "name": "B/Calendar Button",
+                  "reusable": true,
+                  "layout": "vertical",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "D9KS1s",
+                      "name": "Button",
+                      "fill": "$b-panel",
+                      "cornerRadius": 4,
+                      "stroke": "$b-game-line",
+                      "strokeWidth": 1,
+                      "gap": 10,
+                      "padding": [
+                        10,
+                        14
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "f1iTj",
+                          "name": "Icon",
+                          "width": 16,
+                          "height": 16,
+                          "icon": "calendar-plus",
+                          "library": "lucide",
+                          "fill": "$b-game"
+                        },
+                        {
+                          "type": "text",
+                          "id": "GoCMK",
+                          "name": "Label",
+                          "fill": "$b-ink",
+                          "content": "ADD TO CALENDAR",
+                          "fontFamily": "$b-font-mono",
+                          "fontSize": 12,
+                          "fontWeight": "700",
+                          "letterSpacing": 1.5
+                        },
+                        {
+                          "type": "icon",
+                          "id": "eGXHt",
+                          "name": "Chevron",
+                          "width": 14,
+                          "height": 14,
+                          "icon": "chevron-down",
+                          "library": "lucide",
+                          "fill": "$b-ink-3"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "nGbri",
+                      "name": "Note",
+                      "fill": "$b-ink-3",
+                      "content": "America server · UTC−5 · new banners appear automatically",
+                      "fontFamily": "$b-font-mono",
+                      "fontSize": 11,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "EDmDQ",
+                  "name": "B/Calendar Menu",
+                  "reusable": true,
+                  "width": 320,
+                  "fill": "$b-panel",
+                  "cornerRadius": 4,
+                  "stroke": "$b-line",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 2,
+                  "padding": 4,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "cE1BW",
+                      "name": "Item Apple Calendar · Outlook",
+                      "width": "fill_container",
+                      "fill": "$b-panel-2",
+                      "cornerRadius": 3,
+                      "gap": 12,
+                      "padding": [
+                        10,
+                        12
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "neu5g",
+                          "name": "Icon",
+                          "width": 16,
+                          "height": 16,
+                          "icon": "monitor-smartphone",
+                          "library": "lucide",
+                          "fill": "$b-ink-2"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "vlhIn",
+                          "name": "Text",
+                          "layout": "vertical",
+                          "gap": 2,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "knwBM",
+                              "name": "Title",
+                              "fill": "$b-ink",
+                              "content": "Apple Calendar · Outlook",
+                              "fontFamily": "$b-font-body",
+                              "fontSize": 14,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "u7gUD",
+                              "name": "Hint",
+                              "fill": "$b-ink-3",
+                              "content": "Subscribe",
+                              "fontFamily": "$b-font-mono",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "RWMfx",
+                      "name": "Item Google Calendar",
+                      "width": "fill_container",
+                      "cornerRadius": 3,
+                      "gap": 12,
+                      "padding": [
+                        10,
+                        12
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "Sh7Vk",
+                          "name": "Icon",
+                          "width": 16,
+                          "height": 16,
+                          "icon": "globe",
+                          "library": "lucide",
+                          "fill": "$b-ink-2"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "nrP1c",
+                          "name": "Text",
+                          "layout": "vertical",
+                          "gap": 2,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "eEaBc",
+                              "name": "Title",
+                              "fill": "$b-ink",
+                              "content": "Google Calendar",
+                              "fontFamily": "$b-font-body",
+                              "fontSize": 14,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "YfEDt",
+                              "name": "Hint",
+                              "fill": "$b-ink-3",
+                              "content": "Subscribe",
+                              "fontFamily": "$b-font-mono",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "z5LDEJ",
+                      "name": "Item Download .ics file",
+                      "width": "fill_container",
+                      "cornerRadius": 3,
+                      "gap": 12,
+                      "padding": [
+                        10,
+                        12
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "ejps4",
+                          "name": "Icon",
+                          "width": 16,
+                          "height": 16,
+                          "icon": "download",
+                          "library": "lucide",
+                          "fill": "$b-ink-2"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "MWokc",
+                          "name": "Text",
+                          "layout": "vertical",
+                          "gap": 2,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "t0BYDi",
+                              "name": "Title",
+                              "fill": "$b-ink",
+                              "content": "Download .ics file",
+                              "fontFamily": "$b-font-body",
+                              "fontSize": 14,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "WCLnD",
+                              "name": "Hint",
+                              "fill": "$b-ink-3",
+                              "content": "One-time import",
+                              "fontFamily": "$b-font-mono",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "l7tSs",
+                  "name": "Open state (first item hovered)",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "id": "irmdS",
+                      "type": "ref",
+                      "ref": "j0vsL",
+                      "name": "Button open"
+                    },
+                    {
+                      "id": "KNLyI",
+                      "type": "ref",
+                      "ref": "EDmDQ",
+                      "name": "Menu"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
         }
       ]
     },
@@ -3083,6 +3380,12 @@
                       "fontFamily": "$b-font-body",
                       "fontSize": 16,
                       "fontWeight": "normal"
+                    },
+                    {
+                      "id": "u3Zdn",
+                      "type": "ref",
+                      "ref": "j0vsL",
+                      "name": "Calendar"
                     }
                   ]
                 },
@@ -5017,6 +5320,17 @@
               "fontFamily": "$b-font-body",
               "fontSize": 15,
               "fontWeight": "normal"
+            },
+            {
+              "id": "mw5w0",
+              "type": "ref",
+              "ref": "j0vsL",
+              "name": "Calendar",
+              "descendants": {
+                "nGbri": {
+                  "content": "America server · UTC−5 · auto-updates"
+                }
+              }
             },
             {
               "type": "frame",
@@ -9547,6 +9861,17 @@
                       }
                     }
                   ]
+                },
+                {
+                  "id": "Djsum",
+                  "type": "ref",
+                  "ref": "j0vsL",
+                  "name": "Calendar",
+                  "descendants": {
+                    "nGbri": {
+                      "content": "America server · UTC−5 · every ZZZ banner, kept up to date"
+                    }
+                  }
                 }
               ]
             }

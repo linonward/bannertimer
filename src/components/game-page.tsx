@@ -137,6 +137,7 @@ export function GamePage({ gameId, lang = "en" }: { gameId: string; lang?: Lang 
             / <span>{game.name}</span>
           </nav>
           <BannerHero
+            gameId={game.id}
             shortName={game.shortName}
             versions={versions}
             banners={banners}
