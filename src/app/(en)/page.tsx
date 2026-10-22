@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { HomeBoard } from "@/components/home-board";
+import { JsonLd } from "@/components/json-ld";
 import { SiteFooter } from "@/components/site-footer";
 import { bannersOf, lastUpdated, versionsOf } from "@/lib/banners";
 import { BUILD_TIME } from "@/lib/build-time";
-import { GAMES, SHARE_IMAGE, SITE_NAME } from "@/lib/games";
+import { GAMES, SHARE_IMAGE, SITE_NAME, SITE_URL } from "@/lib/games";
 
 // The hub (docs/product.md §3): a quick view of each game's current banner. It targets no
 // keyword, so it never competes with the game pages.
@@ -27,6 +28,30 @@ const gameList = names.length > 1 ? `${names.slice(0, -1).join(", ")} and ${name
 export default function Home() {
   return (
     <>
+      {/* §7: the home page alone names the site and who runs it. */}
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "WebSite",
+              "@id": `${SITE_URL}/#website`,
+              name: SITE_NAME,
+              url: `${SITE_URL}/`,
+              description,
+              inLanguage: "en",
+              publisher: { "@id": `${SITE_URL}/#organization` },
+            },
+            {
+              "@type": "Organization",
+              "@id": `${SITE_URL}/#organization`,
+              name: SITE_NAME,
+              url: `${SITE_URL}/`,
+              email: "hello@bannertimer.com",
+            },
+          ],
+        }}
+      />
       <main>
         <div className="relative flex flex-col gap-4 overflow-hidden px-5 pt-10 pb-6 md:px-20 md:pt-[72px] md:pb-10">
           <span aria-hidden="true" className="pointer-events-none absolute top-[-40px] right-[108px] h-px w-[252px] max-md:hidden">

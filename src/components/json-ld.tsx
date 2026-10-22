@@ -1,4 +1,4 @@
-// Structured data (docs/product.md §7): FAQPage and BreadcrumbList only.
+// Structured data (docs/product.md §7): FAQPage and BreadcrumbList, plus WebSite and Organization on the home page only.
 export function JsonLd({ data }: { data: object }) {
   return (
     <script
