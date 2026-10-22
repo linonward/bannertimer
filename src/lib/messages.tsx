@@ -101,6 +101,14 @@ export type Messages = {
   pickedInGameShort: string;
   showMore: (n: number) => string;
   noMatch: string;
+  // Calendar subscribe (src/lib/calendar.ts)
+  calendarAdd: string;
+  calendarApple: string;
+  calendarGoogle: string;
+  calendarSubscribe: string;
+  calendarDownload: string;
+  calendarOnce: string;
+  calendarNote: (server: string, offset: string) => string;
 };
 
 const en: Messages = {
@@ -147,6 +155,13 @@ const en: Messages = {
   countdown: formatCountdown,
   units: ["DAYS", "HOURS", "MIN", "SEC"],
   servers: { america: "America", europe: "Europe", asia: "Asia" },
+  calendarAdd: "Add to calendar",
+  calendarApple: "Apple Calendar · Outlook",
+  calendarGoogle: "Google Calendar",
+  calendarSubscribe: "Subscribe",
+  calendarDownload: "Download .ics file",
+  calendarOnce: "One-time import",
+  calendarNote: (server, offset) => `${server} server · ${offset} · new banners appear automatically`,
   official: "Official",
   leaked: "Leaked — unconfirmed",
   estimate: "Estimate — not announced",
@@ -275,6 +290,13 @@ const vi: Messages = {
   },
   units: ["NGÀY", "GIỜ", "PHÚT", "GIÂY"],
   servers: { america: "Mỹ", europe: "Châu Âu", asia: "Châu Á" },
+  calendarAdd: "Thêm vào lịch",
+  calendarApple: "Apple Calendar · Outlook",
+  calendarGoogle: "Google Calendar",
+  calendarSubscribe: "Đăng ký",
+  calendarDownload: "Tải tệp .ics",
+  calendarOnce: "Nhập một lần",
+  calendarNote: (server, offset) => `Máy chủ ${server} · ${offset} · banner mới tự động xuất hiện`,
   official: "Chính thức",
   leaked: "Rò rỉ — chưa xác nhận",
   estimate: "Ước tính — chưa công bố",
@@ -407,6 +429,13 @@ const ptBr: Messages = {
   countdown: formatCountdown,
   units: ["DIAS", "HORAS", "MIN", "SEG"],
   servers: { america: "América", europe: "Europa", asia: "Ásia" },
+  calendarAdd: "Adicionar ao calendário",
+  calendarApple: "Apple Calendar · Outlook",
+  calendarGoogle: "Google Agenda",
+  calendarSubscribe: "Assinar",
+  calendarDownload: "Baixar arquivo .ics",
+  calendarOnce: "Importação única",
+  calendarNote: (server, offset) => `Servidor ${server} · ${offset} · novos banners aparecem automaticamente`,
   official: "Oficial",
   leaked: "Vazamento — não confirmado",
   estimate: "Estimativa — não anunciada",

@@ -25,3 +25,16 @@ test("each server has its own feed with its own times", async ({ request }) => {
 test("an unknown server is 404", async ({ request }) => {
   expect((await request.get("/zzz/calendar/mars.ics")).status()).toBe(404);
 });
+
+// The subscribe menu is in the server HTML, linked to the page language's default server.
+for (const [path, feed] of [
+  ["/hsr/", "/hsr/calendar/america.ics"],
+  ["/vi/zzz/", "/zzz/calendar/asia.ics"],
+  ["/genshin/7.2/", "/genshin/calendar/america.ics"],
+]) {
+  test(`${path} links the ${feed} feed in its HTML`, async ({ request }) => {
+    const html = await (await request.get(path)).text();
+    expect(html).toContain(`href="webcal://bannertimer.com${feed}"`);
+    expect(html).toContain(`href="${feed}"`);
+  });
+}

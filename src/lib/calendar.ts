@@ -10,6 +10,18 @@ export function calendarPath(gameId: string, server: Server): string {
   return `/${gameId}/calendar/${server}.ics`;
 }
 
+export type CalendarLinks = { webcal: string; google: string; download: string };
+
+/** Subscribe in Apple Calendar or Outlook (webcal), subscribe in Google Calendar, or download once. */
+export function calendarLinks(gameId: string, server: Server): CalendarLinks {
+  const webcal = `${SITE_URL.replace(/^https:/, "webcal:")}${calendarPath(gameId, server)}`;
+  return {
+    webcal,
+    google: `https://calendar.google.com/calendar/render?cid=${encodeURIComponent(webcal)}`,
+    download: calendarPath(gameId, server),
+  };
+}
+
 /** "20261111T040000Z": a moment in iCalendar UTC form. */
 function stamp(ms: number): string {
   return new Date(ms).toISOString().replace(/[-:]/g, "").replace(/\.\d+/, "");

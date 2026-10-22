@@ -19,11 +19,13 @@ import {
   utcOffsetLabel,
 } from "@/lib/time";
 import { fiveNames, LiveBannerRow } from "./banner-line";
+import { CalendarMenu } from "./calendar-menu";
 import { FlapCountdown } from "./flap-countdown";
 import { HourglassIcon } from "./icons";
 import { StatusBadge } from "./status-badge";
 
 type Props = {
+  gameId: string;
   shortName: string;
   versions: VersionRecord[];
   banners: BannerEntry[];
@@ -43,7 +45,7 @@ const DAY = 86_400_000;
  * with the live banners and the next ones. The server HTML states end and start times as dates;
  * after hydration the countdown runs every second, and the banners switch if the build is stale.
  */
-export function BannerHero({ shortName, versions, banners, nextVersionOf, renderedAt, intro, lang = "en" }: Props) {
+export function BannerHero({ gameId, shortName, versions, banners, nextVersionOf, renderedAt, intro, lang = "en" }: Props) {
   const t = messages(lang);
   const locale = intlLocale(lang);
   const { now, live } = useNow(renderedAt);
@@ -86,6 +88,7 @@ export function BannerHero({ shortName, versions, banners, nextVersionOf, render
           nextVersion,
         })}
       </p>
+      <CalendarMenu gameId={gameId} lang={lang} />
       </div>
 
       <section

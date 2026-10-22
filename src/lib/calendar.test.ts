@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Banner, VersionRecord } from "./banners";
-import { calendarFeed, calendarPath } from "./calendar";
+import { calendarFeed, calendarLinks, calendarPath } from "./calendar";
 import { getGame } from "./games";
 
 function banner(name: string, five: string, start: Banner["start"], end: Banner["end"]): Banner {
@@ -67,6 +67,16 @@ const prop = (event: string[], name: string) => event.find((l) => l.startsWith(`
 describe("calendarPath", () => {
   it("is one feed per game and server", () => {
     expect(calendarPath("hsr", "asia")).toBe("/hsr/calendar/asia.ics");
+  });
+});
+
+describe("calendarLinks", () => {
+  it("subscribes by webcal, through Google Calendar, or downloads the file", () => {
+    expect(calendarLinks("zzz", "europe")).toEqual({
+      webcal: "webcal://bannertimer.com/zzz/calendar/europe.ics",
+      google: "https://calendar.google.com/calendar/render?cid=webcal%3A%2F%2Fbannertimer.com%2Fzzz%2Fcalendar%2Feurope.ics",
+      download: "/zzz/calendar/europe.ics",
+    });
   });
 });
 
