@@ -3689,6 +3689,16 @@
                               ]
                             }
                           ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "R9l1UV",
+                          "name": "Source",
+                          "fill": "$b-ink-3",
+                          "content": "Source: hoyolab.com · checked Oct 21, 2026",
+                          "fontFamily": "$b-font-mono",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -5598,6 +5608,16 @@
                           ]
                         }
                       ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "dPGL2",
+                      "name": "Source",
+                      "fill": "$b-ink-3",
+                      "content": "Source: hoyolab.com · checked Oct 21, 2026",
+                      "fontFamily": "$b-font-mono",
+                      "fontSize": 11,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -7339,6 +7359,16 @@
                               ]
                             }
                           ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "X8PH0x",
+                          "name": "Source",
+                          "fill": "$b-ink-3",
+                          "content": "Source: zenless.hoyoverse.com · checked Oct 21, 2026",
+                          "fontFamily": "$b-font-mono",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
