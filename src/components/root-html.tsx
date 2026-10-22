@@ -4,7 +4,7 @@ import { Analytics } from "./analytics";
 import { SiteHeader } from "./site-header";
 import "../app/globals.css";
 
-// The font files live in src/fonts (latin subsets from Google Fonts, OFL), so the build needs no
+// The font files live in src/fonts (latin + Vietnamese subsets, OFL), so the build needs no
 // network and the pages make no third-party request on the critical path (§7).
 const display = localFont({
   src: [
