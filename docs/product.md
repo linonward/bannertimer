@@ -41,7 +41,7 @@ M1、M2 已上线（M1 2026-10-21 部署并提交 GSC）。之后按「数据更
 | 工作线 | 时间 | 内容 | 验收 |
 |---|---|---|---|
 | A. 小修补 | 10-22 ~ 10-24 | 查明推送 `production` 不触发 Workers Builds 构建的原因；加 .ics 日历订阅（2026-10-22 定：每款游戏每个服务器一个订阅源，见 §3；S01 订阅源、S02 游戏页与版本页的订阅按钮） | 合并后 5 分钟内开始部署；日历文件能导入 |
-| B. M4 维护倒计时 | 10-26 ~ 11-07 | 先画设计稿画板；数据模型加维护开始时刻与预计时长；三款游戏的 `/{game}/maintenance/` | 11-07 前上线，赶上 HSR 4.7（11-11）与 ZZZ 3.4（12-02）的更新日 |
+| B. M4 维护倒计时 | 10-22 ~ 11-07 | 2026-10-22 开工，规则见 §3「维护页」、§4 `maintenance`、§6.3；切片：S01 规格 → S02 数据 → S03 设计稿画板与三款游戏的 `/{game}/maintenance/` | 11-07 前上线，赶上 HSR 4.7（11-11）与 ZZZ 3.4（12-02）的更新日 |
 | C. M3 多语言 | 数据到位后开工 | 10-31 前拿到 vi / pt-BR / ko 卡池词与韩语「픽업 / 배너」对比；补写 `/zzz/`、`/genshin/` 三语文案；先做结构（路由、hreflang、首屏答案段），翻译按搜索量排序 | 11-21 前上线搜索量最高的一种语言，hreflang 互通 |
 | D. 扩展评估 | 与 C 并行 | 查鸣潮、崩坏3 等候选的 `banner countdown / banner schedule / next banner` 搜索量与 KD；按四条标准评估（有量低 KD、版本 + 上下半结构、官方公告可读、搜索结果未被定制页占满） | 评估写入本文档，不开工 |
 
@@ -84,6 +84,14 @@ M1、M2 已上线（M1 2026-10-21 部署并提交 GSC）。之后按「数据更
   - `/privacy/`：如实写当前状态。Cloudflare Web Analytics 无 cookie、只在 `bannertimer.com` 计数（§11）；所选服务器存在浏览器 `localStorage`，不上传；站点托管在 Cloudflare，请求（含 IP）由其处理；日历订阅源与普通页面一样被请求。无广告、无账号。
   - `/llms.txt`：站点一句话说明，加三个主表页、全部版本页、语言页与 About / Privacy 的链接，由 §4 数据生成，不手写卡池。
   - 首页加 `WebSite` 与 `Organization`（2026-10-22 改：原定不加，GEO 体检后决定加；`Organization` 带 `email` `hello@bannertimer.com`），只在首页，见 §7。不加作者 schema。
+- **维护页** `/{game}/maintenance/`（M4，2026-10-22 定）。三款游戏都做，同一模板，只有英文，不加 hreflang；列入各游戏的 sitemap。页面按此刻与 §4 `maintenance` 数据分三种状态，服务器 HTML 写构建时的状态，JS 只更新倒计时数字（同 §14 第 2 条）：
+  - **维护前**：倒计时到维护开始；写开始时刻、预计时长与预计结束时刻。
+  - **维护中**：倒计时到预计结束；写明「预计」，官方可能延长。
+  - **维护后**：写「{version} 维护已结束，{version} 已上线」，链到版本页；下个版本已有 `maintenance` 数据时，同时倒计时到下次维护。
+  - `estimate` 状态的维护一律标「Estimate — not announced」，灰色，同版本页的估算日期。
+  - 第一版不做维护补偿（原石、星琼等）。
+  - 互链：游戏页与有 `maintenance` 数据的版本页链到维护页；维护页链回游戏页与对应版本页。
+  - 结构化数据只用 `FAQPage` + `BreadcrumbList`，**不标 `Event`**。
 - **日历订阅源** `/{game}/calendar/{server}.ics`（`server` 为 `america` / `europe` / `asia`，2026-10-22 定）。每个卡池一个事件，从开池到结束；只有估算的版本加一个「{Game} {version} starts (Estimate — not announced)」事件；`leaked` 卡池标题带「Leaked — unconfirmed」。`serverLocal` 时刻按该服务器换算，所以每服一个文件。只用于日历应用订阅，不是页面，不进 sitemap。
 
 ### 3.1 语言版本（M3）
@@ -171,6 +179,14 @@ M1、M2 已上线（M1 2026-10-21 部署并提交 GSC）。之后按「数据更
 - `featured4` 可以为空数组：游戏让玩家自选 4★ 时（如 ZZZ 3.3 起的 A 级代理人），官方不给默认名单。
 - `status`、`sourceUrl`、`sourceCheckedAt` 按期记录：同一期的池来自同一条公告或爆料。
 - `estimate` 可选：官方还没公布卡池时，用来提前上线版本页。内容是估算的开始时刻 `start`、推算依据 `basis`、`sourceUrl`、`sourceCheckedAt`，四项必填；推算只能基于官方已公布的时间（如上个版本的结束时刻加约 5 小时维护）。只有带 `estimate` 的版本，`phases` 才可以为空。页面上一律标「Estimate — not announced」，灰色，不用绿色。`status` 规则不变：估算日期不是 `official`，也不是 `leaked`（2026-10-21 定，见 §14 第 11 条）。
+- `maintenance` 可选（2026-10-22 定，M4）：开启这个版本的更新维护。字段：
+  - `start`：只用 `{ "utc": … }`，维护对所有服务器是同一时刻。
+  - `durationHours`：官方写的预计时长（如「约 5 小时」写 `5`），正数。
+  - `status`：`official`（官方公告给出了开始时刻）或 `estimate`（按惯例推算，如「次日 06:00 (UTC+8) 开始」）。只有这两个值。
+  - `basis`：`estimate` 时必填，写推算依据。
+  - `sourceUrl`、`sourceCheckedAt`：必填。
+  - 一致性：维护结束时刻（`start` + `durationHours`）必须等于该版本第一个 `utc` 开池时刻；只有 `estimate` 的版本，必须等于 `estimate.start`。`pnpm test` 检查这一条，所以维护时刻与开池时刻只有一个来源。
+
 - `versionName` 可选：官方不给版本号、只给名称时填写（如原神 `Luna VIII`）。`version` 仍写玩家搜索用的数字（`6.8`），用于 URL 和 Title（2026-10-21 定，见 §14 第 8 条）。
 - `start` / `end` 只有两种形态（2026-10-21 定，见 §14 第 1 条）：
   - `{ "utc": "…Z" }`：全球同一时刻，如版本维护结束后的上半池开池。
@@ -369,6 +385,29 @@ FAQ 同 `/hsr/`，把 HSR 换成 ZZZ。
 - 站内链接文字：`Próximo banner do Genshin`
 - 首屏答案段与 FAQ 同 `/hsr/` 的 PT-BR，把 HSR 换成 Genshin。
 
+### 6.3 `/{game}/maintenance/`（主词 zzz maintenance countdown）
+
+2026-10-22 起草，只有 EN。三款游戏共用一套文案，`{Game}` 用简称（HSR / ZZZ / Genshin）。只有 `zzz maintenance countdown` 有搜索数据（§3：260，KD 19.9）；HSR 与 Genshin 的维护词未调研。
+
+- Title：`{Game} Maintenance Countdown — Update Downtime & End Time`（HSR / ZZZ 54 字符，Genshin 58 字符）
+- Meta：`When {Game} update maintenance starts and ends, with a live countdown in your timezone. Official start time, expected end and the version it brings.`（HSR / ZZZ 145 字符，Genshin 149 字符）
+- H1：`{Game} Maintenance Countdown`
+- 站内链接文字：`{Game} maintenance countdown`
+
+**首屏答案段**（按 §3 的三种状态，时刻写 UTC，倒计时开始后换成本地时间）
+
+- 维护前：`{Game} {version} update maintenance starts {START} and is expected to last about {N} hours, ending around {END}. Servers are offline during maintenance, and the {version} banners open when it ends.`（`estimate` 时在开始时刻后加 ` — Estimate, not announced`）
+- 维护中：`{Game} {version} update maintenance is in progress. It started {START} and is expected to end around {END}; HoYoverse can extend it.`
+- 维护后：`{Game} {version} update maintenance ended around {END}, and version {version} is live.` 后接一句：有下次维护数据时 `The next update, {next}, is expected to start maintenance {NEXT_START}.`；没有时 `The next maintenance date has not been announced yet.`
+
+**FAQ（配 FAQPage schema）**
+
+| Q | A 模板 |
+|---|---|
+| When does {Game} maintenance end? | {Game} {version} maintenance is expected to end around {END}, about {N} hours after it starts at {START}. HoYoverse can extend it. |
+| How long is {Game} update maintenance? | Version updates usually take about {N} hours. The start time comes from the official notice; the end time is an estimate until maintenance finishes. |
+| When do the new banners open? | The first {version} banners open for every server at the same moment, when maintenance ends. |
+
 ## 7. 技术实现要求
 
 | 项 | 要求 | 为什么 |
@@ -479,6 +518,8 @@ FAQ 同 `/hsr/`，把 HSR 换成 ZZZ。
 10. **跳出率与停留时间**。§11 要看停留时间（> 90 秒）和跳出率（< 60%），但 Cloudflare Web Analytics 不提供这两项。决定：不测这两项，不另加工具，不自建接口；两周验收看人均页数（浏览量 ÷ 访问数）与 GSC 的点击和排名。已写入 §11。
 11. **卡池公布前的版本页**。2026-10-21 当天上线的竞品 zzzcountdown.com 已用估算日期做了 `/zzz-3.4-countdown`，抢占 `zzz 3.4 countdown / release date` 的真空期；原规则「有卡池数据才生成版本页」会把这个窗口让出去。决定：§4 新增可选 `estimate`，没有卡池时也生成版本页，日期明确标为估算；`/zzz/3.4/` 按 3.3 官方结束时刻（12-02 06:00 UTC+8）加约 5 小时维护估算为 12-02 03:00 UTC。`/hsr/4.7/`（2026-10-22 定）的依据较弱：官方只公布了 4.6 卡池结束时刻（11-10 15:00 服务器时间），没有写版本结束时刻；按 HSR 惯例（次日 06:00 UTC+8 开始维护，约 5 小时）估算为 11-11 03:00 UTC，basis 里写明是惯例。`/genshin/7.2/`（2026-10-22 定）同理：官方只公布了 7.1 下半祈愿结束时刻（11-03 14:59 服务器时间）；Luna VIII→7.0、7.0→7.1 都是次日 06:00 (UTC+8) 开始维护，估算为 11-04 03:00 UTC。已写入 §4、§8。
 12. **M3 语言版本的范围**（2026-10-22 定）。原 §2 写 vi / pt-BR / ko 三语言，但 §6 只给了 `/hsr/` 的三语文案，§13 要求先做结构、按实测排翻译，§6 又要求 ko 先测「픽업」再定标题。决定：M3 只做 vi、pt-BR 的三个主表页，整页翻译；首页与版本页只有英文；角色名与卡池名沿用数据里的英文名，不改 §4；ko 延后到实测数据与韩文译名字段都到位。已写入 §2、§3.1、§4、§6、§11、§13。
+
+13. **M4 维护页的范围**（2026-10-22 定）。§2 只写了 URL 与「维护开始时刻与预计时长」。决定：§4 加可选 `maintenance`（`official` / `estimate`，维护结束必须等于开池时刻）；页面分维护前、维护中、维护后三种状态，维护后有下次数据时同时倒计时；三款游戏都做；第一版不做补偿。已写入 §2.1、§3、§4、§6.3。
 
 ## 数据存疑的地方
 
