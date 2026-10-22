@@ -293,3 +293,10 @@ test("the home page names the site and its publisher in WebSite and Organization
     expect(await (await request.get(path)).text()).not.toMatch(/"@type":"(WebSite|Organization)"/);
   }
 });
+
+test("each home board links the official notice of its live banners", async ({ request }) => {
+  const html = await (await request.get("/")).text();
+  // ZZZ 3.3 phase 1 is live at BUILD_NOW.
+  expect(html).toContain('href="https://zenless.hoyoverse.com/en-us/news/166926"');
+  expect(html.match(/<li data-game="[a-z]+"[\s\S]*?<\/li>/g)!.every((board) => board.includes("Source:"))).toBe(true);
+});

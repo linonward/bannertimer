@@ -8,6 +8,7 @@ import { formatCountdown, formatServerShort, instant, utcOffsetLabel } from "@/l
 import { fiveNames } from "./banner-line";
 import { FlapCountdown } from "./flap-countdown";
 import { ArrowRightIcon } from "./icons";
+import { Sources } from "./sources";
 import { StatusBadge } from "./status-badge";
 
 /** One game's board on the home page: what is live, a small countdown, what is next. */
@@ -61,6 +62,7 @@ export function HomeBoard({
               <FlapCountdown ms={live ? endsAt - now : null} size="S" />
               <p className="sr-only">{live ? formatCountdown(endsAt - now) : formatServerShort(endsAt, server)}</p>
             </div>
+            <Sources banners={current} />
           </>
         ) : (
           <p className="font-display text-[44px] leading-[42px] font-extrabold text-ink-3 italic">NO BANNER LIVE</p>
