@@ -98,6 +98,8 @@ CI ([`.github/workflows/ci.yml`](../.github/workflows/ci.yml)) runs lint, typech
 
 The CI run on `main` after each merge is the check that the merged PRs work together. If it fails, fix `main` before you merge anything else. Only a green `main` deploys: the `promote` job in CI then fast-forwards the `production` branch, and Cloudflare Workers Builds deploys `production`. Never push to `production` by hand.
 
+If a merge starts no CI run on `main` (GitHub sometimes drops the push event; check `gh run list -b main`), run it by hand: `gh workflow run CI --ref main`. It checks and promotes like a push.
+
 ## 7. Merge and clean up
 
 Once auto-merge and the ruleset are on (§6), queue the merge as soon as the PR is ready. GitHub squash-merges it when the required checks pass:

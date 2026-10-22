@@ -7,6 +7,9 @@ on:
   push:
     branches: [main]
     paths-ignore: ["**/*.md"]
+  # Rerun `main` by hand when GitHub drops a push event and no run starts:
+  # `gh workflow run CI --ref main`. It checks and promotes like a push.
+  workflow_dispatch:
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -77,7 +80,7 @@ jobs:
   # A plain push is fast-forward only: an older commit can't replace a newer one.
   promote:
     needs: [check, e2e]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
       contents: write
