@@ -77,7 +77,7 @@ M1、M2 已上线（M1 2026-10-21 部署并提交 GSC）。之后按「数据更
 - **四个 banner 常青词共用一个 URL**（`/zzz/` 同时承载 upcoming / next / schedule / current，合计月搜 **14,100**）。不做四个薄页，那会让四个词都排不上去。
 - **版本号页用 `/{game}/{version}/`，不用 `?v=3.4` 参数**（参数页会被合并或不收录）。
 - **URL 里不带年份**（不要 `/hsr-4.6-banners-2026`），否则每 42 天报废一批。
-- 首页 `/` 只做「三款当前卡池速览」的枢纽，**不争任何词**，防止和 `/hsr/` 自相竞争。
+- 首页 `/` 只做「三款当前卡池速览」的枢纽，**不争任何词**，防止和 `/hsr/` 自相竞争。首页 Title 为 `Bannertimer — Live Gacha Banner Timers for HoYoverse Games`（58 字符，2026-10-22 定）：只写品牌与「HoYoverse Games」，不写任何游戏名加 banner 的组合，避免与主表页争词。
 - 语言用子目录 `/vi/`、`/pt-br/`、`/ko/`，不用子域、不用参数。
 - **日历订阅源** `/{game}/calendar/{server}.ics`（`server` 为 `america` / `europe` / `asia`，2026-10-22 定）。每个卡池一个事件，从开池到结束；只有估算的版本加一个「{Game} {version} starts (Estimate — not announced)」事件；`leaked` 卡池标题带「Leaked — unconfirmed」。`serverLocal` 时刻按该服务器换算，所以每服一个文件。只用于日历应用订阅，不是页面，不进 sitemap。
 

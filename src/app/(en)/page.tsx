@@ -7,7 +7,7 @@ import { GAMES, SHARE_IMAGE, SITE_NAME } from "@/lib/games";
 
 // The hub (docs/product.md §3): a quick view of each game's current banner. It targets no
 // keyword, so it never competes with the game pages.
-const title = `${SITE_NAME} — Live Gacha Banner Timers`;
+const title = `${SITE_NAME} — Live Gacha Banner Timers for HoYoverse Games`;
 const description = "Current and next banners for HoYoverse gacha games, each with its own live countdown page.";
 
 export const metadata: Metadata = {
