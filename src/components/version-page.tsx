@@ -88,13 +88,7 @@ export function VersionPage({ gameId, version }: { gameId: string; version: stri
           </p>
           {checked && (
             <p className={`font-mono text-xs ${official ? "text-ok" : "text-leak"}`}>
-              Source checked{" "}
-              {new Date(checked).toLocaleDateString("en-US", {
-                month: "short",
-                day: "numeric",
-                year: "numeric",
-                timeZone: "UTC",
-              })}
+              Source checked <CheckedDate iso={checked} />
             </p>
           )}
         </div>
@@ -157,7 +151,7 @@ export function VersionPage({ gameId, version }: { gameId: string; version: stri
                 <a href={v.estimate.sourceUrl} rel="nofollow noopener" className="underline">
                   {new URL(v.estimate.sourceUrl).hostname.replace(/^www\./, "")}
                 </a>{" "}
-                · checked {v.estimate.sourceCheckedAt}
+                · checked <CheckedDate iso={v.estimate.sourceCheckedAt} />
               </p>
             </div>
           )}
@@ -198,13 +192,19 @@ export function VersionPage({ gameId, version }: { gameId: string; version: stri
                       })}
                     </ul>
                     <p className="font-mono text-[13px] text-ink-2">{phaseDates(p)}</p>
-                    {p.status === "leaked" && p.sourceUrl && (
+                    {p.sourceUrl && (
+                      // Official phases link their notice too, so every banner can be checked at the source.
                       <p className="font-mono text-[11px] text-ink-3">
                         Source:{" "}
                         <a href={p.sourceUrl} rel="nofollow noopener" className="underline">
                           {new URL(p.sourceUrl).hostname.replace(/^www\./, "")}
                         </a>
-                        {p.sourceCheckedAt ? ` · checked ${p.sourceCheckedAt}` : ""}
+                        {p.sourceCheckedAt && (
+                          <>
+                            {" "}
+                            · checked <CheckedDate iso={p.sourceCheckedAt} />
+                          </>
+                        )}
                       </p>
                     )}
                   </div>
@@ -304,4 +304,13 @@ export function versionMetadata(gameId: string, version: string): Metadata {
     alternates: { canonical: url },
     openGraph: { title, description, url, images: [SHARE_IMAGE] },
   };
+}
+
+/** "Oct 21, 2026", machine-readable for crawlers. */
+function CheckedDate({ iso }: { iso: string }) {
+  return (
+    <time dateTime={iso}>
+      {new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" })}
+    </time>
+  );
 }

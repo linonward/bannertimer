@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { HomeBoard } from "@/components/home-board";
 import { SiteFooter } from "@/components/site-footer";
-import { bannersOf, versionsOf } from "@/lib/banners";
+import { bannersOf, lastUpdated, versionsOf } from "@/lib/banners";
 import { BUILD_TIME } from "@/lib/build-time";
 import { GAMES, SHARE_IMAGE, SITE_NAME } from "@/lib/games";
 
@@ -20,6 +20,8 @@ export const metadata: Metadata = {
 const SLASHES = ["bg-hsr", "bg-hsr/33", "bg-hsr/33", "bg-zzz", "bg-zzz/33", "bg-zzz/33", "bg-genshin", "bg-genshin/33", "bg-genshin/33"];
 
 const names = GAMES.map((g) => g.name);
+// The newest data change of any game, like the "Last updated" line on the game pages.
+const updated = lastUpdated(GAMES.flatMap((g) => versionsOf(g.id)));
 const gameList = names.length > 1 ? `${names.slice(0, -1).join(", ")} and ${names.at(-1)}` : names[0];
 
 export default function Home() {
@@ -45,6 +47,15 @@ export default function Home() {
           <p className="relative max-w-[640px] text-[17px] leading-[27px] text-ink-2">
             Current banners for {gameList}, counting down to the second in your timezone.
             Open a game for the full banner schedule.
+          </p>
+          <p className="relative flex items-center gap-2.5 font-mono text-[11px] text-ink-3 md:text-xs">
+            <span aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-ok" />
+            <span>
+              Last updated{" "}
+              <time dateTime={updated}>
+                {new Date(updated).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" })}
+              </time>
+            </span>
           </p>
         </div>
         <ul className="flex flex-col gap-5 px-5 pt-6 pb-10 md:flex-row md:px-20 md:pb-[72px]">
