@@ -22,6 +22,7 @@ import { fiveNames, LiveBannerRow } from "./banner-line";
 import { CalendarMenu } from "./calendar-menu";
 import { FlapCountdown } from "./flap-countdown";
 import { HourglassIcon } from "./icons";
+import { Sources } from "./sources";
 import { StatusBadge } from "./status-badge";
 
 type Props = {
@@ -208,26 +209,5 @@ export function BannerHero({ gameId, shortName, versions, banners, nextVersionOf
         </div>
       </section>
     </div>
-  );
-}
-
-/** The notices the banners come from (one link per notice), with the date they were checked. */
-function Sources({ banners, lang }: { banners: BannerEntry[]; lang: Lang }) {
-  const t = messages(lang);
-  const sources = [...new Map(banners.filter((b) => b.sourceUrl).map((b) => [b.sourceUrl!, b])).values()];
-  if (!sources.length) return null;
-  return (
-    <p className="font-mono text-[11px] text-ink-3">
-      {t.source}{" "}
-      {sources.map((b, i) => (
-        <span key={b.sourceUrl}>
-          {i > 0 && ", "}
-          <a href={b.sourceUrl} rel="nofollow noopener" className="underline">
-            {new URL(b.sourceUrl!).hostname.replace(/^www\./, "")}
-          </a>
-        </span>
-      ))}
-      {sources[0].sourceCheckedAt && <time dateTime={sources[0].sourceCheckedAt}>{t.checked(sources[0].sourceCheckedAt)}</time>}
-    </p>
   );
 }

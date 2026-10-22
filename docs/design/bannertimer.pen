@@ -8975,6 +8975,7 @@
           "id": "l1u53",
           "name": "Boards",
           "width": "fill_container",
+          "height": 586,
           "gap": 20,
           "padding": [
             24,
@@ -8992,6 +8993,7 @@
               },
               "clip": true,
               "width": "fill_container",
+              "height": "fill_container",
               "fill": [
                 "$b-panel",
                 {
@@ -9051,6 +9053,7 @@
                   "id": "GKOuI",
                   "name": "Body",
                   "width": "fill_container",
+                  "height": "fill_container",
                   "layout": "vertical",
                   "gap": 18,
                   "padding": [
@@ -9181,6 +9184,16 @@
                           }
                         }
                       ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "Xir0w",
+                      "name": "Source",
+                      "fill": "$b-ink-3",
+                      "content": "Source: hoyolab.com · checked Oct 21, 2026",
+                      "fontFamily": "$b-font-mono",
+                      "fontSize": 11,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -9282,7 +9295,7 @@
               },
               "clip": true,
               "width": "fill_container",
-              "height": 458,
+              "height": "fill_container",
               "fill": [
                 "$b-panel",
                 {
@@ -9342,6 +9355,7 @@
                   "id": "A6BtP",
                   "name": "Body",
                   "width": "fill_container",
+                  "height": "fill_container",
                   "layout": "vertical",
                   "gap": 18,
                   "padding": [
@@ -9472,6 +9486,16 @@
                           }
                         }
                       ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "Q6Hfy",
+                      "name": "Source",
+                      "fill": "$b-ink-3",
+                      "content": "Source: zenless.hoyoverse.com · checked Oct 21, 2026",
+                      "fontFamily": "$b-font-mono",
+                      "fontSize": 11,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -9572,74 +9596,310 @@
             },
             {
               "type": "frame",
-              "id": "plj0N",
+              "id": "Ij3Gj",
               "name": "Board genshin",
               "theme": {
                 "game": "genshin"
               },
               "clip": true,
-              "width": 300,
-              "height": 458,
-              "fill": "$b-bg",
+              "width": "fill_container",
+              "height": "fill_container",
+              "fill": [
+                "$b-panel",
+                {
+                  "type": "gradient",
+                  "gradientType": "radial",
+                  "enabled": true,
+                  "rotation": 0,
+                  "size": {
+                    "width": 1.4,
+                    "height": 1
+                  },
+                  "colors": [
+                    {
+                      "color": "$b-game-glow",
+                      "position": 0
+                    },
+                    {
+                      "color": "#00000000",
+                      "position": 1
+                    }
+                  ],
+                  "center": {
+                    "x": 0.9,
+                    "y": 0
+                  }
+                }
+              ],
               "cornerRadius": 4,
               "stroke": "$b-game-line",
               "strokeWidth": 1,
               "layout": "vertical",
-              "gap": 14,
-              "padding": 28,
-              "justifyContent": "end",
               "children": [
                 {
+                  "type": "rectangle",
+                  "id": "f8xCYm",
+                  "name": "Game Bar",
+                  "fill": "$b-game",
+                  "width": "fill_container",
+                  "height": 4
+                },
+                {
                   "type": "text",
-                  "id": "SuoxW",
+                  "id": "b95YuV",
                   "layoutPosition": "absolute",
-                  "x": -10,
-                  "y": -40,
+                  "x": 250,
+                  "y": -60,
                   "name": "Watermark",
                   "fill": "$b-game-soft",
-                  "content": "?",
+                  "content": "7.1",
                   "fontFamily": "$b-font-display",
-                  "fontSize": 360,
+                  "fontSize": 300,
                   "fontWeight": "800",
                   "fontStyle": "italic"
                 },
                 {
-                  "type": "text",
-                  "id": "suFRx",
-                  "name": "Game",
+                  "type": "frame",
+                  "id": "IXKKI",
+                  "name": "Body",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "layout": "vertical",
+                  "gap": 18,
+                  "padding": [
+                    24,
+                    28,
+                    28,
+                    28
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "Pmc3K",
+                      "name": "Top",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "dS11i",
+                          "name": "Game",
+                          "fill": "$b-game",
+                          "content": "GENSHIN IMPACT",
+                          "fontFamily": "$b-font-mono",
+                          "fontSize": 12,
+                          "fontWeight": "700",
+                          "letterSpacing": 2
+                        },
+                        {
+                          "type": "text",
+                          "id": "D0GEYT",
+                          "name": "Ver",
+                          "fill": "$b-ink-3",
+                          "content": "v7.1 · 2 LIVE",
+                          "fontFamily": "$b-font-mono",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "m88n2W",
+                      "name": "Banner",
+                      "fill": "$b-ink",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "SKIRK & ESCOFFIER",
+                      "lineHeight": 0.95,
+                      "fontFamily": "$b-font-display",
+                      "fontSize": 44,
+                      "fontWeight": "800",
+                      "fontStyle": "italic"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "ytGCt",
+                      "name": "Five",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "gNx63",
+                          "name": "Name",
+                          "fill": "$b-ink-2",
+                          "content": "Void Star's Advent · La Chanson Cerise",
+                          "fontFamily": "$b-font-body",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "dX6XP",
+                      "name": "Countdown Wrap",
+                      "layout": "vertical",
+                      "gap": 10,
+                      "padding": [
+                        6,
+                        0,
+                        0,
+                        0
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "sIcIg",
+                          "name": "Caption",
+                          "fill": "$b-game",
+                          "content": "FIRST BANNER ENDS IN",
+                          "fontFamily": "$b-font-mono",
+                          "fontSize": 11,
+                          "fontWeight": "600",
+                          "letterSpacing": 2
+                        },
+                        {
+                          "id": "yOTwF",
+                          "type": "ref",
+                          "ref": "v0vQ2",
+                          "name": "Countdown",
+                          "descendants": {
+                            "QZfWF/tV5c9": {
+                              "content": "2"
+                            },
+                            "F7L7E/tV5c9": {
+                              "content": "0"
+                            },
+                            "FKbsd/tV5c9": {
+                              "content": "2"
+                            },
+                            "BkSk5/tV5c9": {
+                              "content": "2"
+                            },
+                            "q0NVHb/tV5c9": {
+                              "content": "5"
+                            },
+                            "ga2Nx/tV5c9": {
+                              "content": "9"
+                            },
+                            "LitUG/tV5c9": {
+                              "content": "0"
+                            },
+                            "cPOfj/tV5c9": {
+                              "content": "0"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "qRHjC",
+                      "name": "Source",
+                      "fill": "$b-ink-3",
+                      "content": "Source: genshin.hoyoverse.com · checked Oct 21, 2026",
+                      "fontFamily": "$b-font-mono",
+                      "fontSize": 11,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "k9b1dw",
+                  "name": "Next",
+                  "width": "fill_container",
+                  "fill": "$b-panel-2",
+                  "stroke": "$b-line",
+                  "strokeWidth": {
+                    "top": 1
+                  },
+                  "gap": 16,
+                  "padding": [
+                    16,
+                    28
+                  ],
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "b78tIH",
+                      "name": "Text",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "zilJ7",
+                          "name": "K",
+                          "fill": "$b-ink-3",
+                          "content": "NEXT · NOT ANNOUNCED",
+                          "fontFamily": "$b-font-mono",
+                          "fontSize": 11,
+                          "fontWeight": "normal",
+                          "letterSpacing": 1
+                        },
+                        {
+                          "type": "text",
+                          "id": "IGzWp",
+                          "name": "Name",
+                          "fill": "$b-ink-3",
+                          "content": "7.2 TBA",
+                          "fontFamily": "$b-font-display",
+                          "fontSize": 22,
+                          "fontWeight": "800",
+                          "fontStyle": "italic"
+                        }
+                      ]
+                    },
+                    {
+                      "id": "g1DMFU",
+                      "type": "ref",
+                      "ref": "PbWd0",
+                      "enabled": false,
+                      "name": "Status"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "CjKp6",
+                  "name": "CTA",
+                  "width": "fill_container",
                   "fill": "$b-game",
-                  "content": "GENSHIN IMPACT",
-                  "fontFamily": "$b-font-mono",
-                  "fontSize": 12,
-                  "fontWeight": "700",
-                  "letterSpacing": 2
-                },
-                {
-                  "type": "text",
-                  "id": "FEH2y",
-                  "name": "Title",
-                  "fill": "$b-ink",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "BOARD OPENS SOON",
-                  "lineHeight": 0.92,
-                  "fontFamily": "$b-font-display",
-                  "fontSize": 40,
-                  "fontWeight": "800",
-                  "fontStyle": "italic"
-                },
-                {
-                  "type": "text",
-                  "id": "S0fFh4",
-                  "name": "Note",
-                  "fill": "$b-ink-3",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "Genshin banners join the board in the next release.",
-                  "lineHeight": 1.5,
-                  "fontFamily": "$b-font-body",
-                  "fontSize": 14,
-                  "fontWeight": "normal"
+                  "padding": [
+                    16,
+                    28
+                  ],
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "qu12f",
+                      "name": "Label",
+                      "fill": "$b-game-ink",
+                      "content": "FULL GENSHIN SCHEDULE",
+                      "fontFamily": "$b-font-display",
+                      "fontSize": 20,
+                      "fontWeight": "800",
+                      "fontStyle": "italic"
+                    },
+                    {
+                      "type": "icon",
+                      "id": "pNY9q",
+                      "name": "Arrow",
+                      "width": 20,
+                      "height": 20,
+                      "icon": "arrow-right",
+                      "library": "lucide",
+                      "fill": "$b-game-ink"
+                    }
+                  ]
                 }
               ]
             }
