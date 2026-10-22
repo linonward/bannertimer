@@ -170,6 +170,7 @@ export function BannerHero({ gameId, shortName, versions, banners, nextVersionOf
                   <dd className="text-[13px] text-ink-3 max-md:hidden">{live ? localZoneLabel(endsAt) : " "}</dd>
                 </div>
               </dl>
+              <Sources banners={current} lang={lang} />
             </>
           )}
         </div>
@@ -199,15 +200,7 @@ export function BannerHero({ gameId, shortName, versions, banners, nextVersionOf
               <p className="font-mono text-[13px] text-ink-2">
                 {t.starts} {serverShort(startsAt)} {utcOffsetLabel(server)}
               </p>
-              {next[0].sourceUrl && (
-                <p className="font-mono text-[11px] text-ink-3">
-                  {t.source}{" "}
-                  <a href={next[0].sourceUrl} rel="nofollow noopener" className="underline">
-                    {new URL(next[0].sourceUrl).hostname.replace(/^www\./, "")}
-                  </a>
-                  {next[0].sourceCheckedAt && <time dateTime={next[0].sourceCheckedAt}>{t.checked(next[0].sourceCheckedAt)}</time>}
-                </p>
-              )}
+              <Sources banners={next.slice(0, 1)} lang={lang} />
             </div>
           ) : (
             <HourglassIcon className="size-[22px] text-ink-3 max-md:hidden" />
@@ -215,5 +208,26 @@ export function BannerHero({ gameId, shortName, versions, banners, nextVersionOf
         </div>
       </section>
     </div>
+  );
+}
+
+/** The notices the banners come from (one link per notice), with the date they were checked. */
+function Sources({ banners, lang }: { banners: BannerEntry[]; lang: Lang }) {
+  const t = messages(lang);
+  const sources = [...new Map(banners.filter((b) => b.sourceUrl).map((b) => [b.sourceUrl!, b])).values()];
+  if (!sources.length) return null;
+  return (
+    <p className="font-mono text-[11px] text-ink-3">
+      {t.source}{" "}
+      {sources.map((b, i) => (
+        <span key={b.sourceUrl}>
+          {i > 0 && ", "}
+          <a href={b.sourceUrl} rel="nofollow noopener" className="underline">
+            {new URL(b.sourceUrl!).hostname.replace(/^www\./, "")}
+          </a>
+        </span>
+      ))}
+      {sources[0].sourceCheckedAt && <time dateTime={sources[0].sourceCheckedAt}>{t.checked(sources[0].sourceCheckedAt)}</time>}
+    </p>
   );
 }
