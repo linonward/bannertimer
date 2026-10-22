@@ -47,6 +47,9 @@ export type Messages = {
   archiveLink: (game: string) => string;
   faqLink: (game: string) => string;
   disclaimer: string;
+  /** Footer links to the English-only site pages (§3). */
+  aboutLink: string;
+  privacyLink: string;
   // FAQ (§6)
   faqNext: (game: string) => string;
   faqNextAnswer: (titles: string, count: number, start: string, status: string) => string;
@@ -186,6 +189,8 @@ const en: Messages = {
   faqLink: (game) => `${game} banner FAQ`,
   disclaimer:
     "bannertimer is a fan-made schedule. Not affiliated with HoYoverse. Times are converted from official server time.",
+  aboutLink: "About",
+  privacyLink: "Privacy",
   faqNext: (game) => `What is the next ${game} banner?`,
   faqNextAnswer: (titles, count, start, status) =>
     `${titles} ${count > 1 ? "start" : "starts"} ${start}. Status: ${status}.`,
@@ -321,6 +326,8 @@ const vi: Messages = {
   faqLink: (game) => `Hỏi đáp banner ${game}`,
   disclaimer:
     "bannertimer là lịch banner do người hâm mộ làm, không liên kết với HoYoverse. Giờ được quy đổi từ giờ máy chủ chính thức.",
+  aboutLink: "Giới thiệu",
+  privacyLink: "Quyền riêng tư",
   faqNext: (game) => `Banner tiếp theo của ${game} là gì?`,
   faqNextAnswer: (titles, _count, start, status) => `${titles} mở vào ${start}. Trạng thái: ${status}.`,
   faqNextNone: "Banner tiếp theo chưa được công bố.",
@@ -460,6 +467,8 @@ const ptBr: Messages = {
   faqLink: (game) => `Perguntas sobre banners do ${game}`,
   disclaimer:
     "bannertimer é um cronograma feito por fãs, sem vínculo com a HoYoverse. Os horários são convertidos do horário oficial do servidor.",
+  aboutLink: "Sobre",
+  privacyLink: "Privacidade",
   faqNext: (game) => `Qual é o próximo banner do ${game}?`,
   faqNextAnswer: (titles, count, start, status) =>
     `${titles} ${count > 1 ? "começam" : "começa"} em ${start}. Status: ${status}.`,
