@@ -79,6 +79,11 @@ M1、M2 已上线（M1 2026-10-21 部署并提交 GSC）。之后按「数据更
 - **URL 里不带年份**（不要 `/hsr-4.6-banners-2026`），否则每 42 天报废一批。
 - 首页 `/` 只做「三款当前卡池速览」的枢纽，**不争任何词**，防止和 `/hsr/` 自相竞争。首页 Title 为 `Bannertimer — Live Gacha Banner Timers for HoYoverse Games`（58 字符，2026-10-22 定）：只写品牌与「HoYoverse Games」，不写任何游戏名加 banner 的组合，避免与主表页争词。
 - 语言用子目录 `/vi/`、`/pt-br/`、`/ko/`，不用子域、不用参数。
+- **站点信息页** `/about/`、`/privacy/` 与 `/llms.txt`（2026-10-22 定，来自 GEO 体检：缺 About / Contact、Privacy 与 llms.txt）。只有英文，不争任何词，不加 hreflang；`/about/`、`/privacy/` 列入根 sitemap，`/llms.txt` 不列。每页页脚细字行链到 About 与 Privacy，语言页链英文版。
+  - `/about/`：站点是什么、数据从哪来（官方公告，每个卡池链到原公告；`leaked` 与 `estimate` 的规则同 §4）、时间口径（§4 服务器时区）、更正与联系 `hello@bannertimer.com`。
+  - `/privacy/`：如实写当前状态。Cloudflare Web Analytics 无 cookie、只在 `bannertimer.com` 计数（§11）；所选服务器存在浏览器 `localStorage`，不上传；站点托管在 Cloudflare，请求（含 IP）由其处理；日历订阅源与普通页面一样被请求。无广告、无账号。
+  - `/llms.txt`：站点一句话说明，加三个主表页、全部版本页、语言页与 About / Privacy 的链接，由 §4 数据生成，不手写卡池。
+  - 不加 `Organization` / `WebSite` / 作者 schema，结构化数据仍只用 §7 的两种。
 - **日历订阅源** `/{game}/calendar/{server}.ics`（`server` 为 `america` / `europe` / `asia`，2026-10-22 定）。每个卡池一个事件，从开池到结束；只有估算的版本加一个「{Game} {version} starts (Estimate — not announced)」事件；`leaked` 卡池标题带「Leaked — unconfirmed」。`serverLocal` 时刻按该服务器换算，所以每服一个文件。只用于日历应用订阅，不是页面，不进 sitemap。
 
 ### 3.1 语言版本（M3）
@@ -418,6 +423,7 @@ FAQ 同 `/hsr/`，把 HSR 换成 ZZZ。
 - **代充 affiliate**（Eldorado 类）：已验证路径——updatecountdown.info（DR 0、14 个月）靠 `genshin banner countdown` 1,730/月做到 **9,145 月访问**
 - **出价信号**：`zzz next banner` 顶部出价 **$10.57**、`zzz upcoming banners` **$11.53**——代充广告主在抢，这类流量商业价值高
 - 所有广告位固定高度，不要把 CLS 拉起来
+- AdSense 或任何第三方脚本上线前，先更新 `/privacy/`（§3），写明它收集什么
 
 ## 11. 埋点与上线验收（两周看这几项）
 

@@ -2804,16 +2804,52 @@
                       ]
                     },
                     {
-                      "type": "text",
-                      "id": "P0yJc",
-                      "name": "Fine Print",
-                      "fill": "$b-ink-3",
-                      "textGrowth": "fixed-width",
+                      "type": "frame",
+                      "id": "pnpRJ",
+                      "name": "Fine Row",
                       "width": "fill_container",
-                      "content": "bannertimer is a fan-made schedule. Not affiliated with HoYoverse. Times are converted from official server time.",
-                      "fontFamily": "$b-font-body",
-                      "fontSize": 12,
-                      "fontWeight": "normal"
+                      "gap": 40,
+                      "justifyContent": "space_between",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "P0yJc",
+                          "name": "Fine Print",
+                          "fill": "$b-ink-3",
+                          "content": "bannertimer is a fan-made schedule. Not affiliated with HoYoverse. Times are converted from official server time.",
+                          "fontFamily": "$b-font-body",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "YuI5c",
+                          "name": "Site Links",
+                          "gap": 16,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "HAa4F",
+                              "name": "About",
+                              "fill": "$b-ink-3",
+                              "content": "About",
+                              "fontFamily": "$b-font-body",
+                              "fontSize": 12,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "mQRj7",
+                              "name": "Privacy",
+                              "fill": "$b-ink-3",
+                              "content": "Privacy",
+                              "fontFamily": "$b-font-body",
+                              "fontSize": 12,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
                     }
                   ]
                 }
@@ -6781,6 +6817,34 @@
               "fontFamily": "$b-font-body",
               "fontSize": 12,
               "fontWeight": "normal"
+            },
+            {
+              "type": "frame",
+              "id": "XnYMY",
+              "name": "Site Links",
+              "gap": 16,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "lzd67",
+                  "name": "About",
+                  "fill": "$b-ink-3",
+                  "content": "About",
+                  "fontFamily": "$b-font-body",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "M1pQ6Z",
+                  "name": "Privacy",
+                  "fill": "$b-ink-3",
+                  "content": "Privacy",
+                  "fontFamily": "$b-font-body",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
             }
           ]
         }
@@ -14869,6 +14933,329 @@
               "fontFamily": "$b-font-body",
               "fontSize": 13,
               "fontWeight": "normal"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "ZSWNU",
+      "x": 0,
+      "y": 4935,
+      "name": "/about/ — Desktop",
+      "theme": {
+        "game": "hsr"
+      },
+      "clip": true,
+      "width": 1440,
+      "fill": "$b-bg",
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "eOuRu",
+          "type": "ref",
+          "ref": "Xp5Oe",
+          "name": "Header",
+          "width": "fill_container",
+          "descendants": {
+            "W28Kw": {
+              "stroke": "#00000000",
+              "theme": {
+                "game": "hsr"
+              }
+            },
+            "W28Kw/eL4L1": {
+              "fill": "$b-ink-2",
+              "fontWeight": "500"
+            },
+            "J3UXt": {
+              "theme": {
+                "game": "zzz"
+              }
+            },
+            "HqMdS": {
+              "theme": {
+                "game": "genshin"
+              }
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "QJbGs",
+          "name": "Main",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 56,
+          "padding": [
+            72,
+            80,
+            80,
+            80
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "B0nawg",
+              "name": "Intro",
+              "width": 760,
+              "layout": "vertical",
+              "gap": 16,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "fBZNi",
+                  "name": "Eyebrow",
+                  "fill": "$b-ink-3",
+                  "content": "ABOUT",
+                  "fontFamily": "$b-font-mono",
+                  "fontSize": 13,
+                  "fontWeight": "600",
+                  "letterSpacing": 2
+                },
+                {
+                  "type": "text",
+                  "id": "Ft1nb",
+                  "name": "H1",
+                  "fill": "$b-ink",
+                  "content": "ABOUT BANNERTIMER",
+                  "lineHeight": 0.875,
+                  "fontFamily": "$b-font-display",
+                  "fontSize": 96,
+                  "fontWeight": "800",
+                  "letterSpacing": -1,
+                  "fontStyle": "italic"
+                },
+                {
+                  "type": "text",
+                  "id": "PB0qE",
+                  "name": "Lede",
+                  "fill": "$b-ink-2",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "bannertimer shows the current and next gacha banners for Honkai: Star Rail, Zenless Zone Zero and Genshin Impact, with a live countdown to every banner change.",
+                  "lineHeight": 1.6,
+                  "fontFamily": "$b-font-body",
+                  "fontSize": 17,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "w0jfE",
+                  "name": "Updated",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ellipse",
+                      "id": "aGc43",
+                      "name": "Dot",
+                      "fill": "$b-ok",
+                      "width": 6,
+                      "height": 6
+                    },
+                    {
+                      "type": "text",
+                      "id": "wjx9U",
+                      "name": "Text",
+                      "fill": "$b-ink-3",
+                      "content": "Last updated Oct 22, 2026",
+                      "fontFamily": "$b-font-mono",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "a9ulI",
+              "name": "Sections",
+              "width": 760,
+              "layout": "vertical",
+              "gap": 40,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "waiiV",
+                  "name": "Section WHO RUNS IT",
+                  "width": "fill_container",
+                  "stroke": "$b-line",
+                  "strokeWidth": {
+                    "top": 1
+                  },
+                  "layout": "vertical",
+                  "gap": 12,
+                  "padding": [
+                    24,
+                    0,
+                    0,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "yxeSJ",
+                      "name": "H2",
+                      "fill": "$b-ink",
+                      "content": "WHO RUNS IT",
+                      "fontFamily": "$b-font-display",
+                      "fontSize": 32,
+                      "fontWeight": "800",
+                      "fontStyle": "italic"
+                    },
+                    {
+                      "type": "text",
+                      "id": "G3gmP0",
+                      "name": "P",
+                      "fill": "$b-ink-2",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "bannertimer is a fan-made site. Not affiliated with HoYoverse. Game and character names belong to their owners.",
+                      "lineHeight": 1.625,
+                      "fontFamily": "$b-font-body",
+                      "fontSize": 16,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "xfq0E",
+                  "name": "Section WHERE THE DATA COMES FROM",
+                  "width": "fill_container",
+                  "stroke": "$b-line",
+                  "strokeWidth": {
+                    "top": 1
+                  },
+                  "layout": "vertical",
+                  "gap": 12,
+                  "padding": [
+                    24,
+                    0,
+                    0,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "KdWYY",
+                      "name": "H2",
+                      "fill": "$b-ink",
+                      "content": "WHERE THE DATA COMES FROM",
+                      "fontFamily": "$b-font-display",
+                      "fontSize": 32,
+                      "fontWeight": "800",
+                      "fontStyle": "italic"
+                    },
+                    {
+                      "type": "text",
+                      "id": "Wi88q",
+                      "name": "P",
+                      "fill": "$b-ink-2",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Every banner comes from an official notice: HoYoLAB posts and the news pages of each game. Each banner on the site links the notice it comes from, with the date we last checked it.",
+                      "lineHeight": 1.625,
+                      "fontFamily": "$b-font-body",
+                      "fontSize": 16,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "Dv6bU",
+                      "name": "P",
+                      "fill": "$b-ink-2",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "A leak appears only with a source, in grey and marked “Leaked — unconfirmed”. When a version is announced but its banners are not, the page shows an estimated start marked “Estimate — not announced”.",
+                      "lineHeight": 1.625,
+                      "fontFamily": "$b-font-body",
+                      "fontSize": 16,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "kvB6D",
+                  "name": "Section CONTACT AND CORRECTIONS",
+                  "width": "fill_container",
+                  "stroke": "$b-line",
+                  "strokeWidth": {
+                    "top": 1
+                  },
+                  "layout": "vertical",
+                  "gap": 12,
+                  "padding": [
+                    24,
+                    0,
+                    0,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "uvycY",
+                      "name": "H2",
+                      "fill": "$b-ink",
+                      "content": "CONTACT AND CORRECTIONS",
+                      "fontFamily": "$b-font-display",
+                      "fontSize": 32,
+                      "fontWeight": "800",
+                      "fontStyle": "italic"
+                    },
+                    {
+                      "type": "text",
+                      "id": "lJKzL",
+                      "name": "P",
+                      "fill": "$b-ink-2",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Found a wrong date or a missing banner? Email hello@bannertimer.com with a link to the official notice, and we will fix the page.",
+                      "lineHeight": 1.625,
+                      "fontFamily": "$b-font-body",
+                      "fontSize": 16,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "pNA1H",
+          "name": "Footer Wrap",
+          "width": "fill_container",
+          "padding": [
+            0,
+            80
+          ],
+          "children": [
+            {
+              "id": "ylsVK",
+              "type": "ref",
+              "ref": "P1yGZ",
+              "name": "Footer",
+              "width": "fill_container",
+              "descendants": {
+                "wbFvR": {
+                  "content": "GAMES"
+                },
+                "XYBgE": {
+                  "content": "Honkai: Star Rail banner schedule"
+                },
+                "QMyCe": {
+                  "content": "Zenless Zone Zero banner countdown"
+                },
+                "h2oiR": {
+                  "enabled": false
+                }
+              }
             }
           ]
         }
