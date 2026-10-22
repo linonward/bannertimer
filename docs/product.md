@@ -83,7 +83,7 @@ M1、M2 已上线（M1 2026-10-21 部署并提交 GSC）。之后按「数据更
   - `/about/`：站点是什么、数据从哪来（官方公告，每个卡池链到原公告；`leaked` 与 `estimate` 的规则同 §4）、时间口径（§4 服务器时区）、更正与联系 `hello@bannertimer.com`。
   - `/privacy/`：如实写当前状态。Cloudflare Web Analytics 无 cookie、只在 `bannertimer.com` 计数（§11）；所选服务器存在浏览器 `localStorage`，不上传；站点托管在 Cloudflare，请求（含 IP）由其处理；日历订阅源与普通页面一样被请求。无广告、无账号。
   - `/llms.txt`：站点一句话说明，加三个主表页、全部版本页、语言页与 About / Privacy 的链接，由 §4 数据生成，不手写卡池。
-  - 不加 `Organization` / `WebSite` / 作者 schema，结构化数据仍只用 §7 的两种。
+  - 首页加 `WebSite` 与 `Organization`（2026-10-22 改：原定不加，GEO 体检后决定加；`Organization` 带 `email` `hello@bannertimer.com`），只在首页，见 §7。不加作者 schema。
 - **日历订阅源** `/{game}/calendar/{server}.ics`（`server` 为 `america` / `europe` / `asia`，2026-10-22 定）。每个卡池一个事件，从开池到结束；只有估算的版本加一个「{Game} {version} starts (Estimate — not announced)」事件；`leaked` 卡池标题带「Leaked — unconfirmed」。`serverLocal` 时刻按该服务器换算，所以每服一个文件。只用于日历应用订阅，不是页面，不进 sitemap。
 
 ### 3.1 语言版本（M3）
@@ -381,7 +381,7 @@ FAQ 同 `/hsr/`，把 HSR 换成 ZZZ。
 | Sitemap | 按游戏分 sitemap，`lastmod` 用真实内容变动时间 | 版本页上线即提交 |
 | 性能 | 首屏关键路径不含第三方脚本；广告位**固定高度**占位 | 防 CLS，卖点就是体验 |
 | 移动优先 | 卡池表手机竖屏必须可读 | 大量用户在手机上查「还有几天」 |
-| 结构化数据 | `FAQPage` + `BreadcrumbList`；**不要给倒计时标 `Event` / `SpecialAnnouncement`** | 谷歌对后者无稳定富结果支持 |
+| 结构化数据 | `FAQPage` + `BreadcrumbList`；首页另加 `WebSite` + `Organization`（2026-10-22 定，只在首页）；**不要给倒计时标 `Event` / `SpecialAnnouncement`** | 谷歌对后者无稳定富结果支持 |
 
 ## 8. 版本页自动生成规则
 

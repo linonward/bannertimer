@@ -53,7 +53,7 @@ From §3, §4, §5 and §7 of the spec:
 - **No images for banner data.** The timeline and tables are HTML and CSS.
 - **One game per page.** `/hsr/` shows no Genshin or ZZZ banner tables; it only links to them.
 - **URLs:** `/{game}/` and `/{game}/{version}/`. No query parameters, no years. Languages use `/vi/`, `/pt-br/`, `/ko/`.
-- **Structured data:** `FAQPage` and `BreadcrumbList` only. Never mark a countdown as `Event` or `SpecialAnnouncement`.
+- **Structured data:** `FAQPage` and `BreadcrumbList`; the home page alone adds `WebSite` and `Organization`. Never mark a countdown as `Event` or `SpecialAnnouncement`.
 - **Title ≤ 60 characters** and never identical to the H1.
 - Ad slots have a fixed height. No third-party script on the critical path.
 - Don't block search engine user agents.

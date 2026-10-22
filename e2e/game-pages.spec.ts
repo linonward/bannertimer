@@ -282,3 +282,14 @@ test("every FAQ question is a heading", async ({ request }) => {
     for (const q of questions) expect(html, `${path} ${q}`).toMatch(new RegExp(`<h3[^>]*>${q.replace(/[?.*+()]/g, "\\$&")}</h3>`));
   }
 });
+
+test("the home page names the site and its publisher in WebSite and Organization data, and only there", async ({ request }) => {
+  const home = await (await request.get("/")).text();
+  const data = JSON.parse(home.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)![1]);
+  expect(data["@graph"].map((n: { "@type": string }) => n["@type"])).toEqual(["WebSite", "Organization"]);
+  expect(data["@graph"][0]).toMatchObject({ name: "Bannertimer", url: "https://bannertimer.com/" });
+  expect(data["@graph"][1]).toMatchObject({ email: "hello@bannertimer.com", url: "https://bannertimer.com/" });
+  for (const path of ["/hsr/", "/zzz/3.3/", "/about/"]) {
+    expect(await (await request.get(path)).text()).not.toMatch(/"@type":"(WebSite|Organization)"/);
+  }
+});
