@@ -244,3 +244,11 @@ test("the next HSR and Genshin versions have estimate pages before their banners
     expect(html).toContain('data-status="estimate"');
   }
 });
+
+test("the home page title names no game keyword, fits 60 characters and differs from the H1", async ({ request }) => {
+  const html = await (await request.get("/")).text();
+  const title = html.match(/<title>(.*?)<\/title>/)![1];
+  expect(title).toBe("Bannertimer — Live Gacha Banner Timers for HoYoverse Games");
+  expect(title.length).toBeLessThanOrEqual(60);
+  expect(html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/)![1]).not.toContain(title);
+});
