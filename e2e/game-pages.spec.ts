@@ -265,3 +265,20 @@ test("checked and updated dates are machine-readable", async ({ request }) => {
   const home = await (await request.get("/")).text();
   expect(home).toMatch(/<time dateTime="\d{4}-\d\d-\d\dT[\d:.]+Z">\w{3} \d{1,2}, \d{4}<\/time>/i);
 });
+
+// Citations: the live banners link the official notice they come from, not only the next banner.
+test("the live banners cite their official notice in the source", async ({ request }) => {
+  const html = await (await request.get("/hsr/")).text();
+  // At the build moment America runs HSR 4.6 phase 1; phase 2 is the next banner.
+  expect(html).toMatch(/<a [^>]*href="https:\/\/www\.hoyolab\.com\/article\/46851682"/);
+  expect(html).toMatch(/<a [^>]*href="https:\/\/www\.hoyolab\.com\/article\/47142215"/);
+});
+
+test("every FAQ question is a heading", async ({ request }) => {
+  for (const path of ["/hsr/", "/vi/zzz/", "/pt-br/genshin/"]) {
+    const html = await (await request.get(path)).text();
+    const questions = [...html.matchAll(/"@type":"Question","name":"([^"]+)"/g)].map((m) => m[1]);
+    expect(questions.length, path).toBeGreaterThan(0);
+    for (const q of questions) expect(html, `${path} ${q}`).toMatch(new RegExp(`<h3[^>]*>${q.replace(/[?.*+()]/g, "\\$&")}</h3>`));
+  }
+});

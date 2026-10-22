@@ -3124,7 +3124,7 @@
       "type": "frame",
       "id": "fSk8v",
       "x": 1600,
-      "y": 2889,
+      "y": 3580,
       "name": "/hsr/ — Desktop",
       "theme": {
         "game": "hsr"
@@ -3689,6 +3689,16 @@
                               ]
                             }
                           ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "R9l1UV",
+                          "name": "Source",
+                          "fill": "$b-ink-3",
+                          "content": "Source: hoyolab.com · checked Oct 21, 2026",
+                          "fontFamily": "$b-font-mono",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -4950,7 +4960,7 @@
       "type": "frame",
       "id": "Bhjtu",
       "x": 3200,
-      "y": 2889,
+      "y": 3580,
       "name": "/hsr/ — Mobile 390",
       "theme": {
         "game": "hsr"
@@ -5598,6 +5608,16 @@
                           ]
                         }
                       ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "dPGL2",
+                      "name": "Source",
+                      "fill": "$b-ink-3",
+                      "content": "Source: hoyolab.com · checked Oct 21, 2026",
+                      "fontFamily": "$b-font-mono",
+                      "fontSize": 11,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -6770,7 +6790,7 @@
       "type": "frame",
       "id": "TPrin",
       "x": 3750,
-      "y": 2889,
+      "y": 3580,
       "name": "/zzz/ — Desktop",
       "theme": {
         "game": "zzz"
@@ -7339,6 +7359,16 @@
                               ]
                             }
                           ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "X8PH0x",
+                          "name": "Source",
+                          "fill": "$b-ink-3",
+                          "content": "Source: zenless.hoyoverse.com · checked Oct 21, 2026",
+                          "fontFamily": "$b-font-mono",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -8642,7 +8672,7 @@
       "type": "frame",
       "id": "IMdvt",
       "x": 0,
-      "y": 2889,
+      "y": 3580,
       "name": "/ Home — Desktop",
       "theme": {
         "game": "hsr"
@@ -9590,7 +9620,7 @@
       "type": "frame",
       "id": "sGbfP",
       "x": 5350,
-      "y": 2889,
+      "y": 3580,
       "name": "/zzz/3.3/ — Version Desktop",
       "theme": {
         "game": "zzz"

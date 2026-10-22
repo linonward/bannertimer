@@ -39,12 +39,13 @@ export function Section({
 
 /** B/FAQ Item: question on the left, answer on the right; stacked on narrow screens. */
 export function FaqItem({ q, a }: { q: string; a: string }) {
+  // A heading per question, so each answer reads as its own section.
   return (
     <div className="flex flex-col gap-2 border-t border-line py-5 md:flex-row md:gap-12 md:py-6">
-      <dt className="font-display text-xl leading-6 font-semibold italic md:w-[420px] md:shrink-0 md:text-2xl md:leading-7">
+      <h3 className="font-display text-xl leading-6 font-semibold italic md:w-[420px] md:shrink-0 md:text-2xl md:leading-7">
         {q}
-      </dt>
-      <dd className="text-[15px] leading-6 text-ink-2 md:text-base md:leading-[26px]">{a}</dd>
+      </h3>
+      <p className="text-[15px] leading-6 text-ink-2 md:text-base md:leading-[26px]">{a}</p>
     </div>
   );
 }

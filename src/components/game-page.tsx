@@ -184,11 +184,11 @@ export function GamePage({ gameId, lang = "en" }: { gameId: string; lang?: Lang 
         </Section>
 
         <Section id="faq" eyebrow={t.faqEyebrow} title={t.faqTitle(game.shortName)}>
-          <dl>
+          <div>
             {faq.map((f) => (
               <FaqItem key={f.q} {...f} />
             ))}
-          </dl>
+          </div>
         </Section>
       </main>
 
