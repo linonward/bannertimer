@@ -3124,7 +3124,7 @@
       "type": "frame",
       "id": "fSk8v",
       "x": 1600,
-      "y": 2889,
+      "y": 3580,
       "name": "/hsr/ — Desktop",
       "theme": {
         "game": "hsr"
@@ -4960,7 +4960,7 @@
       "type": "frame",
       "id": "Bhjtu",
       "x": 3200,
-      "y": 2889,
+      "y": 3580,
       "name": "/hsr/ — Mobile 390",
       "theme": {
         "game": "hsr"
@@ -6790,7 +6790,7 @@
       "type": "frame",
       "id": "TPrin",
       "x": 3750,
-      "y": 2889,
+      "y": 3580,
       "name": "/zzz/ — Desktop",
       "theme": {
         "game": "zzz"
@@ -8672,7 +8672,7 @@
       "type": "frame",
       "id": "IMdvt",
       "x": 0,
-      "y": 2889,
+      "y": 3580,
       "name": "/ Home — Desktop",
       "theme": {
         "game": "hsr"
@@ -9620,7 +9620,7 @@
       "type": "frame",
       "id": "sGbfP",
       "x": 5350,
-      "y": 2889,
+      "y": 3580,
       "name": "/zzz/3.3/ — Version Desktop",
       "theme": {
         "game": "zzz"
